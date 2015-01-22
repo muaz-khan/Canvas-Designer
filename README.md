@@ -8,6 +8,8 @@ This speciality of this drawing-tool is that, it generates Canvas2D code for you
 
 Also, you can collaborate your drawing with up to 15 users; and everything is synced from all users. So, if you draw a line and your friend-A draws quadratic curve and friend-B draws rectangle then everythign will be synced among all users!
 
+<img src="https://canvas-designer.appspot.com/images/HTML5-Canvas-Designer.PNG">
+
 ## [Click to view Gif Presentation](https://cdn.webrtc-experiment.com/images/Canvas-Designer.gif)
 
 ## WebRTC?

@@ -1,8 +1,6 @@
 ﻿// -------------------------------------------------------------
 
 function setSelection(element, prop) {
-	
-	
 	endLastPath();
 	hideContainers();
 	
@@ -17,6 +15,9 @@ function setSelection(element, prop) {
 // -------------------------------------------------------------
 
 (function () {
+
+    var lineCapSelect = find('lineCap-select');
+    var lineJoinSelect = find('lineJoin-select');
 
 	// -------------------------------------------------------------
 
@@ -120,11 +121,33 @@ function setSelection(element, prop) {
 		context.fillText('Line', 16, 12);
 
 		bindEvent(context, 'Line');
-
-		/* Default: setting line as default selected shape!! */
-		is.set('Line');
 	}
 	decorateLine();
+    
+    // -------------------------------------------------------------
+    
+    function decoratePencil() {
+        var context = getContext('pencil-icon');
+
+        context.lineWidth = 5;
+        context.lineCap = 'round';
+        context.moveTo(35, 20);
+		context.lineTo(5, 35);
+		context.stroke();
+		
+		context.fillStyle = 'Gray';
+		context.font = '9px Verdana';
+		context.fillText('Pencil', 6, 12);
+
+        bindEvent(context, 'PencilSelected');
+        
+        lineCapSelect.value = lineJoinSelect.value = 'round';
+        
+        /* Default: setting Pencil as default selected shape!! */
+		is.set('PencilSelected');
+    }
+    
+    decoratePencil();
 
 	// -------------------------------------------------------------
 
@@ -296,9 +319,7 @@ function setSelection(element, prop) {
 			h1 = document.getElementsByTagName('h1')[0],
 			canvas = context.canvas,
 			globalAlphaSelect = find('globalAlpha-select'),
-			globalCompositeOperationSelect = find('globalCompositeOperation-select'),
-			lineCapSelect = find('lineCap-select'),
-			lineJoinSelect = find('lineJoin-select');
+			globalCompositeOperationSelect = find('globalCompositeOperation-select');
 
 		addEvent(canvas, 'click', function () {
 			hideContainers();

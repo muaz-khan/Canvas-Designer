@@ -8,11 +8,12 @@ var is = {
     isRectangle: false,
     isQuadraticCurve: false,
     isBezierCurve: false,
+    isPencilSelected: false,
 
     set: function (shape) {
         var cache = this;
 
-        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = false;
+        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = is.isPencilSelected = false;
         cache['is' + shape] = true;
     }
 };
@@ -132,6 +133,14 @@ var common = {
         for (i = 0; i < points.length; i++) {
             p = points[i];
             point = p[1];
+            
+            if (p[0] === 'pencil') {
+                tempArray[i] = ['context.beginPath();\n'
+                    + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n'
+                    + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n'
+                    + this.strokeOrFill(p[2])
+                ];
+            }
 
             if (p[0] === 'line') {
                 tempArray[i] = ['context.beginPath();\n'
@@ -189,6 +198,15 @@ var common = {
             if (i === 0) {
                 x = point[0];
                 y = point[1];
+            }
+            
+            if (p[0] === 'pencil') {
+                output += this.shortenHelper(p[0], [
+                    getPoint(point[0], x, 'x'),
+                    getPoint(point[1], y, 'y'),
+                    getPoint(point[2], x, 'x'),
+                    getPoint(point[3], y, 'y')
+                ], p[2]);
             }
 
             if (p[0] === 'line') {
@@ -269,6 +287,14 @@ var common = {
             if (p[0] === 'arc') {
                 output += 'context.beginPath();\n'
                         + 'context.arc(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ', ' + point[2] + ', ' + point[3] + ', 0, ' + point[4] + ');\n'
+
+                        + this.strokeOrFill(p[2]);
+            }
+            
+            if (p[0] === 'pencil') {
+                output += 'context.beginPath();\n'
+                        + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n'
+                        + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
 
                         + this.strokeOrFill(p[2]);
             }
