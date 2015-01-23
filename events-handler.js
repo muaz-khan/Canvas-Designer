@@ -16,7 +16,8 @@ addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function (e) {
     else if (cache.isQuadraticCurve) quadraticHandler.mousedown(e);
     else if (cache.isBezierCurve) bezierHandler.mousedown(e);
     else if (cache.isDragLastPath || cache.isDragAllPaths) dragHelper.mousedown(e);
-    else if (is.isPencilSelected) pencilHandler.mousedown(e);
+    else if (is.isPencil) pencilHandler.mousedown(e);
+    else if (is.isEraser) eraserHandler.mousedown(e);
 
     drawHelper.redraw();
 });
@@ -34,7 +35,8 @@ addEvent(document, isTouch ? 'touchend' : 'mouseup', function (e) {
     else if (cache.isQuadraticCurve) quadraticHandler.mouseup(e);
     else if (cache.isBezierCurve) bezierHandler.mouseup(e);
     else if (cache.isDragLastPath || cache.isDragAllPaths) dragHelper.mouseup(e);
-    else if (is.isPencilSelected) pencilHandler.mouseup(e);
+    else if (is.isPencil) pencilHandler.mouseup(e);
+    else if (is.isEraser) eraserHandler.mouseup(e);
 
     drawHelper.redraw();
 });
@@ -52,7 +54,8 @@ addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function (e) {
     else if (cache.isQuadraticCurve) quadraticHandler.mousemove(e);
     else if (cache.isBezierCurve) bezierHandler.mousemove(e);
     else if (cache.isDragLastPath || cache.isDragAllPaths) dragHelper.mousemove(e);
-    else if (is.isPencilSelected) pencilHandler.mousemove(e);
+    else if (is.isPencil) pencilHandler.mousemove(e);
+    else if (is.isEraser) eraserHandler.mousemove(e);
 });
 
 // -------------------------------------------------------------

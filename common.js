@@ -8,12 +8,13 @@ var is = {
     isRectangle: false,
     isQuadraticCurve: false,
     isBezierCurve: false,
-    isPencilSelected: false,
+    isPencil: false,
+    isEraser: false,
 
     set: function (shape) {
         var cache = this;
 
-        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = is.isPencilSelected = false;
+        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = is.isPencil = is.isEraser = false;
         cache['is' + shape] = true;
     }
 };
@@ -141,6 +142,14 @@ var common = {
                     + this.strokeOrFill(p[2])
                 ];
             }
+            
+            if (p[0] === 'eraser') {
+                tempArray[i] = ['context.beginPath();\n'
+                    + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n'
+                    + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n'
+                    + this.strokeOrFill(p[2])
+                ];
+            }
 
             if (p[0] === 'line') {
                 tempArray[i] = ['context.beginPath();\n'
@@ -201,6 +210,15 @@ var common = {
             }
             
             if (p[0] === 'pencil') {
+                output += this.shortenHelper(p[0], [
+                    getPoint(point[0], x, 'x'),
+                    getPoint(point[1], y, 'y'),
+                    getPoint(point[2], x, 'x'),
+                    getPoint(point[3], y, 'y')
+                ], p[2]);
+            }
+            
+            if (p[0] === 'eraser') {
                 output += this.shortenHelper(p[0], [
                     getPoint(point[0], x, 'x'),
                     getPoint(point[1], y, 'y'),
@@ -298,6 +316,14 @@ var common = {
 
                         + this.strokeOrFill(p[2]);
             }
+            
+            if (p[0] === 'eraser') {
+                output += 'context.beginPath();\n'
+                        + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n'
+                        + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
+
+                        + this.strokeOrFill(p[2]);
+            }
 
             if (p[0] === 'line') {
                 output += 'context.beginPath();\n'
@@ -358,6 +384,21 @@ var common = {
     // -------------------------------------------------------------
 
                 + '\t if(p[0] === "line") { \n'
+                        + '\t\t context.moveTo(point[0], point[1]);\n'
+                        + '\t\t context.lineTo(point[2], point[3]);\n'
+                + '\t }\n\n'
+                
+    // -------------------------------------------------------------
+
+                + '\t if(p[0] === "pencil") { \n'
+                        + '\t\t context.moveTo(point[0], point[1]);\n'
+                        + '\t\t context.lineTo(point[2], point[3]);\n'
+                + '\t }\n\n'
+                
+                
+    // -------------------------------------------------------------
+
+                + '\t if(p[0] === "eraser") { \n'
                         + '\t\t context.moveTo(point[0], point[1]);\n'
                         + '\t\t context.lineTo(point[2], point[3]);\n'
                 + '\t }\n\n'

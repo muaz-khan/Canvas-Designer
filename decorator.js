@@ -16,6 +16,8 @@ function setSelection(element, prop) {
 
 (function () {
 
+    var cache = {};
+
     var lineCapSelect = find('lineCap-select');
     var lineJoinSelect = find('lineJoin-select');
 
@@ -31,6 +33,10 @@ function setSelection(element, prop) {
 	// -------------------------------------------------------------
 
 	function bindEvent(context, shape) {
+        if(shape === 'Pencil') {
+            lineCap = lineJoin = 'round';
+        }
+        
 		addEvent(context.canvas, 'click', function () {
 		    dragHelper.global.startingIndex = 0;
 		    
@@ -44,6 +50,32 @@ function setSelection(element, prop) {
 				find('copy-all').checked = true;
 				find('copy-last').checked = false;
 			}
+            
+            if(this.id === 'pencil-icon' || this.id === 'eraser-icon') {
+                cache.lineCap = lineCap;
+                cache.lineJoin = lineJoin;
+                
+                lineCap = lineJoin = 'round';
+            }
+            else if(cache.lineCap && cache.lineJoin){
+                lineCap = cache.lineCap;
+                lineJoin = cache.lineJoin;
+            }
+            
+            if(this.id === 'eraser-icon') {
+                cache.strokeStyle = strokeStyle;
+                cache.fillStyle = fillStyle;
+                cache.lineWidth = lineWidth;
+                
+                strokeStyle = 'White';
+                fillStyle = 'White';
+                lineWidth = 10;
+            }
+            else if(cache.strokeStyle && cache.fillStyle && cache.lineWidth){
+                strokeStyle = cache.strokeStyle;
+                fillStyle = cache.fillStyle;
+                lineWidth = cache.lineWidth;
+            }
 		});
 	}
 
@@ -139,15 +171,33 @@ function setSelection(element, prop) {
 		context.font = '9px Verdana';
 		context.fillText('Pencil', 6, 12);
 
-        bindEvent(context, 'PencilSelected');
-        
-        lineCapSelect.value = lineJoinSelect.value = 'round';
+        bindEvent(context, 'Pencil');
         
         /* Default: setting Pencil as default selected shape!! */
-		is.set('PencilSelected');
+		is.set('Pencil');
     }
     
     decoratePencil();
+    
+    // -------------------------------------------------------------
+    
+    function decorateEraser() {
+        var context = getContext('eraser-icon');
+
+        context.lineWidth = 9;
+        context.lineCap = 'round';
+        context.moveTo(35, 20);
+		context.lineTo(5, 25);
+		context.stroke();
+		
+		context.fillStyle = 'Gray';
+		context.font = '9px Verdana';
+		context.fillText('Eraser', 6, 12);
+
+        bindEvent(context, 'Eraser');
+    }
+    
+    decorateEraser();
 
 	// -------------------------------------------------------------
 
