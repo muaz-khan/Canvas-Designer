@@ -10,11 +10,12 @@ var is = {
     isBezierCurve: false,
     isPencil: false,
     isEraser: false,
+    isText: false,
 
     set: function (shape) {
         var cache = this;
 
-        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = is.isPencil = is.isEraser = false;
+        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = is.isPencil = is.isEraser = is.isText = false;
         cache['is' + shape] = true;
     }
 };
@@ -47,6 +48,7 @@ var points = [],
     globalAlpha = 1,
     globalCompositeOperation = 'source-over',
     lineCap = 'butt',
+    font = '15px Verdana',
     lineJoin = 'miter';
 
 // -------------------------------------------------------------
@@ -61,6 +63,7 @@ function getContext(id) {
     ctx.lineWidth = lineWidth;
     ctx.strokeStyle = strokeStyle;
     ctx.fillStyle = fillStyle;
+    ctx.font = font;
 
     return ctx;
 }
@@ -116,7 +119,6 @@ var common = {
         var output = '', length = points.length, i = 0, point;
         for (i; i < length; i++) {
             point = points[i];
-
             output += this.shortenHelper(point[0], point[1], point[2]);
         }
 
@@ -155,6 +157,12 @@ var common = {
                 tempArray[i] = ['context.beginPath();\n'
                     + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n'
                     + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n'
+                    + this.strokeOrFill(p[2])
+                ];
+            }
+            
+            if (p[0] === 'text') {
+                tempArray[i] = ['context.fillText(' + point[0] + ', ' + point[1] + ', ' + point[2] + ');\n'
                     + this.strokeOrFill(p[2])
                 ];
             }
@@ -209,6 +217,11 @@ var common = {
                 y = point[1];
             }
             
+            if (p[0] === 'text') {
+                x = point[1];
+                y = point[2];
+            }
+            
             if (p[0] === 'pencil') {
                 output += this.shortenHelper(p[0], [
                     getPoint(point[0], x, 'x'),
@@ -233,6 +246,14 @@ var common = {
                     getPoint(point[1], y, 'y'),
                     getPoint(point[2], x, 'x'),
                     getPoint(point[3], y, 'y')
+                ], p[2]);
+            }
+            
+            if (p[0] === 'text') {
+                output += this.shortenHelper(p[0], [
+                    point[0],
+                    getPoint(point[1], x, 'x'),
+                    getPoint(point[2], y, 'y')
                 ], p[2]);
             }
 
@@ -298,6 +319,11 @@ var common = {
             if (i === 0) {
                 x = point[0];
                 y = point[1];
+                
+                if (p[0] === 'text') {
+                    x = point[1];
+                    y = point[2];
+                }
 
                 output = 'var x = ' + x + ', y = ' + y + ';\n\n';
             }
@@ -330,6 +356,11 @@ var common = {
                         + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n'
                         + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
 
+                        + this.strokeOrFill(p[2]);
+            }
+            
+            if (p[0] === 'text') {
+                output += 'context.fillText(' + point[0] + ', ' + getPoint(point[1], x, 'x')  + ', ' + getPoint(point[2], y, 'y') + ');\n'
                         + this.strokeOrFill(p[2]);
             }
 
@@ -379,6 +410,7 @@ var common = {
                         + '\t\t context.globalCompositeOperation = p[2][4];\n'
                         + '\t\t context.lineCap = p[2][5];\n'
                         + '\t\t context.lineJoin = p[2][6];\n'
+                        + '\t\t context.font = p[2][7];\n'
                 + '\t }\n\n'
 
     // -------------------------------------------------------------
@@ -393,6 +425,12 @@ var common = {
                 + '\t if(p[0] === "pencil") { \n'
                         + '\t\t context.moveTo(point[0], point[1]);\n'
                         + '\t\t context.lineTo(point[2], point[3]);\n'
+                + '\t }\n\n'
+                
+    // -------------------------------------------------------------
+
+                + '\t if(p[0] === "text") { \n'
+                        + '\t\t context.fillText(point[0], point[1], point[2]);\n'
                 + '\t }\n\n'
                 
                 
@@ -438,7 +476,7 @@ var common = {
 
     // -------------------------------------------------------------
 
-    strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin) { \n'
+    strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n'
                     + '\t if(lineWidth) { \n'
                             + '\t\t context.globalAlpha = globalAlpha;\n'
                             + '\t\t context.globalCompositeOperation = globalCompositeOperation;\n'
@@ -448,6 +486,7 @@ var common = {
                             + '\t\t context.lineWidth = lineWidth;\n'
                             + '\t\t context.strokeStyle = strokeStyle;\n'
                             + '\t\t context.fillStyle = fillStyle;\n'
+                            + '\t\t context.font = font;\n'
                     + '\t } \n\n'
 
                     + '\t context.stroke();\n'

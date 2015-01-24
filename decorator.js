@@ -198,6 +198,19 @@ function setSelection(element, prop) {
     }
     
     decorateEraser();
+    
+    // -------------------------------------------------------------
+    
+    function decorateText() {
+        var context = getContext('text-icon');
+		
+		context.font = '22px Verdana';
+		context.strokeText('T', 15, 30);
+
+        bindEvent(context, 'Text');
+    }
+    
+    decorateText();
 
 	// -------------------------------------------------------------
 

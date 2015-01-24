@@ -28,6 +28,7 @@
 	<section id="tool-box" class="tool-box">
         <canvas id="pencil-icon" width="40" height="40"></canvas>
         <canvas id="eraser-icon" width="40" height="40"></canvas>
+        <canvas id="text-icon" width="40" height="40"></canvas>
 		<canvas id="drag-last-path" width="40" height="40"></canvas>
 		<canvas id="drag-all-paths" width="40" height="40"></canvas>
 
@@ -172,6 +173,10 @@
 	</section>
 
     <!------------------------------------------>
+    
+    <input type="text" id="text-input" style="position: absolute; top: -100000px; left: -100000px; z-index: 1000000;border:0;outline:none; font-size: 15px;padding:0;margin:0; background: transparent; width: 100%;">
+    
+    <!------------------------------------------>
 
     <footer itemprop="breadcrumb">
 		<a href="http://twitter.com/muazkh" title="@muazkh">©</a> <a href="https://plus.google.com/+MuazKhan" rel="author" title="Muaz Khan's Google+ profile">Muaz Khan</a>
@@ -189,6 +194,7 @@
 	
     <script src="pencil-handler.js"></script>
     <script src="eraser-handler.js"></script>
+    <script src="text-handler.js"></script>
 	<script src="arc-handler.js"></script>
 	<script src="line-handler.js"></script>
 	<script src="rect-handler.js"></script>

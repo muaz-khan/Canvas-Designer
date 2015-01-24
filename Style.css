@@ -60,6 +60,7 @@ html, body {
     height:100%;
     cursor: default;
     color:  Gray;
+    overflow: hidden;
 }
 /*-------------------------------------------------------------*/
 footer

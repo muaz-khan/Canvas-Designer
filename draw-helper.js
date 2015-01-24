@@ -17,7 +17,7 @@ var drawHelper = {
     // -------------------------------------------------------------
 
     getOptions: function () {
-        return [lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin];
+        return [lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
     },
 
     // -------------------------------------------------------------
@@ -47,6 +47,18 @@ var drawHelper = {
         context.beginPath();
         context.moveTo(point[0], point[1]);
         context.lineTo(point[2], point[3]);
+
+        this.handleOptions(context, options);
+    },
+    
+    // -------------------------------------------------------------
+
+    text: function (context, point, options) {
+        var oldFillStyle = fillStyle;
+        context.fillStyle = fillStyle == 'transparent' ? 'Black' : fillStyle;
+        context.font = '15px Verdana';
+		context.fillText(point[0].substr(1, point[0].length - 2), point[1], point[2]);
+        fillStyle = oldFillStyle;
 
         this.handleOptions(context, options);
     },
