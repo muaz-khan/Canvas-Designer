@@ -3,7 +3,7 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    redraw: function () {
+    redraw: function (skipSync) {
         tempContext.clearRect(0, 0, innerWidth, innerHeight);
         context.clearRect(0, 0, innerWidth, innerHeight);
 
@@ -11,6 +11,10 @@ var drawHelper = {
         for (i = 0; i < length; i++) {
             point = points[i];
             this[point[0]](context, point[1], point[2]);
+        }
+        
+        if(!skipSync) {
+            syncPoints();
         }
     },
 
