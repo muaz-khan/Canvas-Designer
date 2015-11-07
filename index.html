@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
 
-	<title>Canvas Designer ® Muaz Khan</title>    
+	<title>Canvas Designer supporting Collaboration | HTML5, WebRTC</title>    
 	<meta name="description" content="HTML5 Canvas Designer ® Muaz Khan – A tool aimed to give you a full-fledged drawing surface and also auto generate appropriate code for you in different formats! Generator/Tool/Editor – 2D API/Context">
 
 	<meta name="author" content="Muaz Khan">
@@ -133,6 +133,16 @@ if(location.hash.replace('#', '').length) {
         session: connection.session
     });
 }
+
+connection.onstatechange = function(state) {
+    var infoBar = document.getElementById('hide-on-datachannel-opened');
+
+    infoBar.innerHTML = state.name + ': ' + state.reason;
+
+    if(state.name === 'room-not-available') {
+        infoBar.innerHTML = 'Screen share session is closed or paused. You will join automatically when share session is resumed.';
+    }
+};
 
 connection.onopen = function() {
     document.getElementById('hide-on-datachannel-opened').style.display = 'none';
