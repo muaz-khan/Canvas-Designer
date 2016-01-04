@@ -13,10 +13,10 @@
 </head>
 <body>
 <script src="canvas-designer-widget.js"></script>
-<script src="https://rtcmulticonnection.herokuapp.com/RTCMultiConnection.js"></script>
+<script src="https://rtcmulticonnection.herokuapp.com/RTCMultiConnection.min.js"></script>
 
 <!-- socket.io for signaling -->
-<script src="https://rtcmulticonnection.herokuapp.com/socket.io/socket.io.js"></script>
+<script src="https://cdn.webrtc-experiment.com/socket.io.js"></script>
 
 <style>
 * {
@@ -115,6 +115,7 @@ document.getElementById('open-room').onclick = function() {
 var connection = new RTCMultiConnection();
 
 connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+connection.socketMessageEvent = 'canvas-designer';
 
 connection.enableFileSharing = false;
 connection.session = {

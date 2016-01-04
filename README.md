@@ -1,4 +1,4 @@
-# [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) / [Demo](https://www.webrtc-experiment.com/Canvas-Designer/)
+# [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) / [LIVE Demo](https://www.webrtc-experiment.com/Canvas-Designer/) - [API Referencee](https://github.com/muaz-khan/Canvas-Designer#api-reference)
 
 "Collaborative" [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) i.e. Canvas-Drawing tool allows you draw bezier/quadratic curves, rectangles, circles and lines. You can also set strokes, back/forth colors and much more. You can draw using pencils, erase drawing, type texts etc.
 
@@ -9,6 +9,21 @@ Also, you can collaborate your drawing with up to 15 users; and everything is sy
 # [Click to view Gif Presentation](https://cdn.webrtc-experiment.com/images/Canvas-Designer.gif)
 
 <img src="https://i.imgur.com/uDbfy1F.png" />
+
+# Built-in tools
+
+You can use [`CanvasDesigner.setSelected`](https://github.com/muaz-khan/Canvas-Designer#setselected) or [`CanvasDesigner.setTools`](https://github.com/muaz-khan/Canvas-Designer#settools) for below tools.
+
+1. `line` --- to draw straight lines
+2. `pencil` --- to write/draw shapes
+3. `dragSingle` --- to drag/move last shape
+4. `dragMultiple` --- to drag/move all shapes
+5. `eraser` --- to erase/clear specific portion of shapes
+6. `rectangle` --- to draw rectangles
+7. `arc` --- to draw circles
+8. `bezier` --- to draw bezier curves
+9. `quadratic` --- to draw quadratic curves
+10. `text` --- to write texts
 
 # How to Use
 
@@ -66,6 +81,75 @@ socket.on('message', function(data) {
 
 CanvasDesigner.addSyncListener(function(data) {
     socket.emit('message', data);
+});
+```
+
+# API Reference
+
+## `syncData`
+
+Pass array-of-points that are shared by remote users using socket.io or websockets or XMPP or WebRTC.
+
+```javascript
+CanvasDesigner.syncData(arrayOfPoints);
+```
+
+## `addSyncListener`
+
+This callback is invoked as soon as something new is drawn. An array-of-points is passed over this function. That array MUST be shared with remote users for collaboration.
+
+```javascript
+CanvasDesigner.addSyncListener(function(data) {
+    websocket.send(JSON.stringify(data));
+});
+```
+
+## `setSelected`
+
+This method allows you problematically select specific tools.
+
+* See list of [all tools](https://github.com/muaz-khan/Canvas-Designer#built-in-tools)
+
+```javascript
+CanvasDesigner.setSelected('rectangle');
+```
+
+## `setTools`
+
+This method allows you choose between tools that **should be displayed** in the tools-panel.
+
+* See list of [all tools](https://github.com/muaz-khan/Canvas-Designer#built-in-tools)
+
+```javascript
+CanvasDesigner.setTools({
+    pencil: true,
+    text: true
+});
+```
+
+## `appendTo`
+
+CanvasDesigner is a widget; that widget should be appended to a DOM object. This method allows you pass `<body>` or any other HTMLDOMElement.
+
+```javascript
+CanvasDesigner.appendTo(document.body || document.documentElement);
+```
+
+## `destroy`
+
+If you want to remove the widget from your HTMLDOMElement.
+
+```javascript
+CanvasDesigner.destroy();
+```
+
+## `toDataURL`
+
+Get data-URL of your drawings! 
+
+```javascript
+CanvasDesigner.toDataURL('image/png', function(dataURL) {
+    window.open(dataURL);
 });
 ```
 

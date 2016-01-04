@@ -7,6 +7,15 @@ var lastPoint = [];
 var selfId = (Math.random() * 10000).toString().replace('.', '');
 
 window.addEventListener('message', function(event) {
+    if(!event.data) return;
+    if(event.data.genDataURL) {
+        var dataURL = context.canvas.toDataURL(event.data.format);
+        window.parent.postMessage({
+            dataURL: dataURL
+        }, '*');
+        return;
+    }
+
     if (!event.data || !event.data.canvasDesignerSyncData) return;
 
     if (event.data.sender && event.data.sender == selfId) return;
