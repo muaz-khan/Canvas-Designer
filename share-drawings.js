@@ -16,6 +16,14 @@ window.addEventListener('message', function(event) {
         return;
     }
 
+    if(event.data.syncPoints) {
+        window.parent.postMessage({
+            canvasDesignerSyncData: points,
+            sender: selfId
+        }, '*');
+        return;
+    }
+
     if (!event.data || !event.data.canvasDesignerSyncData) return;
 
     if (event.data.sender && event.data.sender == selfId) return;

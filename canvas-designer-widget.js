@@ -29,6 +29,7 @@ var CanvasDesigner = (function() {
         if(!event.data) return;
 
         if (!!event.data.canvasDesignerSyncData) {
+            CanvasDesigner.pointsLength = event.data.canvasDesignerSyncData.length;
             syncDataListener(event.data.canvasDesignerSyncData);
         }
 
@@ -73,6 +74,13 @@ var CanvasDesigner = (function() {
                 genDataURL: true,
                 format: format
             }, '*');
-        }
+        },
+        sync: function() {
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({
+                syncPoints: true
+            }, '*');
+        },
+        pointsLength: 0
     };
 })();

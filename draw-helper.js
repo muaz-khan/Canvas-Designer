@@ -13,7 +13,7 @@ var drawHelper = {
             this[point[0]](context, point[1], point[2]);
         }
         
-        if(!skipSync) {
+        if(!skipSync && typeof syncPoints !== 'undefined') {
             syncPoints();
         }
     },

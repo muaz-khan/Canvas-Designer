@@ -153,6 +153,47 @@ CanvasDesigner.toDataURL('image/png', function(dataURL) {
 });
 ```
 
+## `sync`
+
+You can manually sync drawings by invoking `CanvasDesigner.sync` method:
+
+```javascript
+CanvasDesigner.sync();
+```
+
+Here is a real usecase:
+
+```javascript
+webrtcDataChannel.onopen = function() {
+    if(CanvasDesigner.pointsLength > 0) {
+        // you seems having data to be synced with new user!
+        CanvasDesigner.sync();
+    }
+};
+```
+
+## `pointsLength`
+
+Each shape is considered as a `point`. This value allows you check number of shapes that are already drawn on the canvas-designer.
+
+```javascript
+(function looper() {
+    document.getElementById('number-of-shapes').inenrHTML = CanvasDesigner.pointsLength;
+    setTimeout(looper, 1000);
+})();
+```
+
+Or a real usage:
+
+```javascript
+websocket.onopen = function() {
+    if(CanvasDesigner.pointsLength > 0) {
+        // you seems having data to be synced with existing users!
+        CanvasDesigner.sync();
+    }
+};
+```
+
 # Links
 
 1. https://www.webrtc-experiment.com/Canvas-Designer/
