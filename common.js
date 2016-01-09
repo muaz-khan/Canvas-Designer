@@ -10,11 +10,12 @@ var is = {
     isPencil: false,
     isEraser: false,
     isText: false,
+    isImage: false,
 
     set: function(shape) {
         var cache = this;
 
-        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = is.isPencil = is.isEraser = is.isText = false;
+        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isEraser = cache.isText = cache.isImage = false;
         cache['is' + shape] = true;
     }
 };

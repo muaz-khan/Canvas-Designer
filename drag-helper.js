@@ -53,8 +53,39 @@ var dragHelper = {
 
             if (p[0] === 'rect') {
 
+                if (dHelper.isPointInPath(x, y, point[0], point[1])) {
+                    g.pointsToMove = 'stretch-first';
+                }
+
+                if (dHelper.isPointInPath(x, y, point[0] + point[2], point[1])) {
+                    g.pointsToMove = 'stretch-second';
+                }
+
+                if (dHelper.isPointInPath(x, y, point[0], point[1] + point[3])) {
+                    g.pointsToMove = 'stretch-third';
+                }
+
                 if (dHelper.isPointInPath(x, y, point[0] + point[2], point[1] + point[3])) {
-                    g.pointsToMove = 'stretch';
+                    g.pointsToMove = 'stretch-last';
+                }
+            }
+
+            if (p[0] === 'image') {
+
+                if (dHelper.isPointInPath(x, y, point[1], point[2])) {
+                    g.pointsToMove = 'stretch-first';
+                }
+
+                if (dHelper.isPointInPath(x, y, point[1] + point[3], point[2])) {
+                    g.pointsToMove = 'stretch-second';
+                }
+
+                if (dHelper.isPointInPath(x, y, point[1], point[2] + point[4])) {
+                    g.pointsToMove = 'stretch-third';
+                }
+
+                if (dHelper.isPointInPath(x, y, point[1] + point[3], point[2] + point[4])) {
+                    g.pointsToMove = 'stretch-last';
                 }
             }
 
@@ -179,7 +210,37 @@ var dragHelper = {
         if (p[0] === 'rect') {
 
             tempContext.beginPath();
+            tempContext.arc(point[0], point[1], 10, Math.PI * 2, 0, !1);
+            tempContext.fill();
+
+            tempContext.beginPath();
+            tempContext.arc(point[0] + point[2], point[1], 10, Math.PI * 2, 0, !1);
+            tempContext.fill();
+
+            tempContext.beginPath();
+            tempContext.arc(point[0], point[1] + point[3], 10, Math.PI * 2, 0, !1);
+            tempContext.fill();
+
+            tempContext.beginPath();
             tempContext.arc(point[0] + point[2], point[1] + point[3], 10, Math.PI * 2, 0, !1);
+            tempContext.fill();
+        }
+
+        if (p[0] === 'image') {
+            tempContext.beginPath();
+            tempContext.arc(point[1], point[2], 10, Math.PI * 2, 0, !1);
+            tempContext.fill();
+
+            tempContext.beginPath();
+            tempContext.arc(point[1] + point[3], point[2], 10, Math.PI * 2, 0, !1);
+            tempContext.fill();
+
+            tempContext.beginPath();
+            tempContext.arc(point[1], point[2] + point[4], 10, Math.PI * 2, 0, !1);
+            tempContext.fill();
+
+            tempContext.beginPath();
+            tempContext.arc(point[1] + point[3], point[2] + point[4], 10, Math.PI * 2, 0, !1);
             tempContext.fill();
         }
     },
@@ -194,10 +255,76 @@ var dragHelper = {
     // -------------------------------------------------------------
 
     getPoint: function (point, prev, otherPoint) {
-        if (point > prev) point = otherPoint + (point - prev);
-        else point = otherPoint - (prev - point);
+        if (point > prev) {
+            point = otherPoint + (point - prev);
+        }
+        else {
+            point = otherPoint - (prev - point);
+        }
 
         return point;
+    },
+
+    // -------------------------------------------------------------
+
+    getXYWidthHeight: function (x, y, prevX, prevY, oldPoints) {
+        if(oldPoints.pointsToMove == 'stretch-first') {
+            if(x > prevX) {
+                oldPoints.x = oldPoints.x + (x - prevX);
+                oldPoints.width = oldPoints.width - (x - prevX);
+            }
+            else {
+                oldPoints.x = oldPoints.x - (prevX - x);
+                oldPoints.width = oldPoints.width + (prevX - x);
+            }
+            
+            if(y > prevY) {
+                oldPoints.y = oldPoints.y + (y - prevY);
+                oldPoints.height = oldPoints.height - (y - prevY);
+            }
+            else {
+                oldPoints.y = oldPoints.y - (prevY - y);
+                oldPoints.height = oldPoints.height + (prevY - y);
+            }
+        }
+
+        if(oldPoints.pointsToMove == 'stretch-second') {
+            if(x > prevX) {
+                oldPoints.width = oldPoints.width + (x - prevX);
+            }
+            else {
+                oldPoints.width = oldPoints.width - (prevX - x);
+            }
+            
+            if(y < prevY) {
+                oldPoints.y = oldPoints.y + (y - prevY);
+                oldPoints.height = oldPoints.height - (y - prevY);
+            }
+            else {
+                oldPoints.y = oldPoints.y - (prevY - y);
+                oldPoints.height = oldPoints.height + (prevY - y);
+            }
+        }
+
+        if(oldPoints.pointsToMove == 'stretch-third') {
+            if(x > prevX) {
+                oldPoints.x = oldPoints.x + (x - prevX);
+                oldPoints.width = oldPoints.width - (x - prevX);
+            }
+            else {
+                oldPoints.x = oldPoints.x - (prevX - x);
+                oldPoints.width = oldPoints.width + (prevX - x);
+            }
+            
+            if(y < prevY) {
+                oldPoints.height = oldPoints.height + (y - prevY);
+            }
+            else {
+                oldPoints.height = oldPoints.height - (prevY - y);
+            }
+        }
+
+        return oldPoints;
     },
 
     // -------------------------------------------------------------
@@ -283,6 +410,17 @@ var dragHelper = {
                 ], p[2]];
             }
 
+            if (p[0] === 'image') {
+                points[i] = [p[0], [
+                    point[0],
+                    getPoint(x, prevX, point[1]),
+                    getPoint(y, prevY, point[2]),
+                    point[3],
+                    point[4],
+                    point[5]
+                ], p[2]];
+            }
+
             if (p[0] === 'quadratic') {
                 points[i] = [p[0], [
                     getPoint(x, prevX, point[0]),
@@ -318,6 +456,7 @@ var dragHelper = {
             p = points[points.length - 1],
             point = p[1],
             getPoint = this.getPoint,
+            getXYWidthHeight = this.getXYWidthHeight,
             isMoveAllPoints = g.pointsToMove === 'all';
 
         if (p[0] === 'line') {
@@ -359,9 +498,110 @@ var dragHelper = {
                 point[1] = getPoint(y, prevY, point[1]);
             }
 
-            if (g.pointsToMove === 'stretch') {
+            if (g.pointsToMove === 'stretch-first') {
+                var newPoints = getXYWidthHeight(x, y, prevX, prevY, {
+                    x: point[0],
+                    y: point[1],
+                    width: point[2],
+                    height: point[3],
+                    pointsToMove: g.pointsToMove
+                });
+
+                point[0] = newPoints.x;
+                point[1] = newPoints.y;
+                point[2] = newPoints.width;
+                point[3] = newPoints.height;
+            }
+
+            if (g.pointsToMove === 'stretch-second') {
+                var newPoints = getXYWidthHeight(x, y, prevX, prevY, {
+                    x: point[0],
+                    y: point[1],
+                    width: point[2],
+                    height: point[3],
+                    pointsToMove: g.pointsToMove
+                });
+
+                point[1] = newPoints.y;
+                point[2] = newPoints.width;
+                point[3] = newPoints.height;
+            }
+
+            if (g.pointsToMove === 'stretch-third') {
+                var newPoints = getXYWidthHeight(x, y, prevX, prevY, {
+                    x: point[0],
+                    y: point[1],
+                    width: point[2],
+                    height: point[3],
+                    pointsToMove: g.pointsToMove
+                });
+
+                point[0] = newPoints.x;
+                point[2] = newPoints.width;
+                point[3] = newPoints.height;
+            }
+
+            if (g.pointsToMove === 'stretch-last') {
                 point[2] = getPoint(x, prevX, point[2]);
                 point[3] = getPoint(y, prevY, point[3]);
+            }
+
+            points[points.length - 1] = [p[0], point, p[2]];
+        }
+
+        if (p[0] === 'image') {
+
+            if (isMoveAllPoints) {
+                point[1] = getPoint(x, prevX, point[1]);
+                point[2] = getPoint(y, prevY, point[2]);
+            }
+
+            if (g.pointsToMove === 'stretch-first') {
+                var newPoints = getXYWidthHeight(x, y, prevX, prevY, {
+                    x: point[1],
+                    y: point[2],
+                    width: point[3],
+                    height: point[4],
+                    pointsToMove: g.pointsToMove
+                });
+
+                point[1] = newPoints.x;
+                point[2] = newPoints.y;
+                point[3] = newPoints.width;
+                point[4] = newPoints.height;
+            }
+
+            if (g.pointsToMove === 'stretch-second') {
+                var newPoints = getXYWidthHeight(x, y, prevX, prevY, {
+                    x: point[1],
+                    y: point[2],
+                    width: point[3],
+                    height: point[4],
+                    pointsToMove: g.pointsToMove
+                });
+
+                point[2] = newPoints.y;
+                point[3] = newPoints.width;
+                point[4] = newPoints.height;
+            }
+
+            if (g.pointsToMove === 'stretch-third') {
+                var newPoints = getXYWidthHeight(x, y, prevX, prevY, {
+                    x: point[1],
+                    y: point[2],
+                    width: point[3],
+                    height: point[4],
+                    pointsToMove: g.pointsToMove
+                });
+
+                point[1] = newPoints.x;
+                point[3] = newPoints.width;
+                point[4] = newPoints.height;
+            }
+
+            if (g.pointsToMove === 'stretch-last') {
+                point[3] = getPoint(x, prevX, point[3]);
+                point[4] = getPoint(y, prevY, point[4]);
             }
 
             points[points.length - 1] = [p[0], point, p[2]];

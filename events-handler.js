@@ -16,9 +16,10 @@ addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function (e) {
     else if (cache.isQuadraticCurve) quadraticHandler.mousedown(e);
     else if (cache.isBezierCurve) bezierHandler.mousedown(e);
     else if (cache.isDragLastPath || cache.isDragAllPaths) dragHelper.mousedown(e);
-    else if (is.isPencil) pencilHandler.mousedown(e);
-    else if (is.isEraser) eraserHandler.mousedown(e);
-    else if (is.isText) textHandler.mousedown(e);
+    else if (cache.isPencil) pencilHandler.mousedown(e);
+    else if (cache.isEraser) eraserHandler.mousedown(e);
+    else if (cache.isText) textHandler.mousedown(e);
+    else if (cache.isImage) imageHandler.mousedown(e);
 
     drawHelper.redraw();
 });
@@ -36,9 +37,10 @@ addEvent(canvas, isTouch ? 'touchend' : 'mouseup', function (e) {
     else if (cache.isQuadraticCurve) quadraticHandler.mouseup(e);
     else if (cache.isBezierCurve) bezierHandler.mouseup(e);
     else if (cache.isDragLastPath || cache.isDragAllPaths) dragHelper.mouseup(e);
-    else if (is.isPencil) pencilHandler.mouseup(e);
-    else if (is.isEraser) eraserHandler.mouseup(e);
-    else if (is.isText) textHandler.mouseup(e);
+    else if (cache.isPencil) pencilHandler.mouseup(e);
+    else if (cache.isEraser) eraserHandler.mouseup(e);
+    else if (cache.isText) textHandler.mouseup(e);
+    else if (cache.isImage) imageHandler.mouseup(e);
 
     drawHelper.redraw();
 });
@@ -56,9 +58,10 @@ addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function (e) {
     else if (cache.isQuadraticCurve) quadraticHandler.mousemove(e);
     else if (cache.isBezierCurve) bezierHandler.mousemove(e);
     else if (cache.isDragLastPath || cache.isDragAllPaths) dragHelper.mousemove(e);
-    else if (is.isPencil) pencilHandler.mousemove(e);
-    else if (is.isEraser) eraserHandler.mousemove(e);
-    else if (is.isText) textHandler.mousemove(e);
+    else if (cache.isPencil) pencilHandler.mousemove(e);
+    else if (cache.isEraser) eraserHandler.mousemove(e);
+    else if (cache.isText) textHandler.mousemove(e);
+    else if (cache.isImage) imageHandler.mousemove(e);
 });
 
 // -------------------------------------------------------------

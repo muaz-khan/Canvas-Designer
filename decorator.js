@@ -91,6 +91,28 @@ function setSelection(element, prop) {
                 find('copy-last').checked = false;
             }
 
+            if(this.id === 'image-icon') {
+                var selector = new FileSelector();
+                selector.selectSingleFile(function(file) {
+                    if(!file) return;
+
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        var image = new Image();
+                        image.onload = function() {
+                            var index = imageHandler.images.length;
+                            
+                            imageHandler.lastImageURL = image.src;
+                            imageHandler.lastImageIndex = index;
+
+                            imageHandler.images.push(image);
+                        };
+                        image.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
             if (this.id === 'pencil-icon' || this.id === 'eraser-icon') {
                 cache.lineCap = lineCap;
                 cache.lineJoin = lineJoin;
@@ -285,6 +307,23 @@ function setSelection(element, prop) {
     if (tools.text === true) {
         decorateText();
     } else document.getElementById('text-icon').style.display = 'none';
+
+    // -------------------------------------------------------------
+
+    function decorateImage() {
+        var context = getContext('image-icon');
+
+        var image = new Image();
+        image.onload = function() {
+            context.drawImage(image, 4, 4, 32, 32);
+            bindEvent(context, 'Image');
+        };
+        image.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAADFBMVEVYWFhVVVUAAABUVFTqqlXjAAAAA3RSTlMxdACUjPeLAAAATElEQVR42u3SQQrAMAwDQSn7/z+XFExTcOxroN3zgC4STecApy1gpP2gBgZXQMwKwJ23QITYACLlQBC9gAFNwJMXoJhVc7lBA/gsuAArEgqPcT12VgAAAABJRU5ErkJggg==';
+    }
+
+    if (tools.image === true) {
+        decorateImage();
+    } else document.getElementById('image-icon').style.display = 'none';
 
     // -------------------------------------------------------------
 

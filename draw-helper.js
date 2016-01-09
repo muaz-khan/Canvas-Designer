@@ -87,6 +87,30 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
+    image: function (context, point, options) {
+        this.handleOptions(context, options, true);
+        
+        var image = imageHandler.images[point[5]];
+        if(!image) {
+            var image = new Image();
+            image.onload = function() {
+                var index = imageHandler.images.length;
+                            
+                imageHandler.lastImageURL = image.src;
+                imageHandler.lastImageIndex = index;
+
+                imageHandler.images.push(image);
+                context.drawImage(image, point[1], point[2], point[3], point[4]);
+            };
+            image.src = point[0];
+            return;
+        }
+
+        context.drawImage(image, point[1], point[2], point[3], point[4]);
+    },
+
+    // -------------------------------------------------------------
+
     quadratic: function (context, point, options) {
         context.beginPath();
         context.moveTo(point[0], point[1]);

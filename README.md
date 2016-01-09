@@ -1,8 +1,8 @@
 # [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) / [LIVE Demo](https://www.webrtc-experiment.com/Canvas-Designer/) - [API Referencee](https://github.com/muaz-khan/Canvas-Designer#api-reference)
 
-"Collaborative" [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) i.e. Canvas-Drawing tool allows you draw bezier/quadratic curves, rectangles, circles and lines. You can also set strokes, back/forth colors and much more. You can draw using pencils, erase drawing, type texts etc.
+> "Collaborative" [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) i.e. Canvas-Drawing tool allows you draw bezier/quadratic curves, rectangles, circles and lines. You can also set strokes, back/forth colors and much more. You can draw using pencils, erase drawing, type texts etc. You can [easily add your own tools](https://www.webrtc-experiment.com/Canvas-Designer/Help/#contribute).
 
-This speciality of this drawing-tool is that, it generates Canvas2D code for you; so simply draw and get the code!
+This specialty of this drawing-tool is that, it generates Canvas2D code for you; so simply draw and get the code! That code can be used in any javascript Canvas2D application.
 
 Also, you can collaborate your drawing with up to 15 users; and everything is synced from all users. So, if you draw a line and your friend-A draws quadratic curve and friend-B draws rectangle then everything will be synced among all users!
 
@@ -24,6 +24,18 @@ You can use [`CanvasDesigner.setSelected`](https://github.com/muaz-khan/Canvas-D
 8. `bezier` --- to draw bezier curves
 9. `quadratic` --- to draw quadratic curves
 10. `text` --- to write texts
+11. `image` --- add external images
+
+# Features
+
+1. Draw single or multiple shapes of any kind (according to toolbox)
+2. Drag/resize/adjust all the shapes in any possible direction
+3. Rectangles and images can be resized in 4-directions
+
+   Red transparent small circles helps you understand how to resize.
+
+4. Undo drawings using `ctrl+z` keys
+5. Drag/move single or all the shapes without affecting any single coordinate
 
 # How to Use
 
@@ -194,11 +206,22 @@ websocket.onopen = function() {
 };
 ```
 
-# Links
+# How to contribute?
 
-1. https://www.webrtc-experiment.com/Canvas-Designer/
-2. https://github.com/muaz-khan/Canvas-Designer
-3. https://canvas-designer.appspot.com/
+It is not too much complex to add new tools :) Its easy.
+
+* https://www.webrtc-experiment.com/Canvas-Designer/Help/#contribute
+
+# Demos
+
+A-to-zee all shapes, and animations on following page is created using canvas-designer:
+
+* http://muaz-khan.github.io/Everything/Canvas/
+* https://www.webrtc-experiment.com/Canvas-Designer/ (canvas-designer demo allows you draw shapes & get the code; additionally collaborate as well!)
+* Try a simple canvas2d animation demo: http://muaz-khan.github.io/Everything/Canvas/Experiments/Simple-HTML5-Canvas-Experiment/
+* Try many other canvas2d demos: http://muaz-khan.github.io/Everything/Canvas/Experiments/
+
+All above demos are built using canvas-designer!
 
 Original source-code was shared 2-years back, here: https://github.com/muaz-khan/Everything/tree/gh-pages/Canvas/Tools/Designer
 
@@ -208,4 +231,4 @@ And WebRTC-Experiments! https://github.com/muaz-khan/WebRTC-Experiment
 
 # License
 
-[Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) is released under [MIT licence](https://www.webrtc-experiment.com/licence/) . Copyright (c) [Muaz Khan](https://plus.google.com/+MuazKhan).
+[Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) is released under [MIT licence](https://www.webrtc-experiment.com/licence/) . Copyright (c) [Muaz Khan](http://www.MuazKhan.com).

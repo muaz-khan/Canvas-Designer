@@ -10,7 +10,8 @@ var CanvasDesigner = (function() {
         arc: true,
         bezier: true,
         quadratic: true,
-        text: true
+        text: true,
+        image: true
     };
     var selectedIcon = 'pencil';
 
