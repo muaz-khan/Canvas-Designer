@@ -44,7 +44,7 @@ var CanvasDesigner = (function() {
     return {
         appendTo: function(parentNode) {
             iframe = document.createElement('iframe');
-            iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon;
+            iframe.src = this.widgetHtmlURL +  '?widgetJsURL=' + this.widgetJsURL + '&tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon;
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 0;
@@ -82,6 +82,15 @@ var CanvasDesigner = (function() {
                 syncPoints: true
             }, '*');
         },
-        pointsLength: 0
+        pointsLength: 0,
+        undo: function(index) {
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({
+                undo: true,
+                index: index || this.pointsLength - 1 || -1
+            }, '*');
+        },
+        widgetHtmlURL: 'widget.html',
+        widgetJsURL: 'widget.min.js'
     };
 })();

@@ -5,8 +5,11 @@ var canvas = tempContext.canvas,
 
 // -------------------------------------------------------------
 
-addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function (e) {
-    if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : { pageX: 0, pageY: 0 };
+addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function(e) {
+    if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : {
+        pageX: 0,
+        pageY: 0
+    };
 
     var cache = is;
 
@@ -26,9 +29,12 @@ addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function (e) {
 
 // -------------------------------------------------------------
 
-addEvent(canvas, isTouch ? 'touchend' : 'mouseup', function (e) {
-    if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : { pageX: 0, pageY: 0 };
-    
+addEvent(canvas, isTouch ? 'touchend' : 'mouseup', function(e) {
+    if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : {
+        pageX: 0,
+        pageY: 0
+    };
+
     var cache = is;
 
     if (cache.isLine) lineHandler.mouseup(e);
@@ -47,9 +53,12 @@ addEvent(canvas, isTouch ? 'touchend' : 'mouseup', function (e) {
 
 // -------------------------------------------------------------
 
-addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function (e) {
-    if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : { pageX: 0, pageY: 0 };
-    
+addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function(e) {
+    if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : {
+        pageX: 0,
+        pageY: 0
+    };
+
     var cache = is;
 
     if (cache.isLine) lineHandler.mousemove(e);
@@ -73,6 +82,11 @@ var keyCode;
 function onkeydown(e) {
     keyCode = e.keyCode;
 
+    if (e.metaKey) {
+        isControlKeyPressed = true;
+        keyCode = 17;
+    }
+
     if (!isControlKeyPressed && keyCode === 17) {
         isControlKeyPressed = true;
     }
@@ -83,10 +97,14 @@ addEvent(document, 'keydown', onkeydown);
 // -------------------------------------------------------------
 
 function onkeyup(e) {
-    keyCode = e.keyCode;
+    if (e.which == null && (e.charCode != null || e.keyCode != null)) {
+        e.which = e.charCode != null ? e.charCode : e.keyCode;
+    }
+
+    keyCode = e.which || e.keyCode || 0;
 
     /*-------------------------- Ctrl + Z --------------------------*/
-    
+
     if (isControlKeyPressed && keyCode === 90) {
         if (points.length) {
             points.length = points.length - 1;
@@ -100,12 +118,12 @@ function onkeyup(e) {
         dragHelper.global.startingIndex = 0;
 
         endLastPath();
-        
+
         setSelection(find('drag-all-paths'), 'DragAllPaths');
     }
 
     /*-------------------------- Ctrl + C --------------------------*/
-    
+
     if (isControlKeyPressed && keyCode === 67 && points.length) {
         copy();
     }
@@ -116,7 +134,12 @@ function onkeyup(e) {
     }
 
     /*-------------------------- Ending the Control Key --------------------------*/
-    
+
+    if (typeof e.metaKey !== 'undefined' && e.metaKey === false) {
+        isControlKeyPressed = false;
+        keyCode = 17;
+    }
+
     if (keyCode === 17) {
         isControlKeyPressed = false;
     }

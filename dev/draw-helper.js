@@ -3,7 +3,7 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    redraw: function (skipSync) {
+    redraw: function(skipSync) {
         tempContext.clearRect(0, 0, innerWidth, innerHeight);
         context.clearRect(0, 0, innerWidth, innerHeight);
 
@@ -12,21 +12,21 @@ var drawHelper = {
             point = points[i];
             this[point[0]](context, point[1], point[2]);
         }
-        
-        if(!skipSync && typeof syncPoints !== 'undefined') {
+
+        if (!skipSync && typeof syncPoints !== 'undefined') {
             syncPoints();
         }
     },
 
     // -------------------------------------------------------------
 
-    getOptions: function () {
+    getOptions: function() {
         return [lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
     },
 
     // -------------------------------------------------------------
 
-    handleOptions: function (context, opt, isNoFillStroke) {
+    handleOptions: function(context, opt, isNoFillStroke) {
         opt = opt || this.getOptions();
 
         context.globalAlpha = opt[3];
@@ -38,7 +38,7 @@ var drawHelper = {
 
         context.strokeStyle = opt[1];
         context.fillStyle = opt[2];
-        
+
         if (!isNoFillStroke) {
             context.stroke();
             context.fill();
@@ -47,21 +47,21 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    line: function (context, point, options) {
+    line: function(context, point, options) {
         context.beginPath();
         context.moveTo(point[0], point[1]);
         context.lineTo(point[2], point[3]);
 
         this.handleOptions(context, options);
     },
-    
+
     // -------------------------------------------------------------
 
-    text: function (context, point, options) {
+    text: function(context, point, options) {
         var oldFillStyle = fillStyle;
         context.fillStyle = fillStyle === 'transparent' || fillStyle === 'White' ? 'Black' : fillStyle;
         context.font = '15px Verdana';
-		context.fillText(point[0].substr(1, point[0].length - 2), point[1], point[2]);
+        context.fillText(point[0].substr(1, point[0].length - 2), point[1], point[2]);
         fillStyle = oldFillStyle;
 
         this.handleOptions(context, options);
@@ -69,7 +69,7 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    arc: function (context, point, options) {
+    arc: function(context, point, options) {
         context.beginPath();
         context.arc(point[0], point[1], point[2], point[3], 0, point[4]);
 
@@ -78,7 +78,7 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    rect: function (context, point, options) {
+    rect: function(context, point, options) {
         this.handleOptions(context, options, true);
 
         context.strokeRect(point[0], point[1], point[2], point[3]);
@@ -87,15 +87,15 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    image: function (context, point, options) {
+    image: function(context, point, options) {
         this.handleOptions(context, options, true);
-        
+
         var image = imageHandler.images[point[5]];
-        if(!image) {
+        if (!image) {
             var image = new Image();
             image.onload = function() {
                 var index = imageHandler.images.length;
-                            
+
                 imageHandler.lastImageURL = image.src;
                 imageHandler.lastImageIndex = index;
 
@@ -111,7 +111,7 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    quadratic: function (context, point, options) {
+    quadratic: function(context, point, options) {
         context.beginPath();
         context.moveTo(point[0], point[1]);
         context.quadraticCurveTo(point[2], point[3], point[4], point[5]);
@@ -121,7 +121,7 @@ var drawHelper = {
 
     // -------------------------------------------------------------
 
-    bezier: function (context, point, options) {
+    bezier: function(context, point, options) {
         context.beginPath();
         context.moveTo(point[0], point[1]);
         context.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);

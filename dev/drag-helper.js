@@ -13,7 +13,7 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    mousedown: function (e) {
+    mousedown: function(e) {
 
         // -------------------------------------------------------------
 
@@ -129,7 +129,7 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    mouseup: function () {
+    mouseup: function() {
         var g = this.global;
 
         if (is.isDragLastPath) {
@@ -143,7 +143,7 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    mousemove: function (e) {
+    mousemove: function(e) {
         var x = e.pageX - canvas.offsetLeft,
             y = e.pageY - canvas.offsetTop,
             g = this.global;
@@ -159,7 +159,7 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    init: function () {
+    init: function() {
         if (!points.length) return;
 
         var p = points[points.length - 1],
@@ -201,7 +201,7 @@ var dragHelper = {
 
             tempContext.fill();
         }
-        
+
         if (p[0] === 'text') {
             tempContext.font = "15px Verdana";
             tempContext.fillText(point[0], point[1], point[2]);
@@ -247,18 +247,16 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    isPointInPath: function (x, y, first, second) {
-        return x > first - 10 && x < first + 10
-            && y > second - 10 && y < second + 10;
+    isPointInPath: function(x, y, first, second) {
+        return x > first - 10 && x < first + 10 && y > second - 10 && y < second + 10;
     },
 
     // -------------------------------------------------------------
 
-    getPoint: function (point, prev, otherPoint) {
+    getPoint: function(point, prev, otherPoint) {
         if (point > prev) {
             point = otherPoint + (point - prev);
-        }
-        else {
+        } else {
             point = otherPoint - (prev - point);
         }
 
@@ -267,59 +265,53 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    getXYWidthHeight: function (x, y, prevX, prevY, oldPoints) {
-        if(oldPoints.pointsToMove == 'stretch-first') {
-            if(x > prevX) {
+    getXYWidthHeight: function(x, y, prevX, prevY, oldPoints) {
+        if (oldPoints.pointsToMove == 'stretch-first') {
+            if (x > prevX) {
                 oldPoints.x = oldPoints.x + (x - prevX);
                 oldPoints.width = oldPoints.width - (x - prevX);
-            }
-            else {
+            } else {
                 oldPoints.x = oldPoints.x - (prevX - x);
                 oldPoints.width = oldPoints.width + (prevX - x);
             }
-            
-            if(y > prevY) {
+
+            if (y > prevY) {
                 oldPoints.y = oldPoints.y + (y - prevY);
                 oldPoints.height = oldPoints.height - (y - prevY);
-            }
-            else {
+            } else {
                 oldPoints.y = oldPoints.y - (prevY - y);
                 oldPoints.height = oldPoints.height + (prevY - y);
             }
         }
 
-        if(oldPoints.pointsToMove == 'stretch-second') {
-            if(x > prevX) {
+        if (oldPoints.pointsToMove == 'stretch-second') {
+            if (x > prevX) {
                 oldPoints.width = oldPoints.width + (x - prevX);
-            }
-            else {
+            } else {
                 oldPoints.width = oldPoints.width - (prevX - x);
             }
-            
-            if(y < prevY) {
+
+            if (y < prevY) {
                 oldPoints.y = oldPoints.y + (y - prevY);
                 oldPoints.height = oldPoints.height - (y - prevY);
-            }
-            else {
+            } else {
                 oldPoints.y = oldPoints.y - (prevY - y);
                 oldPoints.height = oldPoints.height + (prevY - y);
             }
         }
 
-        if(oldPoints.pointsToMove == 'stretch-third') {
-            if(x > prevX) {
+        if (oldPoints.pointsToMove == 'stretch-third') {
+            if (x > prevX) {
                 oldPoints.x = oldPoints.x + (x - prevX);
                 oldPoints.width = oldPoints.width - (x - prevX);
-            }
-            else {
+            } else {
                 oldPoints.x = oldPoints.x - (prevX - x);
                 oldPoints.width = oldPoints.width + (prevX - x);
             }
-            
-            if(y < prevY) {
+
+            if (y < prevY) {
                 oldPoints.height = oldPoints.height + (y - prevY);
-            }
-            else {
+            } else {
                 oldPoints.height = oldPoints.height - (prevY - y);
             }
         }
@@ -329,7 +321,7 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    dragShape: function (x, y) {
+    dragShape: function(x, y) {
         if (!this.global.ismousedown) return;
 
         tempContext.clearRect(0, 0, innerWidth, innerHeight);
@@ -350,7 +342,7 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    end: function () {
+    end: function() {
         if (!points.length) return;
 
         tempContext.clearRect(0, 0, innerWidth, innerHeight);
@@ -361,10 +353,11 @@ var dragHelper = {
 
     // -------------------------------------------------------------
 
-    dragAllPaths: function (x, y) {
+    dragAllPaths: function(x, y) {
         var g = this.global,
             prevX = g.prevX,
-            prevY = g.prevY, p, point,
+            prevY = g.prevY,
+            p, point,
             length = points.length,
             getPoint = this.getPoint,
             i = g.startingIndex;
@@ -374,82 +367,96 @@ var dragHelper = {
             point = p[1];
 
             if (p[0] === 'line') {
-                points[i] = [p[0], [
-                    getPoint(x, prevX, point[0]),
-                    getPoint(y, prevY, point[1]),
-                    getPoint(x, prevX, point[2]),
-                    getPoint(y, prevY, point[3])
-                ], p[2]];
+                points[i] = [p[0],
+                    [
+                        getPoint(x, prevX, point[0]),
+                        getPoint(y, prevY, point[1]),
+                        getPoint(x, prevX, point[2]),
+                        getPoint(y, prevY, point[3])
+                    ], p[2]
+                ];
 
             }
-            
+
             if (p[0] === 'text') {
-                points[i] = [p[0], [
-                    point[0],
-                    getPoint(x, prevX, point[1]),
-                    getPoint(y, prevY, point[2])
-                ], p[2]];
+                points[i] = [p[0],
+                    [
+                        point[0],
+                        getPoint(x, prevX, point[1]),
+                        getPoint(y, prevY, point[2])
+                    ], p[2]
+                ];
             }
 
             if (p[0] === 'arc') {
-                points[i] = [p[0], [
-                    getPoint(x, prevX, point[0]),
-                    getPoint(y, prevY, point[1]),
-                    point[2],
-                    point[3],
-                    point[4]
-                ], p[2]];
+                points[i] = [p[0],
+                    [
+                        getPoint(x, prevX, point[0]),
+                        getPoint(y, prevY, point[1]),
+                        point[2],
+                        point[3],
+                        point[4]
+                    ], p[2]
+                ];
             }
 
             if (p[0] === 'rect') {
-                points[i] = [p[0], [
-                    getPoint(x, prevX, point[0]),
-                    getPoint(y, prevY, point[1]),
-                    point[2],
-                    point[3]
-                ], p[2]];
+                points[i] = [p[0],
+                    [
+                        getPoint(x, prevX, point[0]),
+                        getPoint(y, prevY, point[1]),
+                        point[2],
+                        point[3]
+                    ], p[2]
+                ];
             }
 
             if (p[0] === 'image') {
-                points[i] = [p[0], [
-                    point[0],
-                    getPoint(x, prevX, point[1]),
-                    getPoint(y, prevY, point[2]),
-                    point[3],
-                    point[4],
-                    point[5]
-                ], p[2]];
+                points[i] = [p[0],
+                    [
+                        point[0],
+                        getPoint(x, prevX, point[1]),
+                        getPoint(y, prevY, point[2]),
+                        point[3],
+                        point[4],
+                        point[5]
+                    ], p[2]
+                ];
             }
 
             if (p[0] === 'quadratic') {
-                points[i] = [p[0], [
-                    getPoint(x, prevX, point[0]),
-                    getPoint(y, prevY, point[1]),
-                    getPoint(x, prevX, point[2]),
-                    getPoint(y, prevY, point[3]),
-                    getPoint(x, prevX, point[4]),
-                    getPoint(y, prevY, point[5])
-                ], p[2]];
+                points[i] = [p[0],
+                    [
+                        getPoint(x, prevX, point[0]),
+                        getPoint(y, prevY, point[1]),
+                        getPoint(x, prevX, point[2]),
+                        getPoint(y, prevY, point[3]),
+                        getPoint(x, prevX, point[4]),
+                        getPoint(y, prevY, point[5])
+                    ], p[2]
+                ];
             }
 
             if (p[0] === 'bezier') {
-                points[i] = [p[0], [
-                    getPoint(x, prevX, point[0]),
-                    getPoint(y, prevY, point[1]),
-                    getPoint(x, prevX, point[2]),
-                    getPoint(y, prevY, point[3]),
-                    getPoint(x, prevX, point[4]),
-                    getPoint(y, prevY, point[5]),
-                    getPoint(x, prevX, point[6]),
-                    getPoint(y, prevY, point[7])
-                ], p[2]];
+                points[i] = [p[0],
+                    [
+                        getPoint(x, prevX, point[0]),
+                        getPoint(y, prevY, point[1]),
+                        getPoint(x, prevX, point[2]),
+                        getPoint(y, prevY, point[3]),
+                        getPoint(x, prevX, point[4]),
+                        getPoint(y, prevY, point[5]),
+                        getPoint(x, prevX, point[6]),
+                        getPoint(y, prevY, point[7])
+                    ], p[2]
+                ];
             }
         }
     },
 
     // -------------------------------------------------------------
 
-    dragLastPath: function (x, y) {
+    dragLastPath: function(x, y) {
         var g = this.global,
             prevX = g.prevX,
             prevY = g.prevY,
@@ -473,7 +480,7 @@ var dragHelper = {
 
             points[points.length - 1] = [p[0], point, p[2]];
         }
-        
+
         if (p[0] === 'text') {
 
             if (g.pointsToMove === 'head' || isMoveAllPoints) {

@@ -1,8 +1,18 @@
 # [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) / [LIVE Demo](https://www.webrtc-experiment.com/Canvas-Designer/) - [API Referencee](https://github.com/muaz-khan/Canvas-Designer#api-reference)
 
+[![npm](https://img.shields.io/npm/v/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![downloads](https://img.shields.io/npm/dm/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![Build Status: Linux](https://travis-ci.org/muaz-khan/Canvas-Designer.png?branch=master)](https://travis-ci.org/muaz-khan/Canvas-Designer)
+
 > "Collaborative" [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) i.e. Canvas-Drawing tool allows you draw bezier/quadratic curves, rectangles, circles and lines. You can also set strokes, back/forth colors and much more. You can draw using pencils, erase drawing, type texts etc. You can [easily add your own tools](https://www.webrtc-experiment.com/Canvas-Designer/Help/#contribute).
 
-This specialty of this drawing-tool is that, it generates Canvas2D code for you; so simply draw and get the code! That code can be used in any javascript Canvas2D application.
+**You can check all releases here:**
+
+* https://github.com/muaz-khan/Canvas-Designer/releases
+
+The specialty of this drawing-tool is that, it generates Canvas2D code for you; so simply draw and get the code! That code can be used in any javascript Canvas2D application.
+
+**You can submit issues here:**
+
+* https://github.com/muaz-khan/Canvas-Designer/issues
 
 Also, you can collaborate your drawing with up to 15 users; and everything is synced from all users. So, if you draw a line and your friend-A draws quadratic curve and friend-B draws rectangle then everything will be synced among all users!
 
@@ -16,7 +26,7 @@ You can use [`CanvasDesigner.setSelected`](https://github.com/muaz-khan/Canvas-D
 
 1. `line` --- to draw straight lines
 2. `pencil` --- to write/draw shapes
-3. `dragSingle` --- to drag/move last shape
+3. `dragSingle` --- to drag/ove and especially **resize** last selected shape
 4. `dragMultiple` --- to drag/move all shapes
 5. `eraser` --- to erase/clear specific portion of shapes
 6. `rectangle` --- to draw rectangles
@@ -25,6 +35,17 @@ You can use [`CanvasDesigner.setSelected`](https://github.com/muaz-khan/Canvas-D
 9. `quadratic` --- to draw quadratic curves
 10. `text` --- to write texts
 11. `image` --- add external images
+
+The correct name for `dragSingle` should be: `drag-move-resize last-selected-shape`.
+
+The correct name for `dragMultiple` should be: `drag-move all-shapes`.
+
+**Upcoming** tools & features:
+
+1. `arrow` --- to draw arrows
+2. Set font-size for texts
+3. Set font-family for texts
+4. Resize all shapes at once (currently you can resize last selected shape only)
 
 # Features
 
@@ -39,15 +60,43 @@ You can use [`CanvasDesigner.setSelected`](https://github.com/muaz-khan/Canvas-D
 
 # How to Use
 
-<ol>
-    <li>Take all code from <a href="https://github.com/muaz-khan/Canvas-Designer">this link</a> and upload somewhere on your site.</li>
-    <li>Target directly will be having this file: <a href="https://github.com/muaz-khan/Canvas-Designer/blob/master/canvas-designer-widget.js">canvas-designer-widget.js</a>. Link this file in your HTML/PHP page.</li>
-    <li>
-        Use this command to append widget in your HTML page:<br>
-            
-        <code>CanvasDesigner.appendTo(document.documentElement);</code>
-    </li>
-</ol>
+1. Download/link `canvas-designer-widget.js` from [this github repository](https://github.com/muaz-khan/Canvas-Designer).
+2. Set `CanvasDesigner.widgetHtmlURL` and `CanvasDesigner.widgetJsURL` in your HTML file.
+3. Use this command to append widget in your HTML page:
+
+   `CanvasDesigner.appendTo(document.body);`
+
+E.g. (Please don't forget replacing `1.0.0` with latest version)
+
+```html
+<!-- 1st step -->
+<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.0/canvas-designer-widget.js"></script>
+
+<!-- 2nd step -->
+<script>
+// both links are mandatory
+// widget.html will internally use widget.js
+CanvasDesigner.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.0/widget.html'; // you can place this file anywhere
+CanvasDesigner.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.0/widget.js';     // you can place this file anywhere
+</script>
+
+<!-- 3rd i.e. last step -->
+<script>
+// <iframe> will be appended to "document.body"
+CanvasDesigner.appendTo(document.body);
+</script>
+```
+
+You can even download TAR:
+
+```
+mkdir Canvas-Designer && cd Canvas-Designer
+wget http://dl.webrtc-experiment.com/canvas-designer.tar.gz
+tar -zxvf canvas-designer.tar.gz
+ls -a
+```
+
+* For windows, use 7Zip or WinRAR to extract this: [canvas-designer.tar.gz](http://dl.webrtc-experiment.com/canvas-designer.tar.gz)
 
 # Complete Usage
 
@@ -98,6 +147,42 @@ CanvasDesigner.addSyncListener(function(data) {
 
 # API Reference
 
+## `widgetHtmlURL`
+
+You can place `widget.html` file anywhere on your site.
+
+```javascript
+CanvasDesigner.widgetHtmlURL = '/html-files/widget.html';
+```
+
+By default `widget.html` is placed in the same directory of `index.html`.
+
+```javascript
+// here is default value
+CanvasDesigner.widgetHtmlURL = 'widget.html';
+```
+
+Remember, `widget.html` is loaded using `<iframe>`.
+
+## `widgetJsURL`
+
+> **Note:** This file is **internally used** by `widget.html`.
+
+You can place `widget.html` file anywhere on your site.
+
+```javascript
+CanvasDesigner.widgetJsURL = '/js-files/widget.min.js';
+```
+
+By default `widget.min.js` is placed in the same directory of `index.html`.
+
+```javascript
+// here is default value
+CanvasDesigner.widgetJsURL = 'widget.min.js';
+```
+
+Remember, `widget.js` is loaded using `<iframe>`.
+
 ## `syncData`
 
 Pass array-of-points that are shared by remote users using socket.io or websockets or XMPP or WebRTC.
@@ -118,7 +203,7 @@ CanvasDesigner.addSyncListener(function(data) {
 
 ## `setSelected`
 
-This method allows you problematically select specific tools.
+This method allows you select specific tools.
 
 * See list of [all tools](https://github.com/muaz-khan/Canvas-Designer#built-in-tools)
 
@@ -146,6 +231,8 @@ CanvasDesigner is a widget; that widget should be appended to a DOM object. This
 ```javascript
 CanvasDesigner.appendTo(document.body || document.documentElement);
 ```
+
+The correct name for `appendTo` is: `append-iframe to target HTML-DOM-element`
 
 ## `destroy`
 
@@ -206,6 +293,19 @@ websocket.onopen = function() {
 };
 ```
 
+## `undo`
+
+You can either undo drawings by pressing `ctrl+z` on windows and `command+z` on Mac; however you can undo using `CanvasDesigner.undo` method as well:
+
+```javascript
+CanvasDesigner.undo(); // undo last shape
+
+// undo shape from specific index
+CanvasDesigner.undo(0);
+```
+
+`CanvasDesigner.pointsLength` shows number of shapes; and `CanvasDesigner.undo` accepts shape-index as well.
+
 # How to contribute?
 
 It is not too much complex to add new tools :) Its easy.
@@ -214,9 +314,7 @@ It is not too much complex to add new tools :) Its easy.
 
 # Demos
 
-A-to-zee all shapes, and animations on following page is created using canvas-designer:
-
-* http://muaz-khan.github.io/Everything/Canvas/
+* http://muaz-khan.github.io/Everything/Canvas/ (A-to-zee all shapes, and animations on this page is created using canvas-designer)
 * https://www.webrtc-experiment.com/Canvas-Designer/ (canvas-designer demo allows you draw shapes & get the code; additionally collaborate as well!)
 * Try a simple canvas2d animation demo: http://muaz-khan.github.io/Everything/Canvas/Experiments/Simple-HTML5-Canvas-Experiment/
 * Try many other canvas2d demos: http://muaz-khan.github.io/Everything/Canvas/Experiments/

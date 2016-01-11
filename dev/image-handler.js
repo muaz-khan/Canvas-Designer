@@ -1,8 +1,11 @@
 // -------------------------------------------------------------
-
-var lineHandler = {
+var imageHandler = {
 
     // -------------------------------------------------------------
+
+    lastImageURL: null,
+    lastImageIndex: 0,
+    images: [],
 
     ismousedown: false,
     prevX: 0,
@@ -10,7 +13,7 @@ var lineHandler = {
 
     // -------------------------------------------------------------
 
-    mousedown: function (e) {
+    mousedown: function(e) {
         var x = e.pageX - canvas.offsetLeft,
             y = e.pageY - canvas.offsetTop;
 
@@ -24,30 +27,30 @@ var lineHandler = {
 
     // -------------------------------------------------------------
 
-    mouseup: function (e) {
+    mouseup: function(e) {
         var x = e.pageX - canvas.offsetLeft,
             y = e.pageY - canvas.offsetTop;
 
         var t = this;
         if (t.ismousedown) {
-            points[points.length] = ['line', [t.prevX, t.prevY, x, y], drawHelper.getOptions()];
+            points[points.length] = ['image', [imageHandler.lastImageURL, t.prevX, t.prevY, x - t.prevX, y - t.prevY, imageHandler.lastImageIndex], drawHelper.getOptions()];
 
             t.ismousedown = false;
         }
+
     },
 
     // -------------------------------------------------------------
 
-    mousemove: function (e) {
+    mousemove: function(e) {
         var x = e.pageX - canvas.offsetLeft,
             y = e.pageY - canvas.offsetTop;
 
         var t = this;
-
         if (t.ismousedown) {
             tempContext.clearRect(0, 0, innerWidth, innerHeight);
 
-            drawHelper.line(tempContext, [t.prevX, t.prevY, x, y]);
+            drawHelper.image(tempContext, [imageHandler.lastImageURL, t.prevX, t.prevY, x - t.prevX, y - t.prevY, imageHandler.lastImageIndex]);
         }
     }
 

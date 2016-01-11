@@ -1,19 +1,4 @@
-﻿// -------------------------------------------------------------
-(function() {
-    var params = {},
-        r = /([^&=]+)=?([^&]*)/g;
-
-    function d(s) {
-        return decodeURIComponent(s.replace(/\+/g, ' '));
-    }
-
-    var match, search = window.location.search;
-    while (match = r.exec(search.substring(1)))
-        params[d(match[1])] = d(match[2]);
-
-    window.params = params;
-})();
-
+// -------------------------------------------------------------
 var tools = {
     line: true,
     pencil: true,
@@ -69,16 +54,15 @@ function setSelection(element, prop) {
         }
 
         /* Default: setting default selected shape!! */
-        if(params.selectedIcon) {
+        if (params.selectedIcon) {
             params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
-            if(params.selectedIcon === shape) {
+            if (params.selectedIcon === shape) {
                 is.set(params.selectedIcon);
             }
-        }
-        else is.set('Pencil');
+        } else is.set('Pencil');
 
         addEvent(context.canvas, 'click', function() {
-            
+
             dragHelper.global.startingIndex = 0;
 
             setSelection(this, shape);
@@ -91,17 +75,17 @@ function setSelection(element, prop) {
                 find('copy-last').checked = false;
             }
 
-            if(this.id === 'image-icon') {
+            if (this.id === 'image-icon') {
                 var selector = new FileSelector();
                 selector.selectSingleFile(function(file) {
-                    if(!file) return;
+                    if (!file) return;
 
                     var reader = new FileReader();
                     reader.onload = function(event) {
                         var image = new Image();
                         image.onload = function() {
                             var index = imageHandler.images.length;
-                            
+
                             imageHandler.lastImageURL = image.src;
                             imageHandler.lastImageIndex = index;
 

@@ -18,7 +18,7 @@ var arcHandler = {
 
     // -------------------------------------------------------------
 
-    mousedown: function (e) {
+    mousedown: function(e) {
         var g = this.global;
 
         var x = e.pageX - canvas.offsetLeft,
@@ -32,7 +32,7 @@ var arcHandler = {
 
     // -------------------------------------------------------------
 
-    mouseup: function (e) {
+    mouseup: function(e) {
         var g = this.global;
 
         var x = e.pageX - canvas.offsetLeft,
@@ -48,7 +48,8 @@ var arcHandler = {
                 g.isCircleDrawn = true;
                 g.isCircleEnded = false;
 
-                var c = (2 * Math.PI * radius) / 21, angle,
+                var c = (2 * Math.PI * radius) / 21,
+                    angle,
                     xx = prevX > x ? prevX - x : x - prevX,
                     yy = prevY > y ? prevY - y : y - prevY;
 
@@ -65,8 +66,7 @@ var arcHandler = {
                 arcRangeContainer.style.left = x + 'px';
 
                 arcRange.value = 2;
-            }
-            else if (g.isCircleDrawn && !g.isCircleEnded) {
+            } else if (g.isCircleDrawn && !g.isCircleEnded) {
                 this.end();
             }
         }
@@ -78,7 +78,7 @@ var arcHandler = {
 
     // -------------------------------------------------------------
 
-    mousemove: function (e) {
+    mousemove: function(e) {
         var g = this.global;
 
         var x = e.pageX - canvas.offsetLeft,
@@ -103,31 +103,31 @@ var arcHandler = {
 
     // -------------------------------------------------------------
 
-    fixAllPoints: function () {
+    fixAllPoints: function() {
         var toFixed = this.toFixed;
 
         for (var i = 0; i < points.length; i++) {
-            var p = points[i], point;
+            var p = points[i],
+                point;
             if (p[0] === 'arc') {
                 point = p[1];
-                points[i] = ['arc',
-                                [toFixed(point[0]), toFixed(point[1]), toFixed(point[2]), toFixed(point[3]), point[4]],
-                                p[2]
-                            ];
+                points[i] = ['arc', [toFixed(point[0]), toFixed(point[1]), toFixed(point[2]), toFixed(point[3]), point[4]],
+                    p[2]
+                ];
             }
         }
     },
 
     // -------------------------------------------------------------
 
-    init: function () {
+    init: function() {
         var markIsClockwise = find('is-clockwise'),
             g = this.global;
 
         g.arcRangeContainer = find('arc-range-container');
         g.arcRange = find('arc-range');
 
-        addEvent(markIsClockwise, 'change', function (e) {
+        addEvent(markIsClockwise, 'change', function(e) {
             g.isClockwise = markIsClockwise.checked;
 
             g.arcRange.value = arcHandler.toFixed(g.arcRange.value);
@@ -151,11 +151,12 @@ var arcHandler = {
 
     // -------------------------------------------------------------
 
-    arcRangeHandler: function (e) {
+    arcRangeHandler: function(e) {
         var g = arcHandler.global,
             arcRange = g.arcRange;
 
-        var key = e.keyCode, value = +arcRange.value;
+        var key = e.keyCode,
+            value = +arcRange.value;
         if (key == 39 || key == 40) arcRange.value = (value < 2 ? value : 1.98) + .02;
         if (key == 37 || key == 38) arcRange.value = (value > 0 ? value : .02) - .02;
 
@@ -165,10 +166,9 @@ var arcHandler = {
 
             if (p[0] === 'arc') {
                 var point = p[1];
-                points[points.length - 1] = ['arc',
-                                                [point[0], point[1], point[2], range, g.isClockwise ? 1 : 0],
-                                                p[2]
-                                            ];
+                points[points.length - 1] = ['arc', [point[0], point[1], point[2], range, g.isClockwise ? 1 : 0],
+                    p[2]
+                ];
 
                 drawHelper.redraw();
             }
@@ -177,13 +177,13 @@ var arcHandler = {
 
     // -------------------------------------------------------------
 
-    toFixed: function (input) {
+    toFixed: function(input) {
         return Number(input).toFixed(1);
     },
 
     // -------------------------------------------------------------
 
-    end: function () {
+    end: function() {
         var g = this.global;
 
         g.arcRangeContainer.style.display = 'none';

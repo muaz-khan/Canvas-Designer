@@ -1,11 +1,7 @@
 // -------------------------------------------------------------
-var imageHandler = {
+var rectHandler = {
 
     // -------------------------------------------------------------
-
-    lastImageURL: null,
-    lastImageIndex: 0,
-    images: [],
 
     ismousedown: false,
     prevX: 0,
@@ -13,12 +9,12 @@ var imageHandler = {
 
     // -------------------------------------------------------------
 
-    mousedown: function (e) {
+    mousedown: function(e) {
         var x = e.pageX - canvas.offsetLeft,
             y = e.pageY - canvas.offsetTop;
 
         var t = this;
-        
+
         t.prevX = x;
         t.prevY = y;
 
@@ -27,13 +23,13 @@ var imageHandler = {
 
     // -------------------------------------------------------------
 
-    mouseup: function (e) {
+    mouseup: function(e) {
         var x = e.pageX - canvas.offsetLeft,
             y = e.pageY - canvas.offsetTop;
 
         var t = this;
         if (t.ismousedown) {
-            points[points.length] = ['image', [imageHandler.lastImageURL, t.prevX, t.prevY, x - t.prevX, y - t.prevY, imageHandler.lastImageIndex], drawHelper.getOptions()];
+            points[points.length] = ['rect', [t.prevX, t.prevY, x - t.prevX, y - t.prevY], drawHelper.getOptions()];
 
             t.ismousedown = false;
         }
@@ -42,15 +38,15 @@ var imageHandler = {
 
     // -------------------------------------------------------------
 
-    mousemove: function (e) {
+    mousemove: function(e) {
         var x = e.pageX - canvas.offsetLeft,
             y = e.pageY - canvas.offsetTop;
-        
+
         var t = this;
         if (t.ismousedown) {
             tempContext.clearRect(0, 0, innerWidth, innerHeight);
 
-            drawHelper.image(tempContext, [imageHandler.lastImageURL, t.prevX, t.prevY, x - t.prevX, y - t.prevY, imageHandler.lastImageIndex]);
+            drawHelper.rect(tempContext, [t.prevX, t.prevY, x - t.prevX, y - t.prevY]);
         }
     }
 
