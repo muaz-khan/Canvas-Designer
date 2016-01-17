@@ -16,6 +16,11 @@ textInput.onkeyup = function(e) {
     textInput.style.color = fillStyle == 'transparent' ? 'Black' : fillStyle;
 
     setTimeout(function() {
+        if (!!textInput.select && typeof textInput.select === 'function') {
+            textInput.select();
+            return;
+        }
+
         textInput.focus();
     }, 200);
 };
@@ -69,6 +74,11 @@ var textHandler = {
         textInput.style.color = fillStyle == 'transparent' ? 'Black' : fillStyle;
 
         setTimeout(function() {
+            if (!!textInput.select && typeof textInput.select === 'function') {
+                textInput.select();
+                return;
+            }
+
             textInput.focus();
         }, 200);
     },

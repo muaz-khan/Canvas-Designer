@@ -1,4 +1,4 @@
-// Last time updated at Monday, January 11th, 2016, 1:38:19 PM 
+// Last time updated at Sunday, January 17th, 2016, 6:32:30 PM 
 
 // _______________
 // Canvas-Designer
@@ -533,7 +533,8 @@
         arc: true,
         bezier: true,
         quadratic: true,
-        text: true
+        text: true,
+        image: true
     };
 
     if (params.tools) {
@@ -2088,6 +2089,11 @@
         textInput.style.color = fillStyle == 'transparent' ? 'Black' : fillStyle;
 
         setTimeout(function() {
+            if (!!textInput.select && typeof textInput.select === 'function') {
+                textInput.select();
+                return;
+            }
+
             textInput.focus();
         }, 200);
     };
@@ -2141,6 +2147,11 @@
             textInput.style.color = fillStyle == 'transparent' ? 'Black' : fillStyle;
 
             setTimeout(function() {
+                if (!!textInput.select && typeof textInput.select === 'function') {
+                    textInput.select();
+                    return;
+                }
+
                 textInput.focus();
             }, 200);
         },
