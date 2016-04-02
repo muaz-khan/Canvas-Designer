@@ -1,4 +1,4 @@
-// Last time updated: 2016-03-12 1:24:58 PM UTC
+// Last time updated: 2016-04-02 6:49:49 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -333,58 +333,58 @@
 
             this.prevProps = null;
         },
-        forLoop: 'for(i; i < length; i++) {\n' + '\t p = points[i];\n' + '\t point = p[1];\n' + '\t context.beginPath();\n\n'
+        forLoop: 'for(i; i < length; i++) {\n' + '    p = points[i];\n' + '    point = p[1];\n' + '    context.beginPath();\n\n'
 
         // globals
-            + '\t if(p[2]) { \n' + '\t\t context.lineWidth = p[2][0];\n' + '\t\t context.strokeStyle = p[2][1];\n' + '\t\t context.fillStyle = p[2][2];\n'
+            + '    if(p[2]) { \n' + '       context.lineWidth = p[2][0];\n' + '       context.strokeStyle = p[2][1];\n' + '       context.fillStyle = p[2][2];\n'
 
-            + '\t\t context.globalAlpha = p[2][3];\n' + '\t\t context.globalCompositeOperation = p[2][4];\n' + '\t\t context.lineCap = p[2][5];\n' + '\t\t context.lineJoin = p[2][6];\n' + '\t\t context.font = p[2][7];\n' + '\t }\n\n'
+            + '       context.globalAlpha = p[2][3];\n' + '       context.globalCompositeOperation = p[2][4];\n' + '       context.lineCap = p[2][5];\n' + '       context.lineJoin = p[2][6];\n' + '       context.font = p[2][7];\n' + '    }\n\n'
 
         // line
 
-            + '\t if(p[0] === "line") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
+            + '    if(p[0] === "line") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
         // pencil
 
-            + '\t if(p[0] === "pencil") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
+            + '    if(p[0] === "pencil") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
         // text
 
-            + '\t if(p[0] === "text") { \n' + '\t\t context.fillText(point[0], point[1], point[2]);\n' + '\t }\n\n'
+            + '    if(p[0] === "text") { \n' + '       context.fillText(point[0], point[1], point[2]);\n' + '    }\n\n'
 
         // eraser
 
-            + '\t if(p[0] === "eraser") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
+            + '    if(p[0] === "eraser") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
         // arc
 
-            + '\t if(p[0] === "arc") context.arc(point[0], point[1], point[2], point[3], 0, point[4]); \n\n'
+            + '    if(p[0] === "arc") context.arc(point[0], point[1], point[2], point[3], 0, point[4]); \n\n'
 
         // rect
 
-            + '\t if(p[0] === "rect") {\n' + '\t\t context.strokeRect(point[0], point[1], point[2], point[3]);\n' + '\t\t context.fillRect(point[0], point[1], point[2], point[3]);\n'
+            + '    if(p[0] === "rect") {\n' + '       context.strokeRect(point[0], point[1], point[2], point[3]);\n' + '       context.fillRect(point[0], point[1], point[2], point[3]);\n'
 
-            + '\t }\n\n'
+            + '    }\n\n'
 
         // quadratic
 
-            + '\t if(p[0] === "quadratic") {\n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '\t }\n\n'
+            + '    if(p[0] === "quadratic") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '    }\n\n'
 
         // bezier
 
-            + '\t if(p[0] === "bezier") {\n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '\t }\n\n'
+            + '    if(p[0] === "bezier") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '    }\n\n'
 
         // end-fill
 
-            + '\t context.stroke();\n' + '\t context.fill();\n'
+            + '    context.stroke();\n' + '    context.fill();\n'
 
             + '}',
 
-        strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '\t if(lineWidth) { \n' + '\t\t context.globalAlpha = globalAlpha;\n' + '\t\t context.globalCompositeOperation = globalCompositeOperation;\n' + '\t\t context.lineCap = lineCap;\n' + '\t\t context.lineJoin = lineJoin;\n'
+        strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '    if(lineWidth) { \n' + '       context.globalAlpha = globalAlpha;\n' + '       context.globalCompositeOperation = globalCompositeOperation;\n' + '       context.lineCap = lineCap;\n' + '       context.lineJoin = lineJoin;\n'
 
-            + '\t\t context.lineWidth = lineWidth;\n' + '\t\t context.strokeStyle = strokeStyle;\n' + '\t\t context.fillStyle = fillStyle;\n' + '\t\t context.font = font;\n' + '\t } \n\n'
+            + '       context.lineWidth = lineWidth;\n' + '       context.strokeStyle = strokeStyle;\n' + '       context.fillStyle = fillStyle;\n' + '       context.font = font;\n' + '    } \n\n'
 
-            + '\t context.stroke();\n' + '\t context.fill();\n'
+            + '    context.stroke();\n' + '    context.fill();\n'
 
             + '}',
         strokeOrFill: function(p) {
@@ -487,11 +487,37 @@
         var selected = document.getElementsByClassName('selected-shape')[0];
         if (selected) selected.className = selected.className.replace(/selected-shape/g, '');
 
+        if (!element.className) {
+            element.className = '';
+        }
+
         element.className += ' selected-shape';
     }
 
-    (function() {
+    /* Default: setting default selected shape!! */
+    is.set(window.selectedIcon);
 
+    window.addEventListener('load', function() {
+        var toolBox = document.getElementById('tool-box');
+        var canvasElements = toolBox.getElementsByTagName('canvas');
+        var shape = window.selectedIcon.toLowerCase();
+
+
+        var firstMatch;
+        for (var i = 0; i < canvasElements.length; i++) {
+            if (!firstMatch && (canvasElements[i].id || '').indexOf(shape) !== -1) {
+                firstMatch = canvasElements[i];
+            }
+        }
+        if (!firstMatch) {
+            window.selectedIcon = 'Pencil';
+            firstMatch = document.getElementById('pencil-icon');
+        }
+
+        setSelection(firstMatch, window.selectedIcon);
+    }, false);
+
+    (function() {
         var cache = {};
 
         var lineCapSelect = find('lineCap-select');
@@ -508,14 +534,6 @@
             if (shape === 'Pencil') {
                 lineCap = lineJoin = 'round';
             }
-
-            /* Default: setting default selected shape!! */
-            if (params.selectedIcon) {
-                params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
-                if (params.selectedIcon === shape) {
-                    is.set(params.selectedIcon);
-                }
-            } else is.set('Pencil');
 
             addEvent(context.canvas, 'click', function() {
                 if (textHandler.text.length) {
@@ -1029,7 +1047,6 @@
 
         addEvent(isShorten, 'change', common.updateTextArea);
         addEvent(isAbsolute, 'change', common.updateTextArea);
-
     })();
 
     function hideContainers() {
@@ -2558,6 +2575,8 @@
             if (points.length) {
                 points.length = points.length - 1;
                 drawHelper.redraw();
+
+                syncPoints(true);
             }
         }
 
@@ -2611,7 +2630,8 @@
     // scripts on this page directly touches DOM-elements
     // removing or altering anything may cause failures in the UI event handlers
     // it is used only to bring collaboration for canvas-surface
-    var lastPoint = [];
+    var lastPointIndex = 0;
+
     var selfId = (Math.random() * 10000).toString().replace('.', '');
 
     window.addEventListener('message', function(event) {
@@ -2629,6 +2649,7 @@
             if (index === -1) {
                 points.length = points.length - 1;
                 drawHelper.redraw();
+                syncPoints(true);
                 return;
             }
 
@@ -2641,15 +2662,13 @@
                 }
                 points = newPoints;
                 drawHelper.redraw();
+                syncPoints(true);
             }
             return;
         }
 
         if (event.data.syncPoints) {
-            window.parent.postMessage({
-                canvasDesignerSyncData: points,
-                sender: selfId
-            }, '*');
+            syncPoints(true);
             return;
         }
 
@@ -2658,26 +2677,44 @@
         if (event.data.sender && event.data.sender == selfId) return;
 
         // drawing is shared here (array of points)
-        points = event.data.canvasDesignerSyncData;
+        var d = event.data.canvasDesignerSyncData;
 
-        // to support two-way sharing
-        if (!lastPoint.length) {
-            lastPoint = points.join('');
+        if (d.startIndex !== 0) {
+            for (var i = 0; i < d.points.length; i++) {
+                points[i + d.startIndex] = d.points[i];
+            }
+        } else {
+            points = d.points;
         }
+
+        lastPointIndex = points.length;
 
         // redraw the <canvas> surfaces
         drawHelper.redraw(true);
     }, false);
 
-    function syncPoints() {
-        if (!lastPoint.length) {
-            lastPoint = points.join('');
+    function syncPoints(isSyncAll) {
+        if (isSyncAll) {
+            lastPointIndex = 0;
         }
 
-        if (points.join('') != lastPoint) {
-            syncData(points || []);
-            lastPoint = points.join('');
+        if (lastPointIndex == points.length) return;
+
+        var pointsToShare = [];
+        for (var i = lastPointIndex; i < points.length; i++) {
+            pointsToShare[i - lastPointIndex] = points[i];
         }
+
+        if (pointsToShare.length) {
+            syncData({
+                points: pointsToShare || [],
+                startIndex: lastPointIndex
+            });
+        }
+
+        if (!pointsToShare.length && points.length) return;
+
+        lastPointIndex = points.length;
     }
 
     function syncData(data) {

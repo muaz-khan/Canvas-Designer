@@ -322,58 +322,58 @@ var common = {
 
         this.prevProps = null;
     },
-    forLoop: 'for(i; i < length; i++) {\n' + '\t p = points[i];\n' + '\t point = p[1];\n' + '\t context.beginPath();\n\n'
+    forLoop: 'for(i; i < length; i++) {\n' + '    p = points[i];\n' + '    point = p[1];\n' + '    context.beginPath();\n\n'
 
     // globals
-        + '\t if(p[2]) { \n' + '\t\t context.lineWidth = p[2][0];\n' + '\t\t context.strokeStyle = p[2][1];\n' + '\t\t context.fillStyle = p[2][2];\n'
+        + '    if(p[2]) { \n' + '       context.lineWidth = p[2][0];\n' + '       context.strokeStyle = p[2][1];\n' + '       context.fillStyle = p[2][2];\n'
 
-        + '\t\t context.globalAlpha = p[2][3];\n' + '\t\t context.globalCompositeOperation = p[2][4];\n' + '\t\t context.lineCap = p[2][5];\n' + '\t\t context.lineJoin = p[2][6];\n' + '\t\t context.font = p[2][7];\n' + '\t }\n\n'
+        + '       context.globalAlpha = p[2][3];\n' + '       context.globalCompositeOperation = p[2][4];\n' + '       context.lineCap = p[2][5];\n' + '       context.lineJoin = p[2][6];\n' + '       context.font = p[2][7];\n' + '    }\n\n'
 
     // line
 
-        + '\t if(p[0] === "line") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
+        + '    if(p[0] === "line") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
     // pencil
 
-        + '\t if(p[0] === "pencil") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
+        + '    if(p[0] === "pencil") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
     // text
 
-        + '\t if(p[0] === "text") { \n' + '\t\t context.fillText(point[0], point[1], point[2]);\n' + '\t }\n\n'
+        + '    if(p[0] === "text") { \n' + '       context.fillText(point[0], point[1], point[2]);\n' + '    }\n\n'
 
     // eraser
 
-        + '\t if(p[0] === "eraser") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
+        + '    if(p[0] === "eraser") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
     // arc
 
-        + '\t if(p[0] === "arc") context.arc(point[0], point[1], point[2], point[3], 0, point[4]); \n\n'
+        + '    if(p[0] === "arc") context.arc(point[0], point[1], point[2], point[3], 0, point[4]); \n\n'
 
     // rect
 
-        + '\t if(p[0] === "rect") {\n' + '\t\t context.strokeRect(point[0], point[1], point[2], point[3]);\n' + '\t\t context.fillRect(point[0], point[1], point[2], point[3]);\n'
+        + '    if(p[0] === "rect") {\n' + '       context.strokeRect(point[0], point[1], point[2], point[3]);\n' + '       context.fillRect(point[0], point[1], point[2], point[3]);\n'
 
-        + '\t }\n\n'
+        + '    }\n\n'
 
     // quadratic
 
-        + '\t if(p[0] === "quadratic") {\n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '\t }\n\n'
+        + '    if(p[0] === "quadratic") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '    }\n\n'
 
     // bezier
 
-        + '\t if(p[0] === "bezier") {\n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '\t }\n\n'
+        + '    if(p[0] === "bezier") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '    }\n\n'
 
     // end-fill
 
-        + '\t context.stroke();\n' + '\t context.fill();\n'
+        + '    context.stroke();\n' + '    context.fill();\n'
 
         + '}',
 
-    strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '\t if(lineWidth) { \n' + '\t\t context.globalAlpha = globalAlpha;\n' + '\t\t context.globalCompositeOperation = globalCompositeOperation;\n' + '\t\t context.lineCap = lineCap;\n' + '\t\t context.lineJoin = lineJoin;\n'
+    strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '    if(lineWidth) { \n' + '       context.globalAlpha = globalAlpha;\n' + '       context.globalCompositeOperation = globalCompositeOperation;\n' + '       context.lineCap = lineCap;\n' + '       context.lineJoin = lineJoin;\n'
 
-        + '\t\t context.lineWidth = lineWidth;\n' + '\t\t context.strokeStyle = strokeStyle;\n' + '\t\t context.fillStyle = fillStyle;\n' + '\t\t context.font = font;\n' + '\t } \n\n'
+        + '       context.lineWidth = lineWidth;\n' + '       context.strokeStyle = strokeStyle;\n' + '       context.fillStyle = fillStyle;\n' + '       context.font = font;\n' + '    } \n\n'
 
-        + '\t context.stroke();\n' + '\t context.fill();\n'
+        + '    context.stroke();\n' + '    context.fill();\n'
 
         + '}',
     strokeOrFill: function(p) {

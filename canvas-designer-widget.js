@@ -30,7 +30,7 @@ var CanvasDesigner = (function() {
         if(!event.data) return;
 
         if (!!event.data.canvasDesignerSyncData) {
-            CanvasDesigner.pointsLength = event.data.canvasDesignerSyncData.length;
+            CanvasDesigner.pointsLength = event.data.canvasDesignerSyncData.points.length;
             syncDataListener(event.data.canvasDesignerSyncData);
         }
 

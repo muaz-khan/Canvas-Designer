@@ -133,6 +133,8 @@ function onkeyup(e) {
         if (points.length) {
             points.length = points.length - 1;
             drawHelper.redraw();
+
+            syncPoints(true);
         }
     }
 

@@ -129,9 +129,15 @@
 		    margin-top: 0;
 		    border-top:0;
 		}
-		.selected-shape, .tool-box canvas:hover
+		.tool-box canvas:hover
 		{
-		    box-shadow: inset 0 0 10px rgba(0, 0, 0, .1);
+		    box-shadow: none;
+    		background: rgb(255, 247, 103);
+		}
+		.selected-shape
+		{
+		    box-shadow: inset 0px 0px 4px 1px rgb(193, 164, 19)!important;
+    		background: rgb(255, 247, 103)!important;
 		}
 		/* surface */
 		.preview-panel
@@ -334,7 +340,7 @@
 		<canvas id="drag-last-path" width="40" height="40"></canvas>
 		<canvas id="drag-all-paths" width="40" height="40"></canvas>
 
-		<canvas id="line" class="selected-shape" width="40" height="40"></canvas>
+		<canvas id="line" width="40" height="40"></canvas>
 		<canvas id="arc" width="40" height="40"></canvas>
 		<canvas id="rectangle" width="40" height="40"></canvas>
 		<canvas id="quadratic-curve" width="40" height="40"></canvas>
@@ -494,6 +500,14 @@
 
 		    window.params = params;
 		})();
+
+		window.selectedIcon = params.selectedIcon;
+
+		if (window.selectedIcon) {
+            window.selectedIcon = window.selectedIcon.split('')[0].toUpperCase() + window.selectedIcon.replace(window.selectedIcon.split('').shift(1), '');
+        } else {
+        	window.selectedIcon = 'Pencil';
+        }
 
 		var script = document.createElement('script');
 		script.src = params.widgetJsURL;

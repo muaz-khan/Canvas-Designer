@@ -25,11 +25,37 @@ function setSelection(element, prop) {
     var selected = document.getElementsByClassName('selected-shape')[0];
     if (selected) selected.className = selected.className.replace(/selected-shape/g, '');
 
+    if (!element.className) {
+        element.className = '';
+    }
+
     element.className += ' selected-shape';
 }
 
-(function() {
+/* Default: setting default selected shape!! */
+is.set(window.selectedIcon);
 
+window.addEventListener('load', function() {
+    var toolBox = document.getElementById('tool-box');
+    var canvasElements = toolBox.getElementsByTagName('canvas');
+    var shape = window.selectedIcon.toLowerCase();
+
+
+    var firstMatch;
+    for (var i = 0; i < canvasElements.length; i++) {
+        if (!firstMatch && (canvasElements[i].id || '').indexOf(shape) !== -1) {
+            firstMatch = canvasElements[i];
+        }
+    }
+    if (!firstMatch) {
+        window.selectedIcon = 'Pencil';
+        firstMatch = document.getElementById('pencil-icon');
+    }
+
+    setSelection(firstMatch, window.selectedIcon);
+}, false);
+
+(function() {
     var cache = {};
 
     var lineCapSelect = find('lineCap-select');
@@ -46,14 +72,6 @@ function setSelection(element, prop) {
         if (shape === 'Pencil') {
             lineCap = lineJoin = 'round';
         }
-
-        /* Default: setting default selected shape!! */
-        if (params.selectedIcon) {
-            params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
-            if (params.selectedIcon === shape) {
-                is.set(params.selectedIcon);
-            }
-        } else is.set('Pencil');
 
         addEvent(context.canvas, 'click', function() {
             if (textHandler.text.length) {
@@ -567,7 +585,6 @@ function setSelection(element, prop) {
 
     addEvent(isShorten, 'change', common.updateTextArea);
     addEvent(isAbsolute, 'change', common.updateTextArea);
-
 })();
 
 function hideContainers() {

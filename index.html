@@ -13,7 +13,7 @@
 </head>
 <body>
 <script src="canvas-designer-widget.js"></script>
-<script src="https://rtcmulticonnection.herokuapp.com/RTCMultiConnection.min.js"></script>
+<script src="https://cdn.webrtc-experiment.com/rmc3.min.js"></script>
 
 <!-- socket.io for signaling -->
 <script src="https://cdn.webrtc-experiment.com/socket.io.js"></script>
@@ -80,7 +80,7 @@ input {
 <div id="widget-container" style="position: fixed;bottom: 0;right: 20%;left: 20%;height: 100%;border: 1px solid black; border-top:0; border-bottom: 0;"></div>
 
 <div id="action-controls" style="width: 19%; padding: 1%;position: absolute;left:0;">
-    <h2>Select Icons</h2>
+    <h2>Select Tools</h2>
     <input type="checkbox" id="pencil" checked>
     <label for="pencil">pencil</label><br>
     
@@ -191,6 +191,14 @@ input {
 </div>
 
 <script>
+document.getElementById('room-id').onkeyup = document.getElementById('room-id').onblur = function() {
+    localStorage.setItem('canvas-designer-roomid', this.value);
+};
+
+if(localStorage.getItem('canvas-designer-roomid')) {
+    document.getElementById('room-id').value = localStorage.getItem('canvas-designer-roomid');
+}
+
 document.getElementById('open-room').onclick = function() {
     var roomid = document.getElementById('room-id').value;
     if(!roomid.length) return alert('Please enter roomid.');
@@ -265,6 +273,7 @@ connection.onmessage = function(event) {
 <script>
 // you can place widget.html anywhere
 CanvasDesigner.widgetHTML = 'widget.html';
+CanvasDesigner.widgetJsURL = 'widget.min.js'
 
 CanvasDesigner.addSyncListener(function(data) {
     connection.send(data);
