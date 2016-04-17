@@ -1,4 +1,7 @@
-# [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) / [LIVE Demo](https://www.webrtc-experiment.com/Canvas-Designer/) - [API Referencee](https://github.com/muaz-khan/Canvas-Designer#api-reference)
+# [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) / [API Referencee](https://github.com/muaz-khan/Canvas-Designer#api-reference)
+
+* Main demo: https://www.webrtc-experiment.com/Canvas-Designer/
+* Multiple designers demo: https://www.webrtc-experiment.com/Canvas-Designer/multiple.html
 
 [![npm](https://img.shields.io/npm/v/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![downloads](https://img.shields.io/npm/dm/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![Build Status: Linux](https://travis-ci.org/muaz-khan/Canvas-Designer.png?branch=master)](https://travis-ci.org/muaz-khan/Canvas-Designer)
 
@@ -22,7 +25,7 @@ Also, you can collaborate your drawing with up to 15 users; and everything is sy
 
 # Built-in tools
 
-You can use [`CanvasDesigner.setSelected`](https://github.com/muaz-khan/Canvas-Designer#setselected) or [`CanvasDesigner.setTools`](https://github.com/muaz-khan/Canvas-Designer#settools) for below tools.
+You can use [`designer.setSelected`](https://github.com/muaz-khan/Canvas-Designer#setselected) or [`designer.setTools`](https://github.com/muaz-khan/Canvas-Designer#settools) for below tools.
 
 1. `line` --- to draw straight lines
 2. `pencil` --- to write/draw shapes
@@ -55,35 +58,41 @@ The correct name for `dragMultiple` should be: `drag-move all-shapes`.
 
    Red transparent small circles helps you understand how to resize.
 
-4. Undo drawings using `ctrl+z` keys
+4. Undo drawings using `ctrl+z` keys (undo all shapes, undo last 10 or specific shapes, undo range of shapes or undo last shape)
 5. Drag/move single or all the shapes without affecting any single coordinate
+
+More importantly, you can use unlimited designers on a single page. Each will have its own surface and its own tools.
 
 # How to Use
 
 1. Download/link `canvas-designer-widget.js` from [this github repository](https://github.com/muaz-khan/Canvas-Designer).
-2. Set `CanvasDesigner.widgetHtmlURL` and `CanvasDesigner.widgetJsURL` in your HTML file.
+2. Set `designer.widgetHtmlURL` and `designer.widgetJsURL` in your HTML file.
 3. Use this command to append widget in your HTML page:
 
-   `CanvasDesigner.appendTo(document.body);`
+   `var designer = new CanvasDesigner();`
+
+   `designer.appendTo(document.body);`
 
 E.g. (Please don't forget replacing `1.0.0` with latest version)
 
 ```html
 <!-- 1st step -->
-<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.2/canvas-designer-widget.js"></script>
+<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.3/canvas-designer-widget.js"></script>
 
 <!-- 2nd step -->
 <script>
+var designer = new CanvasDesigner();
+
 // both links are mandatory
 // widget.html will internally use widget.js
-CanvasDesigner.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.2/widget.html'; // you can place this file anywhere
-CanvasDesigner.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.2/widget.js';     // you can place this file anywhere
+designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.3/widget.html'; // you can place this file anywhere
+designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.3/widget.js';     // you can place this file anywhere
 </script>
 
 <!-- 3rd i.e. last step -->
 <script>
 // <iframe> will be appended to "document.body"
-CanvasDesigner.appendTo(document.body);
+designer.appendTo(document.body);
 </script>
 ```
 
@@ -101,34 +110,36 @@ ls -a
 # Complete Usage
 
 ```javascript
+var designer = new CanvasDesigner();
+
 websocket.onmessage = function(event) {
-    CanvasDesigner.syncData( JSON.parse(event.data) );
+    designer.syncData( JSON.parse(event.data) );
 };
 
-CanvasDesigner.addSyncListener(function(data) {
+designer.addSyncListener(function(data) {
     websocket.send(JSON.stringify(data));
 });
 
-CanvasDesigner.setSelected('pencil');
+designer.setSelected('pencil');
 
-CanvasDesigner.setTools({
+designer.setTools({
     pencil: true,
     text: true
 });
 
-CanvasDesigner.appendTo(document.documentElement);
+designer.appendTo(document.documentElement);
 ```
 
-It is having `CanvasDesigner.destroy()` method as well.
+It is having `designer.destroy()` method as well.
 
 # Use [WebRTC](http://www.rtcmulticonnection.org/docs/)!
 
 ```javascript
 webrtc.onmessage = function(event) {
-    CanvasDesigner.syncData( event.data );
+    designer.syncData( event.data );
 };
 
-CanvasDesigner.addSyncListener(function(data) {
+designer.addSyncListener(function(data) {
     webrtc.send(data);
 });
 ```
@@ -137,10 +148,10 @@ CanvasDesigner.addSyncListener(function(data) {
 
 ```javascript
 socket.on('message', function(data) {
-    CanvasDesigner.syncData( data );
+    designer.syncData( data );
 });
 
-CanvasDesigner.addSyncListener(function(data) {
+designer.addSyncListener(function(data) {
     socket.emit('message', data);
 });
 ```
@@ -152,14 +163,14 @@ CanvasDesigner.addSyncListener(function(data) {
 You can place `widget.html` file anywhere on your site.
 
 ```javascript
-CanvasDesigner.widgetHtmlURL = '/html-files/widget.html';
+designer.widgetHtmlURL = '/html-files/widget.html';
 ```
 
 By default `widget.html` is placed in the same directory of `index.html`.
 
 ```javascript
 // here is default value
-CanvasDesigner.widgetHtmlURL = 'widget.html';
+designer.widgetHtmlURL = 'widget.html';
 ```
 
 Remember, `widget.html` is loaded using `<iframe>`.
@@ -171,14 +182,14 @@ Remember, `widget.html` is loaded using `<iframe>`.
 You can place `widget.html` file anywhere on your site.
 
 ```javascript
-CanvasDesigner.widgetJsURL = '/js-files/widget.min.js';
+designer.widgetJsURL = '/js-files/widget.min.js';
 ```
 
 By default `widget.min.js` is placed in the same directory of `index.html`.
 
 ```javascript
 // here is default value
-CanvasDesigner.widgetJsURL = 'widget.min.js';
+designer.widgetJsURL = 'widget.min.js';
 ```
 
 Remember, `widget.js` is loaded using `<iframe>`.
@@ -188,7 +199,7 @@ Remember, `widget.js` is loaded using `<iframe>`.
 Pass array-of-points that are shared by remote users using socket.io or websockets or XMPP or WebRTC.
 
 ```javascript
-CanvasDesigner.syncData(arrayOfPoints);
+designer.syncData(arrayOfPoints);
 ```
 
 ## `addSyncListener`
@@ -196,8 +207,8 @@ CanvasDesigner.syncData(arrayOfPoints);
 This callback is invoked as soon as something new is drawn. An array-of-points is passed over this function. That array MUST be shared with remote users for collaboration.
 
 ```javascript
-CanvasDesigner.addSyncListener(function(data) {
-    websocket.send(JSON.stringify(data));
+designer.addSyncListener(function(data) {
+    designer.send(JSON.stringify(data));
 });
 ```
 
@@ -208,7 +219,7 @@ This method allows you select specific tools.
 * See list of [all tools](https://github.com/muaz-khan/Canvas-Designer#built-in-tools)
 
 ```javascript
-CanvasDesigner.setSelected('rectangle');
+designer.setSelected('rectangle');
 ```
 
 ## `setTools`
@@ -218,7 +229,7 @@ This method allows you choose between tools that **should be displayed** in the 
 * See list of [all tools](https://github.com/muaz-khan/Canvas-Designer#built-in-tools)
 
 ```javascript
-CanvasDesigner.setTools({
+designer.setTools({
     pencil: true,
     text: true
 });
@@ -229,7 +240,7 @@ CanvasDesigner.setTools({
 CanvasDesigner is a widget; that widget should be appended to a DOM object. This method allows you pass `<body>` or any other HTMLDOMElement.
 
 ```javascript
-CanvasDesigner.appendTo(document.body || document.documentElement);
+designer.appendTo(document.body || document.documentElement);
 ```
 
 The correct name for `appendTo` is: `append-iframe to target HTML-DOM-element`
@@ -239,7 +250,7 @@ The correct name for `appendTo` is: `append-iframe to target HTML-DOM-element`
 If you want to remove the widget from your HTMLDOMElement.
 
 ```javascript
-CanvasDesigner.destroy();
+designer.destroy();
 ```
 
 ## `toDataURL`
@@ -247,26 +258,26 @@ CanvasDesigner.destroy();
 Get data-URL of your drawings! 
 
 ```javascript
-CanvasDesigner.toDataURL('image/png', function(dataURL) {
+designer.toDataURL('image/png', function(dataURL) {
     window.open(dataURL);
 });
 ```
 
 ## `sync`
 
-You can manually sync drawings by invoking `CanvasDesigner.sync` method:
+You can manually sync drawings by invoking `designer.sync` method:
 
 ```javascript
-CanvasDesigner.sync();
+designer.sync();
 ```
 
 Here is a real usecase:
 
 ```javascript
 webrtcDataChannel.onopen = function() {
-    if(CanvasDesigner.pointsLength > 0) {
+    if(designer.pointsLength > 0) {
         // you seems having data to be synced with new user!
-        CanvasDesigner.sync();
+        designer.sync();
     }
 };
 ```
@@ -277,7 +288,7 @@ Each shape is considered as a `point`. This value allows you check number of sha
 
 ```javascript
 (function looper() {
-    document.getElementById('number-of-shapes').inenrHTML = CanvasDesigner.pointsLength;
+    document.getElementById('number-of-shapes').inenrHTML = designer.pointsLength;
     setTimeout(looper, 1000);
 })();
 ```
@@ -286,25 +297,34 @@ Or a real usage:
 
 ```javascript
 websocket.onopen = function() {
-    if(CanvasDesigner.pointsLength > 0) {
+    if(designer.pointsLength > 0) {
         // you seems having data to be synced with existing users!
-        CanvasDesigner.sync();
+        designer.sync();
     }
 };
 ```
 
 ## `undo`
 
-You can either undo drawings by pressing `ctrl+z` on windows and `command+z` on Mac; however you can undo using `CanvasDesigner.undo` method as well:
+You can either undo drawings by pressing `ctrl+z` on windows and `command+z` on Mac; however you can undo using `designer.undo` method as well:
 
 ```javascript
-CanvasDesigner.undo(); // undo last shape
+designer.undo();   // undo last shape
+designer.undo(-1); // undo last shape
 
 // undo shape from specific index
-CanvasDesigner.undo(0);
+designer.undo(0);
+
+// undo all shapes
+designer.undo('all');
+
+// undo last 10 shapes
+designer.undo({
+    numberOfLastShapes: 10
+})
 ```
 
-`CanvasDesigner.pointsLength` shows number of shapes; and `CanvasDesigner.undo` accepts shape-index as well.
+`designer.pointsLength` shows number of shapes; and `designer.undo` accepts shape-index as well.
 
 # How to contribute?
 

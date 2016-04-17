@@ -3,20 +3,46 @@
 // it is used only to bring collaboration for canvas-surface
 var lastPointIndex = 0;
 
-var selfId = (Math.random() * 10000).toString().replace('.', '');
+var uid;
 
 window.addEventListener('message', function(event) {
     if (!event.data) return;
+
+    if (!uid) {
+        uid = event.data.uid;
+    }
+
     if (event.data.genDataURL) {
-        var dataURL = context.canvas.toDataURL(event.data.format);
+        var dataURL = context.canvas.toDataURL(event.data.format, 1);
         window.parent.postMessage({
-            dataURL: dataURL
+            dataURL: dataURL,
+            uid: uid
         }, '*');
         return;
     }
 
     if (event.data.undo && points.length) {
         var index = event.data.index;
+
+        if (index === 'all') {
+            points = [];
+            drawHelper.redraw();
+            syncPoints(true);
+            return;
+        }
+
+        if (index.numberOfLastShapes) {
+            try {
+                points.length -= index.numberOfLastShapes;
+            } catch (e) {
+                points = [];
+            }
+
+            drawHelper.redraw();
+            syncPoints(true);
+            return;
+        }
+
         if (index === -1) {
             points.length = points.length - 1;
             drawHelper.redraw();
@@ -43,9 +69,7 @@ window.addEventListener('message', function(event) {
         return;
     }
 
-    if (!event.data || !event.data.canvasDesignerSyncData) return;
-
-    if (event.data.sender && event.data.sender == selfId) return;
+    if (!event.data.canvasDesignerSyncData) return;
 
     // drawing is shared here (array of points)
     var d = event.data.canvasDesignerSyncData;
@@ -91,6 +115,6 @@ function syncPoints(isSyncAll) {
 function syncData(data) {
     window.parent.postMessage({
         canvasDesignerSyncData: data,
-        sender: selfId
+        uid: uid
     }, '*');
 }
