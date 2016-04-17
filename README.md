@@ -253,6 +253,25 @@ If you want to remove the widget from your HTMLDOMElement.
 designer.destroy();
 ```
 
+## `iframe`
+
+You can access designer iframe as following:
+
+```javascript
+designer.iframe.style.border = '5px solid red';
+
+window.open(designer.iframe.src);
+```
+
+`designer.iframe` will be `null/undefined` until you call `appendTo`. So always use this code-block:
+
+```javascript
+if(!designer.iframe) {
+    designer.appendTo(document.body);
+}
+designer.iframe.style.border = '5px solid red';
+```
+
 ## `toDataURL`
 
 Get data-URL of your drawings! 
