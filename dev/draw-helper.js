@@ -13,8 +13,18 @@ var drawHelper = {
             syncPoints();
         }
     },
-    getOptions: function() {
-        return [lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
+    getOptions: function(opt) {
+        opt = opt || {};
+        return [
+            opt.lineWidth || lineWidth,
+            opt.strokeStyle || strokeStyle,
+            opt.fillStyle || fillStyle,
+            opt.globalAlpha || globalAlpha,
+            opt.globalCompositeOperation || globalCompositeOperation,
+            opt.lineCap || lineCap,
+            opt.lineJoin || lineJoin,
+            opt.font || font
+        ];
     },
     handleOptions: function(context, opt, isNoFillStroke) {
         opt = opt || this.getOptions();
@@ -29,6 +39,8 @@ var drawHelper = {
         context.strokeStyle = opt[1];
         context.fillStyle = opt[2];
 
+        context.font = opt[7];
+
         if (!isNoFillStroke) {
             context.stroke();
             context.fill();
@@ -42,13 +54,9 @@ var drawHelper = {
         this.handleOptions(context, options);
     },
     text: function(context, point, options) {
-        var oldFillStyle = fillStyle;
-        context.fillStyle = fillStyle === 'transparent' || fillStyle === 'White' ? 'Black' : fillStyle;
-        context.font = '15px Verdana';
-        context.fillText(point[0].substr(1, point[0].length - 2), point[1], point[2]);
-        fillStyle = oldFillStyle;
-
         this.handleOptions(context, options);
+        context.fillStyle = textHandler.getFillColor(options[2]);
+        context.fillText(point[0].substr(1, point[0].length - 2), point[1], point[2]);
     },
     arc: function(context, point, options) {
         context.beginPath();

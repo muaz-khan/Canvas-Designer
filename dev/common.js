@@ -39,9 +39,9 @@ var points = [],
     fillStyle = 'transparent',
     globalAlpha = 1,
     globalCompositeOperation = 'source-over',
-    lineCap = 'butt',
-    font = '15px Verdana',
-    lineJoin = 'miter';
+    lineCap = 'round',
+    font = '15px "Arial"',
+    lineJoin = 'round';
 
 function getContext(id) {
     var canv = find(id),

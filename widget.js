@@ -1,4 +1,4 @@
-// Last time updated: 2016-04-17 12:40:31 PM UTC
+// Last time updated: 2016-05-05 3:40:52 PM UTC
 
 // _______________
 // Canvas-Designer
@@ -50,9 +50,9 @@
         fillStyle = 'transparent',
         globalAlpha = 1,
         globalCompositeOperation = 'source-over',
-        lineCap = 'butt',
-        font = '15px Verdana',
-        lineJoin = 'miter';
+        lineCap = 'round',
+        font = '15px "Arial"',
+        lineJoin = 'round';
 
     function getContext(id) {
         var canv = find(id),
@@ -537,7 +537,7 @@
 
             addEvent(context.canvas, 'click', function() {
                 if (textHandler.text.length) {
-                    points[points.length] = ['text', ['"' + textHandler.text + '"', textHandler.x, textHandler.y], drawHelper.getOptions()];
+                    textHandler.appendPoints();
                 }
 
                 if (shape === 'Text') {
@@ -546,6 +546,7 @@
                     textHandler.text = '';
                 } else {
                     textHandler.text = '';
+                    textHandler.showOrHideTextTools('hide');
                     tempContext.canvas.style.cursor = 'default';
                     if (typeof textHandler.blinkCursorInterval !== 'undefined') {
                         clearInterval(textHandler.blinkCursorInterval);
@@ -1072,8 +1073,18 @@
                 syncPoints();
             }
         },
-        getOptions: function() {
-            return [lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
+        getOptions: function(opt) {
+            opt = opt || {};
+            return [
+                opt.lineWidth || lineWidth,
+                opt.strokeStyle || strokeStyle,
+                opt.fillStyle || fillStyle,
+                opt.globalAlpha || globalAlpha,
+                opt.globalCompositeOperation || globalCompositeOperation,
+                opt.lineCap || lineCap,
+                opt.lineJoin || lineJoin,
+                opt.font || font
+            ];
         },
         handleOptions: function(context, opt, isNoFillStroke) {
             opt = opt || this.getOptions();
@@ -1088,6 +1099,8 @@
             context.strokeStyle = opt[1];
             context.fillStyle = opt[2];
 
+            context.font = opt[7];
+
             if (!isNoFillStroke) {
                 context.stroke();
                 context.fill();
@@ -1101,13 +1114,9 @@
             this.handleOptions(context, options);
         },
         text: function(context, point, options) {
-            var oldFillStyle = fillStyle;
-            context.fillStyle = fillStyle === 'transparent' || fillStyle === 'White' ? 'Black' : fillStyle;
-            context.font = '15px Verdana';
-            context.fillText(point[0].substr(1, point[0].length - 2), point[1], point[2]);
-            fillStyle = oldFillStyle;
-
             this.handleOptions(context, options);
+            context.fillStyle = textHandler.getFillColor(options[2]);
+            context.fillText(point[0].substr(1, point[0].length - 2), point[1], point[2]);
         },
         arc: function(context, point, options) {
             context.beginPath();
@@ -1871,7 +1880,20 @@
 
     var textHandler = {
         text: '',
+        selectedFontFamily: 'Arial',
+        selectedFontSize: '15',
+        getFillColor: function(color) {
+            color = (color || fillStyle).toLowerCase();
+
+            if (color == 'rgba(255, 255, 255, 0)' || color == 'transparent' || color === 'white') {
+                return 'black';
+            }
+
+            return color;
+        },
         writeText: function(keyPressed, isBackKeyPressed) {
+            if (!is.isText) return;
+
             if (isBackKeyPressed) {
                 textHandler.text = textHandler.text.substr(0, textHandler.text.length - 1);
                 textHandler.fillText(textHandler.text);
@@ -1882,10 +1904,15 @@
             textHandler.fillText(textHandler.text);
         },
         fillText: function(text) {
+            if (!is.isText) return;
+
             tempContext.clearRect(0, 0, tempContext.canvas.width, tempContext.canvas.height);
 
-            tempContext.fillStyle = 'black';
-            tempContext.font = font;
+            var options = textHandler.getOptions();
+            drawHelper.handleOptions(tempContext, options);
+            tempContext.fillStyle = textHandler.getFillColor(options[2]);
+            tempContext.font = textHandler.selectedFontSize + 'px "' + textHandler.selectedFontFamily + '"';
+
             tempContext.fillText(text, textHandler.x, textHandler.y);
         },
         blinkCursorInterval: null,
@@ -1898,9 +1925,29 @@
                 textHandler.fillText(textHandler.text);
             }
         },
+        getOptions: function() {
+            var options = {
+                font: textHandler.selectedFontSize + 'px "' + textHandler.selectedFontFamily + '"',
+                fillStyle: textHandler.getFillColor(),
+                strokeStyle: '#6c96c8',
+                globalCompositeOperation: 'source-over',
+                globalAlpha: 1,
+                lineJoin: 'round',
+                lineCap: 'round',
+                lineWidth: 2
+            };
+            font = options.font;
+            return options;
+        },
+        appendPoints: function() {
+            var options = textHandler.getOptions();
+            points[points.length] = ['text', ['"' + textHandler.text + '"', textHandler.x, textHandler.y], drawHelper.getOptions(options)];
+        },
         mousedown: function(e) {
+            if (!is.isText) return;
+
             if (textHandler.text.length) {
-                points[points.length] = ['text', ['"' + textHandler.text + '"', textHandler.x, textHandler.y], drawHelper.getOptions()];
+                this.appendPoints();
             }
 
             textHandler.x = textHandler.y = 0;
@@ -1918,9 +1965,83 @@
 
             textHandler.blinkCursor();
             textHandler.blinkCursorInterval = setInterval(textHandler.blinkCursor, 700);
+
+            this.showTextTools();
         },
         mouseup: function(e) {},
-        mousemove: function(e) {}
+        mousemove: function(e) {},
+        showOrHideTextTools: function(show) {
+            this.fontFamilyBox.style.display = show == 'show' ? 'block' : 'none';
+            this.fontSizeBox.style.display = show == 'show' ? 'block' : 'none';
+
+            this.fontSizeBox.style.left = this.x + 'px';
+            this.fontFamilyBox.style.left = (this.fontSizeBox.clientWidth + this.x) + 'px';
+
+            this.fontSizeBox.style.top = this.y + 'px';
+            this.fontFamilyBox.style.top = this.y + 'px';
+        },
+        showTextTools: function() {
+            if (!this.fontFamilyBox || !this.fontSizeBox) return;
+
+            this.unselectAllFontFamilies();
+            this.unselectAllFontSizes();
+
+            this.showOrHideTextTools('show');
+
+            this.eachFontFamily(function(child) {
+                child.onclick = function(e) {
+                    e.preventDefault();
+
+                    textHandler.showOrHideTextTools('hide');
+
+                    textHandler.selectedFontFamily = this.innerHTML;
+                    this.className = 'font-family-selected';
+                };
+                child.style.fontFamily = child.innerHTML;
+            });
+
+            this.eachFontSize(function(child) {
+                child.onclick = function(e) {
+                    e.preventDefault();
+
+                    textHandler.showOrHideTextTools('hide');
+
+                    textHandler.selectedFontSize = this.innerHTML;
+                    this.className = 'font-family-selected';
+                };
+                // child.style.fontSize = child.innerHTML + 'px';
+            });
+        },
+        eachFontFamily: function(callback) {
+            var childs = this.fontFamilyBox.querySelectorAll('li');
+            for (var i = 0; i < childs.length; i++) {
+                callback(childs[i]);
+            }
+        },
+        unselectAllFontFamilies: function() {
+            this.eachFontFamily(function(child) {
+                child.className = '';
+                if (child.innerHTML === textHandler.selectedFontFamily) {
+                    child.className = 'font-family-selected';
+                }
+            });
+        },
+        eachFontSize: function(callback) {
+            var childs = this.fontSizeBox.querySelectorAll('li');
+            for (var i = 0; i < childs.length; i++) {
+                callback(childs[i]);
+            }
+        },
+        unselectAllFontSizes: function() {
+            this.eachFontSize(function(child) {
+                child.className = '';
+                if (child.innerHTML === textHandler.selectedFontSize) {
+                    child.className = 'font-size-selected';
+                }
+            });
+        },
+        fontFamilyBox: document.querySelector('.fontSelectUl'),
+        fontSizeBox: document.querySelector('.fontSizeUl')
     };
 
     var arcHandler = {

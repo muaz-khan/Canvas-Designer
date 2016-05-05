@@ -73,11 +73,11 @@ More importantly, you can use unlimited designers on a single page. Each will ha
 
    `designer.appendTo(document.body);`
 
-E.g. (Please don't forget replacing `1.0.0` with latest version)
+E.g. (Please don't forget replacing `1.0.4` with latest version)
 
 ```html
 <!-- 1st step -->
-<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.3/canvas-designer-widget.js"></script>
+<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.4/canvas-designer-widget.js"></script>
 
 <!-- 2nd step -->
 <script>
@@ -85,8 +85,8 @@ var designer = new CanvasDesigner();
 
 // both links are mandatory
 // widget.html will internally use widget.js
-designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.3/widget.html'; // you can place this file anywhere
-designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.3/widget.js';     // you can place this file anywhere
+designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.4/widget.html'; // you can place this file anywhere
+designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.4/widget.js';     // you can place this file anywhere
 </script>
 
 <!-- 3rd i.e. last step -->

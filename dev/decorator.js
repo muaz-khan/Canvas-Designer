@@ -75,7 +75,7 @@ window.addEventListener('load', function() {
 
         addEvent(context.canvas, 'click', function() {
             if (textHandler.text.length) {
-                points[points.length] = ['text', ['"' + textHandler.text + '"', textHandler.x, textHandler.y], drawHelper.getOptions()];
+                textHandler.appendPoints();
             }
 
             if (shape === 'Text') {
@@ -84,6 +84,7 @@ window.addEventListener('load', function() {
                 textHandler.text = '';
             } else {
                 textHandler.text = '';
+                textHandler.showOrHideTextTools('hide');
                 tempContext.canvas.style.cursor = 'default';
                 if (typeof textHandler.blinkCursorInterval !== 'undefined') {
                     clearInterval(textHandler.blinkCursorInterval);
