@@ -121,6 +121,11 @@ function onkeyup(e) {
 
     keyCode = e.which || e.keyCode || 0;
 
+    if (keyCode === 13 && is.isText) {
+        textHandler.onReturnKeyPressed();
+        return;
+    }
+
     if (keyCode == 8 || keyCode == 46) {
         if (isBackKey(e, keyCode)) {
             textHandler.writeText(textHandler.lastKeyPress, true);
@@ -128,7 +133,13 @@ function onkeyup(e) {
         return;
     }
 
-    // Ctrl + Z
+    // Ctrl + t
+    if (isControlKeyPressed && keyCode === 84 && is.isText) {
+        textHandler.showTextTools();
+        return;
+    }
+
+    // Ctrl + z
     if (isControlKeyPressed && keyCode === 90) {
         if (points.length) {
             points.length = points.length - 1;
@@ -138,7 +149,7 @@ function onkeyup(e) {
         }
     }
 
-    // Ctrl + A
+    // Ctrl + a
     if (isControlKeyPressed && keyCode === 65) {
         dragHelper.global.startingIndex = 0;
 
@@ -147,12 +158,12 @@ function onkeyup(e) {
         setSelection(find('drag-all-paths'), 'DragAllPaths');
     }
 
-    // Ctrl + C
+    // Ctrl + c
     if (isControlKeyPressed && keyCode === 67 && points.length) {
         copy();
     }
 
-    // Ctrl + V
+    // Ctrl + v
     if (isControlKeyPressed && keyCode === 86 && copiedStuff.length) {
         paste();
     }

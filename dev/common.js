@@ -406,6 +406,12 @@ function endLastPath() {
     else if (cache.isBezierCurve) bezierHandler.end();
 
     drawHelper.redraw();
+
+    if (textHandler.text && textHandler.text.length) {
+        textHandler.appendPoints();
+        textHandler.onShapeUnSelected();
+    }
+    textHandler.showOrHideTextTools('hide');
 }
 
 var copiedStuff = [],

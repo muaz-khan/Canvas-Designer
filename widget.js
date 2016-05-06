@@ -1,4 +1,4 @@
-// Last time updated: 2016-05-05 3:40:52 PM UTC
+// Last time updated: 2016-05-06 3:46:17 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -417,6 +417,12 @@
         else if (cache.isBezierCurve) bezierHandler.end();
 
         drawHelper.redraw();
+
+        if (textHandler.text && textHandler.text.length) {
+            textHandler.appendPoints();
+            textHandler.onShapeUnSelected();
+        }
+        textHandler.showOrHideTextTools('hide');
     }
 
     var copiedStuff = [],
@@ -541,16 +547,9 @@
                 }
 
                 if (shape === 'Text') {
-                    tempContext.canvas.style.cursor = 'text';
-                    textHandler.x = textHandler.y = 0;
-                    textHandler.text = '';
+                    textHandler.onShapeSelected();
                 } else {
-                    textHandler.text = '';
-                    textHandler.showOrHideTextTools('hide');
-                    tempContext.canvas.style.cursor = 'default';
-                    if (typeof textHandler.blinkCursorInterval !== 'undefined') {
-                        clearInterval(textHandler.blinkCursorInterval);
-                    }
+                    textHandler.onShapeUnSelected();
                 }
 
                 if (shape === 'Pencil') {
@@ -1882,6 +1881,20 @@
         text: '',
         selectedFontFamily: 'Arial',
         selectedFontSize: '15',
+        onShapeSelected: function() {
+            tempContext.canvas.style.cursor = 'text';
+            this.x = this.y = this.pageX = this.pageY = 0;
+            this.text = '';
+        },
+        onShapeUnSelected: function() {
+            this.text = '';
+            this.showOrHideTextTools('hide');
+            tempContext.canvas.style.cursor = 'default';
+
+            if (typeof this.blinkCursorInterval !== 'undefined') {
+                clearInterval(this.blinkCursorInterval);
+            }
+        },
         getFillColor: function(color) {
             color = (color || fillStyle).toLowerCase();
 
@@ -2039,6 +2052,16 @@
                     child.className = 'font-size-selected';
                 }
             });
+        },
+        onReturnKeyPressed: function() {
+            if (!textHandler.text || !textHandler.text.length) return;
+            var fontSize = parseInt(textHandler.selectedFontSize) || 15;
+            this.mousedown({
+                pageX: this.pageX,
+                // pageY: parseInt(tempContext.measureText(textHandler.text).height * 2) + 10
+                pageY: this.pageY + fontSize + 5
+            });
+            drawHelper.redraw();
         },
         fontFamilyBox: document.querySelector('.fontSelectUl'),
         fontSizeBox: document.querySelector('.fontSizeUl')
@@ -2684,6 +2707,11 @@
 
         keyCode = e.which || e.keyCode || 0;
 
+        if (keyCode === 13 && is.isText) {
+            textHandler.onReturnKeyPressed();
+            return;
+        }
+
         if (keyCode == 8 || keyCode == 46) {
             if (isBackKey(e, keyCode)) {
                 textHandler.writeText(textHandler.lastKeyPress, true);
@@ -2691,7 +2719,13 @@
             return;
         }
 
-        // Ctrl + Z
+        // Ctrl + t
+        if (isControlKeyPressed && keyCode === 84 && is.isText) {
+            textHandler.showTextTools();
+            return;
+        }
+
+        // Ctrl + z
         if (isControlKeyPressed && keyCode === 90) {
             if (points.length) {
                 points.length = points.length - 1;
@@ -2701,7 +2735,7 @@
             }
         }
 
-        // Ctrl + A
+        // Ctrl + a
         if (isControlKeyPressed && keyCode === 65) {
             dragHelper.global.startingIndex = 0;
 
@@ -2710,12 +2744,12 @@
             setSelection(find('drag-all-paths'), 'DragAllPaths');
         }
 
-        // Ctrl + C
+        // Ctrl + c
         if (isControlKeyPressed && keyCode === 67 && points.length) {
             copy();
         }
 
-        // Ctrl + V
+        // Ctrl + v
         if (isControlKeyPressed && keyCode === 86 && copiedStuff.length) {
             paste();
         }

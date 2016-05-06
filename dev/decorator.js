@@ -79,16 +79,9 @@ window.addEventListener('load', function() {
             }
 
             if (shape === 'Text') {
-                tempContext.canvas.style.cursor = 'text';
-                textHandler.x = textHandler.y = 0;
-                textHandler.text = '';
+                textHandler.onShapeSelected();
             } else {
-                textHandler.text = '';
-                textHandler.showOrHideTextTools('hide');
-                tempContext.canvas.style.cursor = 'default';
-                if (typeof textHandler.blinkCursorInterval !== 'undefined') {
-                    clearInterval(textHandler.blinkCursorInterval);
-                }
+                textHandler.onShapeUnSelected();
             }
 
             if (shape === 'Pencil') {
