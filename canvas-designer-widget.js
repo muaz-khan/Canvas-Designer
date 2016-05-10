@@ -1,5 +1,3 @@
-// Last time updated: 2016-04-17 6:42:16 AM UTC
-
 // _______________
 // Canvas-Designer
 

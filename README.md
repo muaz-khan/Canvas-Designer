@@ -46,9 +46,7 @@ The correct name for `dragMultiple` should be: `drag-move all-shapes`.
 **Upcoming** tools & features:
 
 1. `arrow` --- to draw arrows
-2. Set font-size for texts
-3. Set font-family for texts
-4. Resize all shapes at once (currently you can resize last selected shape only)
+2. Resize all shapes at once (currently you can resize last selected shape only)
 
 # Features
 
@@ -63,6 +61,23 @@ The correct name for `dragMultiple` should be: `drag-move all-shapes`.
 
 More importantly, you can use unlimited designers on a single page. Each will have its own surface and its own tools.
 
+# Chinese, Arabic, other languages
+
+You can install following chrome extension for multi-language input tools:
+
+* https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab?hl=en
+
+Now type your own language text in any `<input>` box or anywhere, and simply copy that text.
+
+Now click `T` tool icon from the tool-box and press `ctrl+v` to paste your own language's text.
+
+To repeat it:
+
+1. Write your own language texts anywhere and make sure to copy to clipboard using `ctrl+v`
+2. Then click `T` icon, and try press `ctrl+v` to paste your copied text
+
+You can paste any text: English, Arabic, Chinese or whatever!
+
 # How to Use
 
 1. Download/link `canvas-designer-widget.js` from [this github repository](https://github.com/muaz-khan/Canvas-Designer).
@@ -73,11 +88,11 @@ More importantly, you can use unlimited designers on a single page. Each will ha
 
    `designer.appendTo(document.body);`
 
-E.g. (Please don't forget replacing `1.0.5` with latest version)
+E.g. (Please don't forget replacing `1.0.6` with latest version)
 
 ```html
 <!-- 1st step -->
-<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.5/canvas-designer-widget.js"></script>
+<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.6/canvas-designer-widget.js"></script>
 
 <!-- 2nd step -->
 <script>
@@ -85,8 +100,8 @@ var designer = new CanvasDesigner();
 
 // both links are mandatory
 // widget.html will internally use widget.js
-designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.5/widget.html'; // you can place this file anywhere
-designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.5/widget.js';     // you can place this file anywhere
+designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.6/widget.html'; // you can place this file anywhere
+designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.6/widget.js';     // you can place this file anywhere
 </script>
 
 <!-- 3rd i.e. last step -->

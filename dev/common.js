@@ -121,7 +121,7 @@ var common = {
             }
 
             if (p[0] === 'text') {
-                tempArray[i] = ['context.fillText(' + point[0] + ', ' + point[1] + ', ' + point[2] + ');\n' + this.strokeOrFill(p[2])];
+                tempArray[i] = [this.strokeOrFill(p[2]) + '\ncontext.fillText(' + point[0] + ', ' + point[1] + ', ' + point[2] + ');'];
             }
 
             if (p[0] === 'arc') {
@@ -297,7 +297,7 @@ var common = {
             }
 
             if (p[0] === 'text') {
-                output += 'context.fillText(' + point[0] + ', ' + getPoint(point[1], x, 'x') + ', ' + getPoint(point[2], y, 'y') + ');\n' + this.strokeOrFill(p[2]);
+                output += this.strokeOrFill(p[2]) + '\n' + 'context.fillText(' + point[0] + ', ' + getPoint(point[1], x, 'x') + ', ' + getPoint(point[2], y, 'y') + ');';
             }
 
             if (p[0] === 'rect') {
@@ -380,18 +380,18 @@ var common = {
         if (!this.prevProps || this.prevProps !== p.join(',')) {
             this.prevProps = p.join(',');
 
-            return 'strokeOrFill("' + p.join('", "') + '");';
+            return 'strokeOrFill(\'' + p.join('\', \'') + '\');';
         }
 
         return 'strokeOrFill();';
     },
     prevProps: null,
     shortenHelper: function(name, p1, p2) {
-        var result = '["' + name + '", [' + p1.join(', ') + ']';
+        var result = '[\'' + name + '\', [' + p1.join(', ') + ']';
 
         if (!this.prevProps || this.prevProps !== p2.join(',')) {
             this.prevProps = p2.join(',');
-            result += ', ["' + p2.join('", "') + '"]';
+            result += ', [\'' + p2.join('\', \'') + '\']';
         }
 
         return result + '], ';

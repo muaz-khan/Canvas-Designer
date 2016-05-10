@@ -195,3 +195,18 @@ function onkeypress(e) {
 }
 
 addEvent(document, 'keypress', onkeypress);
+
+function onTextFromClipboard(e) {
+    if (!is.isText) return;
+    var pastedText = undefined;
+    if (window.clipboardData && window.clipboardData.getData) { // IE
+        pastedText = window.clipboardData.getData('Text');
+    } else if (e.clipboardData && e.clipboardData.getData) {
+        pastedText = e.clipboardData.getData('text/plain');
+    }
+    if (pastedText && pastedText.length) {
+        textHandler.writeText(pastedText);
+    }
+}
+
+addEvent(document, 'paste', onTextFromClipboard);
