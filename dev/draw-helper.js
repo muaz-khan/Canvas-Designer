@@ -10,7 +10,7 @@ var drawHelper = {
         }
 
         if (!skipSync && typeof syncPoints !== 'undefined') {
-            syncPoints();
+            syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
         }
     },
     getOptions: function(opt) {

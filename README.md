@@ -71,12 +71,12 @@ Now type your own language text in any `<input>` box or anywhere, and simply cop
 
 Now click `T` tool icon from the tool-box and press `ctrl+v` to paste your own language's text.
 
-To repeat it:
+**To repeat it:**
 
-1. Write your own language texts anywhere and make sure to copy to clipboard using `ctrl+v`
-2. Then click `T` icon, and try press `ctrl+v` to paste your copied text
+1. Type your own language texts anywhere and make sure to copy to clipboard using `ctrl+v`
+2. Then click `T` icon, and then press `ctrl+v` to paste your copied text
 
-You can paste any text: English, Arabic, Chinese or whatever!
+You can paste any text: English, Arabic, Chinese etc.
 
 # How to Use
 

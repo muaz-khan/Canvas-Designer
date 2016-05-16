@@ -1,4 +1,4 @@
-// Last time updated: 2016-05-10 6:26:39 AM UTC
+// Last time updated: 2016-05-16 3:58:53 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -1069,7 +1069,7 @@
             }
 
             if (!skipSync && typeof syncPoints !== 'undefined') {
-                syncPoints();
+                syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
             }
         },
         getOptions: function(opt) {
