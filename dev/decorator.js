@@ -1,5 +1,6 @@
 var tools = {
     line: true,
+    arrow: true,
     pencil: true,
     dragSingle: true,
     dragMultiple: true,
@@ -234,8 +235,8 @@ window.addEventListener('load', function() {
     function decorateLine() {
         var context = getContext('line');
 
-        context.moveTo(0, 0);
-        context.lineTo(40, 40);
+        context.moveTo(10, 15);
+        context.lineTo(30, 35);
         context.stroke();
 
         context.fillStyle = 'Gray';
@@ -248,6 +249,38 @@ window.addEventListener('load', function() {
     if (tools.line === true) {
         decorateLine();
     } else document.getElementById('line').style.display = 'none';
+
+    function decorateArrow() {
+        var context = getContext('arrow');
+
+        var x = 10;
+        var y = 35;
+
+        context.beginPath();
+        context.moveTo(x, y);
+        context.lineTo(x + 20, y - 20);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(x + 15, y - 5);
+        context.lineTo(x + 20, y - 20);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(x + 5, y - 15);
+        context.lineTo(x + 20, y - 20);
+        context.stroke();
+
+        context.fillStyle = 'Gray';
+        context.font = '9px Verdana';
+        context.fillText('Arrow', 5, 12);
+
+        bindEvent(context, 'Arrow');
+    }
+
+    if (tools.arrow === true) {
+        decorateArrow();
+    } else document.getElementById('arrow').style.display = 'none';
 
     function decoratePencil() {
         var context = getContext('pencil-icon');

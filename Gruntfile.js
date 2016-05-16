@@ -32,6 +32,7 @@ module.exports = function(grunt) {
                     'dev/text-handler.js',
                     'dev/arc-handler.js',
                     'dev/line-handler.js',
+                    'dev/arrow-handler.js',
                     'dev/rect-handler.js',
                     'dev/quadratic-handler.js',
                     'dev/bezier-handler.js',

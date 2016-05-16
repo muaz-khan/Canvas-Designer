@@ -53,6 +53,36 @@ var drawHelper = {
 
         this.handleOptions(context, options);
     },
+    arrow: function(context, point, options) {
+        var mx = point[0];
+        var my = point[1];
+
+        var lx = point[2];
+        var ly = point[3];
+
+        var arrowSize = arrowHandler.arrowSize;
+
+        if (arrowSize == 10) {
+            arrowSize = (options ? options[0] : lineWidth) * 5;
+        }
+
+        var angle = Math.atan2(ly - my, lx - mx);
+
+        context.beginPath();
+        context.moveTo(mx, my);
+        context.lineTo(lx, ly);
+
+        this.handleOptions(context, options);
+
+        context.beginPath();
+        context.moveTo(lx, ly);
+        context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+        context.lineTo(lx - arrowSize * Math.cos(angle + Math.PI / 7), ly - arrowSize * Math.sin(angle + Math.PI / 7));
+        context.lineTo(lx, ly);
+        context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+
+        this.handleOptions(context, options);
+    },
     text: function(context, point, options) {
         this.handleOptions(context, options);
         context.fillStyle = textHandler.getFillColor(options[2]);

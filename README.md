@@ -19,7 +19,13 @@ The specialty of this drawing-tool is that, it generates Canvas2D code for you; 
 
 Also, you can collaborate your drawing with up to 15 users; and everything is synced from all users. So, if you draw a line and your friend-A draws quadratic curve and friend-B draws rectangle then everything will be synced among all users!
 
-# [Click to view Gif Presentation](https://cdn.webrtc-experiment.com/images/Canvas-Designer.gif)
+### Youtube Videos
+
+* https://www.youtube.com/watch?v=oSSwMlBu8SY
+
+Gif images:
+
+* https://cdn.webrtc-experiment.com/images/Canvas-Designer.gif
 
 <img src="https://i.imgur.com/uDbfy1F.png" />
 
@@ -38,6 +44,7 @@ You can use [`designer.setSelected`](https://github.com/muaz-khan/Canvas-Designe
 9. `quadratic` --- to draw quadratic curves
 10. `text` --- to write texts on single or multiple lines, select font families/sizes and more
 11. `image` --- add external images
+12. `arrow` --- draw arrow lines
 
 The correct name for `dragSingle` should be: `drag-move-resize last-selected-shape`.
 
@@ -45,8 +52,7 @@ The correct name for `dragMultiple` should be: `drag-move all-shapes`.
 
 **Upcoming** tools & features:
 
-1. `arrow` --- to draw arrows
-2. Resize all shapes at once (currently you can resize last selected shape only)
+1. Resize all shapes at once (currently you can resize last selected shape only)
 
 # Features
 
@@ -88,11 +94,11 @@ You can paste any text: English, Arabic, Chinese etc.
 
    `designer.appendTo(document.body);`
 
-E.g. (Please don't forget replacing `1.0.6` with latest version)
+E.g. (Please don't forget replacing `1.0.7` with latest version)
 
 ```html
 <!-- 1st step -->
-<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.6/canvas-designer-widget.js"></script>
+<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.7/canvas-designer-widget.js"></script>
 
 <!-- 2nd step -->
 <script>
@@ -100,8 +106,8 @@ var designer = new CanvasDesigner();
 
 // both links are mandatory
 // widget.html will internally use widget.js
-designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.6/widget.html'; // you can place this file anywhere
-designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.6/widget.js';     // you can place this file anywhere
+designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.7/widget.html'; // you can place this file anywhere
+designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.7/widget.js';     // you can place this file anywhere
 </script>
 
 <!-- 3rd i.e. last step -->
@@ -245,8 +251,18 @@ This method allows you choose between tools that **should be displayed** in the 
 
 ```javascript
 designer.setTools({
+    line: true,
+    arrow: true,
     pencil: true,
-    text: true
+    dragSingle: true,
+    dragMultiple: true,
+    eraser: true,
+    rectangle: true,
+    arc: true,
+    bezier: true,
+    quadratic: true,
+    text: true,
+    image: true
 });
 ```
 
@@ -375,21 +391,6 @@ ctrl+a (to select all shapes)
 ctrl+c (copy last-selected shape)
 ctrl+v (paste last-copied shape)
 ```
-
-# Demos
-
-* http://muaz-khan.github.io/Everything/Canvas/ (A-to-zee all shapes, and animations on this page is created using canvas-designer)
-* https://www.webrtc-experiment.com/Canvas-Designer/ (canvas-designer demo allows you draw shapes & get the code; additionally collaborate as well!)
-* Try a simple canvas2d animation demo: http://muaz-khan.github.io/Everything/Canvas/Experiments/Simple-HTML5-Canvas-Experiment/
-* Try many other canvas2d demos: http://muaz-khan.github.io/Everything/Canvas/Experiments/
-
-All above demos are built using canvas-designer!
-
-Original source-code was shared 2-years back, here: https://github.com/muaz-khan/Everything/tree/gh-pages/Canvas/Tools/Designer
-
-There is a similar "tinny" tool, however it isn't yet supporting collaboration: https://canvature.appspot.com/
-
-And WebRTC-Experiments! https://github.com/muaz-khan/WebRTC-Experiment
 
 # License
 

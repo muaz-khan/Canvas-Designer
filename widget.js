@@ -1,4 +1,4 @@
-// Last time updated: 2016-05-16 3:58:53 AM UTC
+// Last time updated: 2016-05-16 12:24:31 PM UTC
 
 // _______________
 // Canvas-Designer
@@ -11,6 +11,7 @@
 
     var is = {
         isLine: false,
+        isArrow: false,
         isArc: false,
         isDragLastPath: false,
         isDragAllPaths: false,
@@ -25,7 +26,7 @@
         set: function(shape) {
             var cache = this;
 
-            cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isEraser = cache.isText = cache.isImage = false;
+            cache.isLine = cache.isArrow = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isEraser = cache.isText = cache.isImage = false;
             cache['is' + shape] = true;
         }
     };
@@ -107,7 +108,7 @@
             }
 
             output = output.substr(0, output.length - 2);
-            textarea.value = 'var points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + this.forLoop;
+            textarea.value = 'var points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + drawArrow.toString() + '\n\n' + this.forLoop;
 
             this.prevProps = null;
         },
@@ -135,6 +136,10 @@
                     tempArray[i] = [this.strokeOrFill(p[2]) + '\ncontext.fillText(' + point[0] + ', ' + point[1] + ', ' + point[2] + ');'];
                 }
 
+                if (p[0] === 'arrow') {
+                    tempArray[i] = ['drawArrow(' + point[0] + ', ' + point[1] + ', ' + point[2] + ', ' + point[3] + ', \'' + p[2].join('\',\'') + '\');'];
+                }
+
                 if (p[0] === 'arc') {
                     tempArray[i] = ['context.beginPath(); \n' + 'context.arc(' + toFixed(point[0]) + ',' + toFixed(point[1]) + ',' + toFixed(point[2]) + ',' + toFixed(point[3]) + ', 0,' + point[4] + '); \n' + this.strokeOrFill(p[2])];
                 }
@@ -152,7 +157,7 @@
                 }
 
             }
-            textarea.value = tempArray.join('\n\n') + this.strokeFillText;
+            textarea.value = tempArray.join('\n\n') + this.strokeFillText + '\n\n' + drawArrow.toString();
 
             this.prevProps = null;
         },
@@ -196,6 +201,15 @@
                 }
 
                 if (p[0] === 'line') {
+                    output += this.shortenHelper(p[0], [
+                        getPoint(point[0], x, 'x'),
+                        getPoint(point[1], y, 'y'),
+                        getPoint(point[2], x, 'x'),
+                        getPoint(point[3], y, 'y')
+                    ], p[2]);
+                }
+
+                if (p[0] === 'arrow') {
                     output += this.shortenHelper(p[0], [
                         getPoint(point[0], x, 'x'),
                         getPoint(point[1], y, 'y'),
@@ -257,7 +271,7 @@
             }
 
             output = output.substr(0, output.length - 2);
-            textarea.value = 'var x = ' + x + ', y = ' + y + ', points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + this.forLoop;
+            textarea.value = 'var x = ' + x + ', y = ' + y + ', points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + drawArrow.toString() + '\n\n' + this.forLoop;
 
             this.prevProps = null;
         },
@@ -307,6 +321,10 @@
                     + this.strokeOrFill(p[2]);
                 }
 
+                if (p[0] === 'arrow') {
+                    output += 'drawArrow(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ', ' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ', \'' + p[2].join('\',\'') + '\');\n';
+                }
+
                 if (p[0] === 'text') {
                     output += this.strokeOrFill(p[2]) + '\n' + 'context.fillText(' + point[0] + ', ' + getPoint(point[1], x, 'x') + ', ' + getPoint(point[2], y, 'y') + ');';
                 }
@@ -329,32 +347,36 @@
 
                 if (i !== length - 1) output += '\n\n';
             }
-            textarea.value = output + this.strokeFillText;
+            textarea.value = output + this.strokeFillText + '\n\n' + drawArrow.toString();
 
             this.prevProps = null;
         },
         forLoop: 'for(i; i < length; i++) {\n' + '    p = points[i];\n' + '    point = p[1];\n' + '    context.beginPath();\n\n'
 
         // globals
-            + '    if(p[2]) { \n' + '       context.lineWidth = p[2][0];\n' + '       context.strokeStyle = p[2][1];\n' + '       context.fillStyle = p[2][2];\n'
+            + '    if(p[2]) { \n' + '\tcontext.lineWidth = p[2][0];\n' + '\tcontext.strokeStyle = p[2][1];\n' + '\tcontext.fillStyle = p[2][2];\n'
 
-            + '       context.globalAlpha = p[2][3];\n' + '       context.globalCompositeOperation = p[2][4];\n' + '       context.lineCap = p[2][5];\n' + '       context.lineJoin = p[2][6];\n' + '       context.font = p[2][7];\n' + '    }\n\n'
+            + '\tcontext.globalAlpha = p[2][3];\n' + '\tcontext.globalCompositeOperation = p[2][4];\n' + '\tcontext.lineCap = p[2][5];\n' + '\tcontext.lineJoin = p[2][6];\n' + '\tcontext.font = p[2][7];\n' + '    }\n\n'
 
         // line
 
-            + '    if(p[0] === "line") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
+            + '    if(p[0] === "line") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
+
+        // arrow
+
+            + '    if(p[0] === "arrow") { \n' + '\tdrawArrow(point[0], point[1], point[2], point[3], p[2]);\n' + '    }\n\n'
 
         // pencil
 
-            + '    if(p[0] === "pencil") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
+            + '    if(p[0] === "pencil") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
         // text
 
-            + '    if(p[0] === "text") { \n' + '       context.fillText(point[0], point[1], point[2]);\n' + '    }\n\n'
+            + '    if(p[0] === "text") { \n' + '\tcontext.fillText(point[0], point[1], point[2]);\n' + '    }\n\n'
 
         // eraser
 
-            + '    if(p[0] === "eraser") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
+            + '    if(p[0] === "eraser") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
         // arc
 
@@ -362,17 +384,17 @@
 
         // rect
 
-            + '    if(p[0] === "rect") {\n' + '       context.strokeRect(point[0], point[1], point[2], point[3]);\n' + '       context.fillRect(point[0], point[1], point[2], point[3]);\n'
+            + '    if(p[0] === "rect") {\n' + '\tcontext.strokeRect(point[0], point[1], point[2], point[3]);\n' + '\tcontext.fillRect(point[0], point[1], point[2], point[3]);\n'
 
             + '    }\n\n'
 
         // quadratic
 
-            + '    if(p[0] === "quadratic") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '    }\n\n'
+            + '    if(p[0] === "quadratic") {\n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '    }\n\n'
 
         // bezier
 
-            + '    if(p[0] === "bezier") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '    }\n\n'
+            + '    if(p[0] === "bezier") {\n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '    }\n\n'
 
         // end-fill
 
@@ -380,9 +402,9 @@
 
             + '}',
 
-        strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '    if(lineWidth) { \n' + '       context.globalAlpha = globalAlpha;\n' + '       context.globalCompositeOperation = globalCompositeOperation;\n' + '       context.lineCap = lineCap;\n' + '       context.lineJoin = lineJoin;\n'
+        strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '    if(lineWidth) { \n' + '\tcontext.globalAlpha = globalAlpha;\n' + '\tcontext.globalCompositeOperation = globalCompositeOperation;\n' + '\tcontext.lineCap = lineCap;\n' + '\tcontext.lineJoin = lineJoin;\n'
 
-            + '       context.lineWidth = lineWidth;\n' + '       context.strokeStyle = strokeStyle;\n' + '       context.fillStyle = fillStyle;\n' + '       context.font = font;\n' + '    } \n\n'
+            + '\tcontext.lineWidth = lineWidth;\n' + '\tcontext.strokeStyle = strokeStyle;\n' + '\tcontext.fillStyle = fillStyle;\n' + '\tcontext.font = font;\n' + '    } \n\n'
 
             + '    context.stroke();\n' + '    context.fill();\n'
 
@@ -408,6 +430,62 @@
             return result + '], ';
         }
     };
+
+    function drawArrow(mx, my, lx, ly, options) {
+        function getOptions(opt) {
+            opt = opt || {};
+
+            return [
+                opt.lineWidth || 2,
+                opt.strokeStyle || '#6c96c8',
+                opt.fillStyle || 'transparent',
+                opt.globalAlpha || 1,
+                opt.globalCompositeOperation || 'source-over',
+                opt.lineCap || 'round',
+                opt.lineJoin || 'round',
+                opt.font || '15px "Arial"'
+            ];
+        }
+
+        function handleOptions(opt, isNoFillStroke) {
+            opt = opt || getOptions();
+
+            context.globalAlpha = opt[3];
+            context.globalCompositeOperation = opt[4];
+
+            context.lineCap = opt[5];
+            context.lineJoin = opt[6];
+            context.lineWidth = opt[0];
+
+            context.strokeStyle = opt[1];
+            context.fillStyle = opt[2];
+
+            context.font = opt[7];
+
+            if (!isNoFillStroke) {
+                context.stroke();
+                context.fill();
+            }
+        }
+
+        var arrowSize = 10;
+        var angle = Math.atan2(ly - my, lx - mx);
+
+        context.beginPath();
+        context.moveTo(mx, my);
+        context.lineTo(lx, ly);
+
+        handleOptions();
+
+        context.beginPath();
+        context.moveTo(lx, ly);
+        context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+        context.lineTo(lx - arrowSize * Math.cos(angle + Math.PI / 7), ly - arrowSize * Math.sin(angle + Math.PI / 7));
+        context.lineTo(lx, ly);
+        context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+
+        handleOptions();
+    }
 
     function endLastPath() {
         var cache = is;
@@ -468,6 +546,7 @@
 
     var tools = {
         line: true,
+        arrow: true,
         pencil: true,
         dragSingle: true,
         dragMultiple: true,
@@ -702,8 +781,8 @@
         function decorateLine() {
             var context = getContext('line');
 
-            context.moveTo(0, 0);
-            context.lineTo(40, 40);
+            context.moveTo(10, 15);
+            context.lineTo(30, 35);
             context.stroke();
 
             context.fillStyle = 'Gray';
@@ -716,6 +795,38 @@
         if (tools.line === true) {
             decorateLine();
         } else document.getElementById('line').style.display = 'none';
+
+        function decorateArrow() {
+            var context = getContext('arrow');
+
+            var x = 10;
+            var y = 35;
+
+            context.beginPath();
+            context.moveTo(x, y);
+            context.lineTo(x + 20, y - 20);
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(x + 15, y - 5);
+            context.lineTo(x + 20, y - 20);
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(x + 5, y - 15);
+            context.lineTo(x + 20, y - 20);
+            context.stroke();
+
+            context.fillStyle = 'Gray';
+            context.font = '9px Verdana';
+            context.fillText('Arrow', 5, 12);
+
+            bindEvent(context, 'Arrow');
+        }
+
+        if (tools.arrow === true) {
+            decorateArrow();
+        } else document.getElementById('arrow').style.display = 'none';
 
         function decoratePencil() {
             var context = getContext('pencil-icon');
@@ -1112,6 +1223,36 @@
 
             this.handleOptions(context, options);
         },
+        arrow: function(context, point, options) {
+            var mx = point[0];
+            var my = point[1];
+
+            var lx = point[2];
+            var ly = point[3];
+
+            var arrowSize = arrowHandler.arrowSize;
+
+            if (arrowSize == 10) {
+                arrowSize = (options ? options[0] : lineWidth) * 5;
+            }
+
+            var angle = Math.atan2(ly - my, lx - mx);
+
+            context.beginPath();
+            context.moveTo(mx, my);
+            context.lineTo(lx, ly);
+
+            this.handleOptions(context, options);
+
+            context.beginPath();
+            context.moveTo(lx, ly);
+            context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+            context.lineTo(lx - arrowSize * Math.cos(angle + Math.PI / 7), ly - arrowSize * Math.sin(angle + Math.PI / 7));
+            context.lineTo(lx, ly);
+            context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+
+            this.handleOptions(context, options);
+        },
         text: function(context, point, options) {
             this.handleOptions(context, options);
             context.fillStyle = textHandler.getFillColor(options[2]);
@@ -1197,6 +1338,17 @@
                     point = p[1];
 
                 if (p[0] === 'line') {
+
+                    if (dHelper.isPointInPath(x, y, point[0], point[1])) {
+                        g.pointsToMove = 'head';
+                    }
+
+                    if (dHelper.isPointInPath(x, y, point[2], point[3])) {
+                        g.pointsToMove = 'tail';
+                    }
+                }
+
+                if (p[0] === 'arrow') {
 
                     if (dHelper.isPointInPath(x, y, point[0], point[1])) {
                         g.pointsToMove = 'head';
@@ -1340,6 +1492,16 @@
             }
 
             if (p[0] === 'line') {
+
+                tempContext.beginPath();
+
+                tempContext.arc(point[0], point[1], 10, Math.PI * 2, 0, !1);
+                tempContext.arc(point[2], point[3], 10, Math.PI * 2, 0, !1);
+
+                tempContext.fill();
+            }
+
+            if (p[0] === 'arrow') {
 
                 tempContext.beginPath();
 
@@ -1504,7 +1666,17 @@
                             getPoint(y, prevY, point[3])
                         ], p[2]
                     ];
+                }
 
+                if (p[0] === 'arrow') {
+                    points[i] = [p[0],
+                        [
+                            getPoint(x, prevX, point[0]),
+                            getPoint(y, prevY, point[1]),
+                            getPoint(x, prevX, point[2]),
+                            getPoint(y, prevY, point[3])
+                        ], p[2]
+                    ];
                 }
 
                 if (p[0] === 'text') {
@@ -1593,6 +1765,21 @@
                 isMoveAllPoints = g.pointsToMove === 'all';
 
             if (p[0] === 'line') {
+
+                if (g.pointsToMove === 'head' || isMoveAllPoints) {
+                    point[0] = getPoint(x, prevX, point[0]);
+                    point[1] = getPoint(y, prevY, point[1]);
+                }
+
+                if (g.pointsToMove === 'tail' || isMoveAllPoints) {
+                    point[2] = getPoint(x, prevX, point[2]);
+                    point[3] = getPoint(y, prevY, point[3]);
+                }
+
+                points[points.length - 1] = [p[0], point, p[2]];
+            }
+
+            if (p[0] === 'arrow') {
 
                 if (g.pointsToMove === 'head' || isMoveAllPoints) {
                     point[0] = getPoint(x, prevX, point[0]);
@@ -2278,6 +2465,47 @@
         }
     };
 
+    var arrowHandler = {
+        ismousedown: false,
+        prevX: 0,
+        prevY: 0,
+        arrowSize: 10,
+        mousedown: function(e) {
+            var x = e.pageX - canvas.offsetLeft,
+                y = e.pageY - canvas.offsetTop;
+
+            var t = this;
+
+            t.prevX = x;
+            t.prevY = y;
+
+            t.ismousedown = true;
+        },
+        mouseup: function(e) {
+            var x = e.pageX - canvas.offsetLeft,
+                y = e.pageY - canvas.offsetTop;
+
+            var t = this;
+            if (t.ismousedown) {
+                points[points.length] = ['arrow', [t.prevX, t.prevY, x, y], drawHelper.getOptions()];
+
+                t.ismousedown = false;
+            }
+        },
+        mousemove: function(e) {
+            var x = e.pageX - canvas.offsetLeft,
+                y = e.pageY - canvas.offsetTop;
+
+            var t = this;
+
+            if (t.ismousedown) {
+                tempContext.clearRect(0, 0, innerWidth, innerHeight);
+
+                drawHelper.arrow(tempContext, [t.prevX, t.prevY, x, y]);
+            }
+        }
+    };
+
     var rectHandler = {
         ismousedown: false,
         prevX: 0,
@@ -2605,6 +2833,7 @@
         else if (cache.isEraser) eraserHandler.mousedown(e);
         else if (cache.isText) textHandler.mousedown(e);
         else if (cache.isImage) imageHandler.mousedown(e);
+        else if (cache.isArrow) arrowHandler.mousedown(e);
 
         drawHelper.redraw();
     });
@@ -2627,6 +2856,7 @@
         else if (cache.isEraser) eraserHandler.mouseup(e);
         else if (cache.isText) textHandler.mouseup(e);
         else if (cache.isImage) imageHandler.mouseup(e);
+        else if (cache.isArrow) arrowHandler.mouseup(e);
 
         drawHelper.redraw();
     });
@@ -2649,6 +2879,7 @@
         else if (cache.isEraser) eraserHandler.mousemove(e);
         else if (cache.isText) textHandler.mousemove(e);
         else if (cache.isImage) imageHandler.mousemove(e);
+        else if (cache.isArrow) arrowHandler.mousemove(e);
     });
 
     var keyCode;

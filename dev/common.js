@@ -1,5 +1,6 @@
 var is = {
     isLine: false,
+    isArrow: false,
     isArc: false,
     isDragLastPath: false,
     isDragAllPaths: false,
@@ -14,7 +15,7 @@ var is = {
     set: function(shape) {
         var cache = this;
 
-        cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isEraser = cache.isText = cache.isImage = false;
+        cache.isLine = cache.isArrow = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isEraser = cache.isText = cache.isImage = false;
         cache['is' + shape] = true;
     }
 };
@@ -96,7 +97,7 @@ var common = {
         }
 
         output = output.substr(0, output.length - 2);
-        textarea.value = 'var points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + this.forLoop;
+        textarea.value = 'var points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + drawArrow.toString() + '\n\n' + this.forLoop;
 
         this.prevProps = null;
     },
@@ -124,6 +125,10 @@ var common = {
                 tempArray[i] = [this.strokeOrFill(p[2]) + '\ncontext.fillText(' + point[0] + ', ' + point[1] + ', ' + point[2] + ');'];
             }
 
+            if (p[0] === 'arrow') {
+                tempArray[i] = ['drawArrow(' + point[0] + ', ' + point[1] + ', ' + point[2] + ', ' + point[3] + ', \'' + p[2].join('\',\'') + '\');'];
+            }
+
             if (p[0] === 'arc') {
                 tempArray[i] = ['context.beginPath(); \n' + 'context.arc(' + toFixed(point[0]) + ',' + toFixed(point[1]) + ',' + toFixed(point[2]) + ',' + toFixed(point[3]) + ', 0,' + point[4] + '); \n' + this.strokeOrFill(p[2])];
             }
@@ -141,7 +146,7 @@ var common = {
             }
 
         }
-        textarea.value = tempArray.join('\n\n') + this.strokeFillText;
+        textarea.value = tempArray.join('\n\n') + this.strokeFillText + '\n\n' + drawArrow.toString();
 
         this.prevProps = null;
     },
@@ -185,6 +190,15 @@ var common = {
             }
 
             if (p[0] === 'line') {
+                output += this.shortenHelper(p[0], [
+                    getPoint(point[0], x, 'x'),
+                    getPoint(point[1], y, 'y'),
+                    getPoint(point[2], x, 'x'),
+                    getPoint(point[3], y, 'y')
+                ], p[2]);
+            }
+
+            if (p[0] === 'arrow') {
                 output += this.shortenHelper(p[0], [
                     getPoint(point[0], x, 'x'),
                     getPoint(point[1], y, 'y'),
@@ -246,7 +260,7 @@ var common = {
         }
 
         output = output.substr(0, output.length - 2);
-        textarea.value = 'var x = ' + x + ', y = ' + y + ', points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + this.forLoop;
+        textarea.value = 'var x = ' + x + ', y = ' + y + ', points = [' + output + '], length = points.length, point, p, i = 0;\n\n' + drawArrow.toString() + '\n\n' + this.forLoop;
 
         this.prevProps = null;
     },
@@ -296,6 +310,10 @@ var common = {
                 + this.strokeOrFill(p[2]);
             }
 
+            if (p[0] === 'arrow') {
+                output += 'drawArrow(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ', ' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ', \'' + p[2].join('\',\'') + '\');\n';
+            }
+
             if (p[0] === 'text') {
                 output += this.strokeOrFill(p[2]) + '\n' + 'context.fillText(' + point[0] + ', ' + getPoint(point[1], x, 'x') + ', ' + getPoint(point[2], y, 'y') + ');';
             }
@@ -318,32 +336,36 @@ var common = {
 
             if (i !== length - 1) output += '\n\n';
         }
-        textarea.value = output + this.strokeFillText;
+        textarea.value = output + this.strokeFillText + '\n\n' + drawArrow.toString();
 
         this.prevProps = null;
     },
     forLoop: 'for(i; i < length; i++) {\n' + '    p = points[i];\n' + '    point = p[1];\n' + '    context.beginPath();\n\n'
 
     // globals
-        + '    if(p[2]) { \n' + '       context.lineWidth = p[2][0];\n' + '       context.strokeStyle = p[2][1];\n' + '       context.fillStyle = p[2][2];\n'
+        + '    if(p[2]) { \n' + '\tcontext.lineWidth = p[2][0];\n' + '\tcontext.strokeStyle = p[2][1];\n' + '\tcontext.fillStyle = p[2][2];\n'
 
-        + '       context.globalAlpha = p[2][3];\n' + '       context.globalCompositeOperation = p[2][4];\n' + '       context.lineCap = p[2][5];\n' + '       context.lineJoin = p[2][6];\n' + '       context.font = p[2][7];\n' + '    }\n\n'
+        + '\tcontext.globalAlpha = p[2][3];\n' + '\tcontext.globalCompositeOperation = p[2][4];\n' + '\tcontext.lineCap = p[2][5];\n' + '\tcontext.lineJoin = p[2][6];\n' + '\tcontext.font = p[2][7];\n' + '    }\n\n'
 
     // line
 
-        + '    if(p[0] === "line") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
+        + '    if(p[0] === "line") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
+
+    // arrow
+
+        + '    if(p[0] === "arrow") { \n' + '\tdrawArrow(point[0], point[1], point[2], point[3], p[2]);\n' + '    }\n\n'
 
     // pencil
 
-        + '    if(p[0] === "pencil") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
+        + '    if(p[0] === "pencil") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
     // text
 
-        + '    if(p[0] === "text") { \n' + '       context.fillText(point[0], point[1], point[2]);\n' + '    }\n\n'
+        + '    if(p[0] === "text") { \n' + '\tcontext.fillText(point[0], point[1], point[2]);\n' + '    }\n\n'
 
     // eraser
 
-        + '    if(p[0] === "eraser") { \n' + '       context.moveTo(point[0], point[1]);\n' + '       context.lineTo(point[2], point[3]);\n' + '    }\n\n'
+        + '    if(p[0] === "eraser") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
 
     // arc
 
@@ -351,17 +373,17 @@ var common = {
 
     // rect
 
-        + '    if(p[0] === "rect") {\n' + '       context.strokeRect(point[0], point[1], point[2], point[3]);\n' + '       context.fillRect(point[0], point[1], point[2], point[3]);\n'
+        + '    if(p[0] === "rect") {\n' + '\tcontext.strokeRect(point[0], point[1], point[2], point[3]);\n' + '\tcontext.fillRect(point[0], point[1], point[2], point[3]);\n'
 
         + '    }\n\n'
 
     // quadratic
 
-        + '    if(p[0] === "quadratic") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '    }\n\n'
+        + '    if(p[0] === "quadratic") {\n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.quadraticCurveTo(point[2], point[3], point[4], point[5]);\n' + '    }\n\n'
 
     // bezier
 
-        + '    if(p[0] === "bezier") {\n' + '       context.moveTo(point[0], point[1]);\n' + '       context.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '    }\n\n'
+        + '    if(p[0] === "bezier") {\n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.bezierCurveTo(point[2], point[3], point[4], point[5], point[6], point[7]);\n' + '    }\n\n'
 
     // end-fill
 
@@ -369,9 +391,9 @@ var common = {
 
         + '}',
 
-    strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '    if(lineWidth) { \n' + '       context.globalAlpha = globalAlpha;\n' + '       context.globalCompositeOperation = globalCompositeOperation;\n' + '       context.lineCap = lineCap;\n' + '       context.lineJoin = lineJoin;\n'
+    strokeFillText: '\n\nfunction strokeOrFill(lineWidth, strokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font) { \n' + '    if(lineWidth) { \n' + '\tcontext.globalAlpha = globalAlpha;\n' + '\tcontext.globalCompositeOperation = globalCompositeOperation;\n' + '\tcontext.lineCap = lineCap;\n' + '\tcontext.lineJoin = lineJoin;\n'
 
-        + '       context.lineWidth = lineWidth;\n' + '       context.strokeStyle = strokeStyle;\n' + '       context.fillStyle = fillStyle;\n' + '       context.font = font;\n' + '    } \n\n'
+        + '\tcontext.lineWidth = lineWidth;\n' + '\tcontext.strokeStyle = strokeStyle;\n' + '\tcontext.fillStyle = fillStyle;\n' + '\tcontext.font = font;\n' + '    } \n\n'
 
         + '    context.stroke();\n' + '    context.fill();\n'
 
@@ -397,6 +419,62 @@ var common = {
         return result + '], ';
     }
 };
+
+function drawArrow(mx, my, lx, ly, options) {
+    function getOptions(opt) {
+        opt = opt || {};
+
+        return [
+            opt.lineWidth || 2,
+            opt.strokeStyle || '#6c96c8',
+            opt.fillStyle || 'transparent',
+            opt.globalAlpha || 1,
+            opt.globalCompositeOperation || 'source-over',
+            opt.lineCap || 'round',
+            opt.lineJoin || 'round',
+            opt.font || '15px "Arial"'
+        ];
+    }
+
+    function handleOptions(opt, isNoFillStroke) {
+        opt = opt || getOptions();
+
+        context.globalAlpha = opt[3];
+        context.globalCompositeOperation = opt[4];
+
+        context.lineCap = opt[5];
+        context.lineJoin = opt[6];
+        context.lineWidth = opt[0];
+
+        context.strokeStyle = opt[1];
+        context.fillStyle = opt[2];
+
+        context.font = opt[7];
+
+        if (!isNoFillStroke) {
+            context.stroke();
+            context.fill();
+        }
+    }
+
+    var arrowSize = 10;
+    var angle = Math.atan2(ly - my, lx - mx);
+
+    context.beginPath();
+    context.moveTo(mx, my);
+    context.lineTo(lx, ly);
+
+    handleOptions();
+
+    context.beginPath();
+    context.moveTo(lx, ly);
+    context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+    context.lineTo(lx - arrowSize * Math.cos(angle + Math.PI / 7), ly - arrowSize * Math.sin(angle + Math.PI / 7));
+    context.lineTo(lx, ly);
+    context.lineTo(lx - arrowSize * Math.cos(angle - Math.PI / 7), ly - arrowSize * Math.sin(angle - Math.PI / 7));
+
+    handleOptions();
+}
 
 function endLastPath() {
     var cache = is;

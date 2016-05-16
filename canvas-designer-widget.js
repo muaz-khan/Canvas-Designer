@@ -14,6 +14,7 @@ function CanvasDesigner() {
 
     var tools = {
         line: true,
+        arrow: true,
         pencil: true,
         dragSingle: true,
         dragMultiple: true,
