@@ -425,6 +425,8 @@
 
 	<section id="tool-box" class="tool-box">
         <canvas id="pencil-icon" width="40" height="40"></canvas>
+        <canvas id="marker-icon" width="40" height="40"></canvas>
+
         <canvas id="eraser-icon" width="40" height="40"></canvas>
         <canvas id="text-icon" width="40" height="40"></canvas>
         <canvas id="image-icon" width="40" height="40"></canvas>
@@ -501,6 +503,28 @@
 		</div>
 		
 		<div id="colors-done" class="btn-007">Done</div>
+	</section>
+
+	<!-- marker selector -->
+	
+	<section id="marker-container" class="context-popup marker-container">
+		Line Width:
+		<input type="text" id="marker-stroke-style" style="width:90px;border:1px solid #ece7e7;" value="10">
+		
+		<table style="width:173px;height:150px;">
+			<tbody id="marker-colors-list"></tbody>
+		</table>
+
+		Fill Style:
+		<input type="text" id="marker-fill-style" style="width:90px;border:1px solid #ece7e7;" value="000000">
+		
+		<br>
+
+		<div id="marker-done" class="btn-007" style="margin-top:5px;">Done</div>
+	</section>
+
+	<!-- marker selector -->
+		
 	</section>
 	
 	<!-- copy paths -->

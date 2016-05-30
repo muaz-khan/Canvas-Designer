@@ -20,6 +20,7 @@ addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function(e) {
     else if (cache.isText) textHandler.mousedown(e);
     else if (cache.isImage) imageHandler.mousedown(e);
     else if (cache.isArrow) arrowHandler.mousedown(e);
+    else if (cache.isMarker) markerHandler.mousedown(e);
 
     drawHelper.redraw();
 });
@@ -43,6 +44,7 @@ addEvent(canvas, isTouch ? 'touchend' : 'mouseup', function(e) {
     else if (cache.isText) textHandler.mouseup(e);
     else if (cache.isImage) imageHandler.mouseup(e);
     else if (cache.isArrow) arrowHandler.mouseup(e);
+    else if (cache.isMarker) markerHandler.mouseup(e);
 
     drawHelper.redraw();
 });
@@ -66,6 +68,7 @@ addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function(e) {
     else if (cache.isText) textHandler.mousemove(e);
     else if (cache.isImage) imageHandler.mousemove(e);
     else if (cache.isArrow) arrowHandler.mousemove(e);
+    else if (cache.isMarker) markerHandler.mousemove(e);
 });
 
 var keyCode;

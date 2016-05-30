@@ -1,4 +1,4 @@
-// Last time updated: 2016-05-16 12:24:31 PM UTC
+// Last time updated: 2016-05-30 3:32:19 PM UTC
 
 // _______________
 // Canvas-Designer
@@ -19,6 +19,7 @@
         isQuadraticCurve: false,
         isBezierCurve: false,
         isPencil: false,
+        isMarker: true,
         isEraser: false,
         isText: false,
         isImage: false,
@@ -26,7 +27,7 @@
         set: function(shape) {
             var cache = this;
 
-            cache.isLine = cache.isArrow = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isEraser = cache.isText = cache.isImage = false;
+            cache.isLine = cache.isArrow = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isMarker = cache.isEraser = cache.isText = cache.isImage = false;
             cache['is' + shape] = true;
         }
     };
@@ -124,6 +125,10 @@
                     tempArray[i] = ['context.beginPath();\n' + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n' + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n' + this.strokeOrFill(p[2])];
                 }
 
+                if (p[0] === 'marker') {
+                    tempArray[i] = ['context.beginPath();\n' + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n' + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n' + this.strokeOrFill(p[2])];
+                }
+
                 if (p[0] === 'eraser') {
                     tempArray[i] = ['context.beginPath();\n' + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n' + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n' + this.strokeOrFill(p[2])];
                 }
@@ -183,6 +188,15 @@
                 }
 
                 if (p[0] === 'pencil') {
+                    output += this.shortenHelper(p[0], [
+                        getPoint(point[0], x, 'x'),
+                        getPoint(point[1], y, 'y'),
+                        getPoint(point[2], x, 'x'),
+                        getPoint(point[3], y, 'y')
+                    ], p[2]);
+                }
+
+                if (p[0] === 'marker') {
                     output += this.shortenHelper(p[0], [
                         getPoint(point[0], x, 'x'),
                         getPoint(point[1], y, 'y'),
@@ -309,6 +323,12 @@
                     + this.strokeOrFill(p[2]);
                 }
 
+                if (p[0] === 'marker') {
+                    output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
+
+                    + this.strokeOrFill(p[2]);
+                }
+
                 if (p[0] === 'eraser') {
                     output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
 
@@ -369,6 +389,11 @@
         // pencil
 
             + '    if(p[0] === "pencil") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
+
+        // marker
+
+            + '    if(p[0] === "marker") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
+
 
         // text
 
@@ -548,6 +573,7 @@
         line: true,
         arrow: true,
         pencil: true,
+        marker: true,
         dragSingle: true,
         dragMultiple: true,
         eraser: true,
@@ -616,7 +642,7 @@
         }
 
         function bindEvent(context, shape) {
-            if (shape === 'Pencil') {
+            if (shape === 'Pencil' || shape === 'Marker') {
                 lineCap = lineJoin = 'round';
             }
 
@@ -631,7 +657,7 @@
                     textHandler.onShapeUnSelected();
                 }
 
-                if (shape === 'Pencil') {
+                if (shape === 'Pencil' || shape === 'Marker') {
                     lineCap = lineJoin = 'round';
                 }
 
@@ -669,7 +695,7 @@
                     });
                 }
 
-                if (this.id === 'pencil-icon' || this.id === 'eraser-icon') {
+                if (this.id === 'pencil-icon' || this.id === 'eraser-icon' || this.id === 'marker-icon') {
                     cache.lineCap = lineCap;
                     cache.lineJoin = lineJoin;
 
@@ -847,6 +873,101 @@
         if (tools.pencil === true) {
             decoratePencil();
         } else document.getElementById('pencil-icon').style.display = 'none';
+
+        function decorateMarker() {
+            function hexToRGBA(h, alpha) {
+                return 'rgba(' + hexToRGB(h).join(',') + ',' + alpha + ')';
+            }
+
+            function doneHandler() {
+                markerContainer.style.display = 'none';
+
+                markerLineWidth = strokeStyleText.value;
+                markerStrokeStyle = hexToRGBA(fillStyleText.value, alpha);
+            }
+
+            var colors = [
+                ['FFFFFF', '006600', '000099', 'CC0000', '8C4600'],
+                ['CCCCCC', '00CC00', '6633CC', 'FF0000', 'B28500'],
+                ['666666', '66FFB2', '006DD9', 'FF7373', 'FF9933'],
+                ['333333', '26FF26', '6699FF', 'CC33FF', 'FFCC99'],
+                ['000000', 'CCFF99', 'BFDFFF', 'FFBFBF', 'FFFF33']
+            ];
+
+            var context = getContext('marker-icon');
+
+            context.lineWidth = 9;
+            context.lineCap = 'round';
+            context.strokeStyle = 'green';
+            context.moveTo(35, 20);
+            context.lineTo(5, 25);
+            context.stroke();
+
+            context.fillStyle = 'Gray';
+            context.font = '9px Verdana';
+            context.fillText('Marker', 6, 12);
+
+            bindEvent(context, 'Marker');
+
+            var markerContainer = find('marker-container'),
+                strokeStyleText = find('marker-stroke-style'),
+                markerColorsList = find("marker-colors-list"),
+                fillStyleText = find('marker-fill-style'),
+                btnMarkerDone = find('marker-done'),
+                canvas = context.canvas,
+                alpha = 0.2;
+
+            // START INIT MARKER
+
+            markerStrokeStyle = hexToRGBA(fillStyleText.value, alpha);
+
+            var html = '';
+            colors.forEach(function(colorRow) {
+                var row = '<tr>';
+
+                colorRow.forEach(function(color) {
+                    row += '<td style="background-color:#' + color + '" data-color="' + color + '"></td>';
+                })
+                row += '</tr>';
+
+                html += row;
+            });
+
+            markerColorsList.innerHTML = html;
+
+            // console.log(markerColorsList.getElementsByTagName('td'))
+            Array.prototype.slice.call(markerColorsList.getElementsByTagName('td')).forEach(function(td) {
+                addEvent(td, 'mouseover', function() {
+                    var elColor = td.getAttribute('data-color');
+                    fillStyleText.value = elColor
+                });
+
+                addEvent(td, 'click', function() {
+                    var elColor = td.getAttribute('data-color');
+                    fillStyleText.value = elColor;
+
+                    doneHandler();
+                });
+            });
+
+            // END INIT MARKER
+
+            addEvent(canvas, 'click', function() {
+                hideContainers();
+
+                markerContainer.style.display = 'block';
+                markerContainer.style.top = (canvas.offsetTop + 1) + 'px';
+                markerContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
+
+                fillStyleText.focus();
+            });
+
+            addEvent(btnMarkerDone, 'click', doneHandler);
+        }
+
+        if (tools.marker === true) {
+            decorateMarker();
+        } else document.getElementById('marker-icon').style.display = 'none';
 
         function decorateEraser() {
             var context = getContext('eraser-icon');
@@ -1163,9 +1284,13 @@
     function hideContainers() {
         var additionalContainer = find('additional-container'),
             colorsContainer = find('colors-container'),
+            markerContainer = find('marker-container'),
             lineWidthContainer = find('line-width-container');
 
-        additionalContainer.style.display = colorsContainer.style.display = lineWidthContainer.style.display = 'none';
+        additionalContainer.style.display =
+            colorsContainer.style.display =
+            markerContainer.style.display =
+            lineWidthContainer.style.display = 'none';
     }
 
     var drawHelper = {
@@ -1217,6 +1342,13 @@
             }
         },
         line: function(context, point, options) {
+            context.beginPath();
+            context.moveTo(point[0], point[1]);
+            context.lineTo(point[2], point[3]);
+
+            this.handleOptions(context, options);
+        },
+        marker: function(context, point, options) {
             context.beginPath();
             context.moveTo(point[0], point[1]);
             context.lineTo(point[2], point[3]);
@@ -2019,6 +2151,150 @@
             }
         }
     };
+
+    var markerHandler = {
+        ismousedown: false,
+        prevX: 0,
+        prevY: 0,
+        mousedown: function(e) {
+            var x = e.pageX - canvas.offsetLeft,
+                y = e.pageY - canvas.offsetTop;
+
+            var t = this;
+
+            t.prevX = x;
+            t.prevY = y;
+
+            t.ismousedown = true;
+
+            // make sure that pencil is drawing shapes even 
+            // if mouse is down but mouse isn't moving
+            tempContext.lineCap = 'round';
+            markerDrawHelper.marker(tempContext, [t.prevX, t.prevY, x, y]);
+
+            points[points.length] = ['marker', [t.prevX, t.prevY, x, y], markerDrawHelper.getOptions()];
+
+            t.prevX = x;
+            t.prevY = y;
+        },
+        mouseup: function(e) {
+            this.ismousedown = false;
+        },
+        mousemove: function(e) {
+            var x = e.pageX - canvas.offsetLeft,
+                y = e.pageY - canvas.offsetTop;
+
+            var t = this;
+
+            if (t.ismousedown) {
+                tempContext.lineCap = 'round';
+                markerDrawHelper.marker(tempContext, [t.prevX, t.prevY, x, y]);
+
+                points[points.length] = ['marker', [t.prevX, t.prevY, x, y], markerDrawHelper.getOptions()];
+
+                t.prevX = x;
+                t.prevY = y;
+            }
+        }
+    }
+
+    var eraserHandler = {
+        ismousedown: false,
+        prevX: 0,
+        prevY: 0,
+        mousedown: function(e) {
+            var x = e.pageX - canvas.offsetLeft,
+                y = e.pageY - canvas.offsetTop;
+
+            var t = this;
+
+            t.prevX = x;
+            t.prevY = y;
+
+            t.ismousedown = true;
+
+            tempContext.lineCap = 'round';
+            drawHelper.marker(tempContext, [t.prevX, t.prevY, x, y]);
+
+            points[points.length] = ['marker', [t.prevX, t.prevY, x, y], drawHelper.getOptions()];
+
+            t.prevX = x;
+            t.prevY = y;
+        },
+        mouseup: function(e) {
+            this.ismousedown = false;
+        },
+        mousemove: function(e) {
+            var x = e.pageX - canvas.offsetLeft,
+                y = e.pageY - canvas.offsetTop;
+
+            var t = this;
+
+            if (t.ismousedown) {
+                tempContext.lineCap = 'round';
+                drawHelper.marker(tempContext, [t.prevX, t.prevY, x, y]);
+
+                points[points.length] = ['marker', [t.prevX, t.prevY, x, y], drawHelper.getOptions()];
+
+                t.prevX = x;
+                t.prevY = y;
+            }
+        }
+    };
+
+    function clone(obj) {
+        if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj)
+            return obj;
+
+        if (obj instanceof Date)
+            var temp = new obj.constructor(); //or new Date(obj);
+        else
+            var temp = obj.constructor();
+
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                obj['isActiveClone'] = null;
+                temp[key] = clone(obj[key]);
+                delete obj['isActiveClone'];
+            }
+        }
+
+        return temp;
+    }
+
+    function hexToRGB(h) {
+        return [
+            hexToR(h),
+            hexToG(h),
+            hexToB(h)
+        ]
+    }
+
+    function hexToR(h) {
+        return parseInt((cutHex(h)).substring(0, 2), 16)
+    }
+
+    function hexToG(h) {
+        return parseInt((cutHex(h)).substring(2, 4), 16)
+    }
+
+    function hexToB(h) {
+        return parseInt((cutHex(h)).substring(4, 6), 16)
+    }
+
+    function cutHex(h) {
+        return (h.charAt(0) == "#") ? h.substring(1, 7) : h
+    }
+
+    var markerLineWidth = 8,
+        markerGlobalAlpha = 0.1,
+        markerStrokeStyle = '#FF7373';
+
+    var markerDrawHelper = clone(drawHelper);
+
+    markerDrawHelper.getOptions = function() {
+        return [markerLineWidth, markerStrokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
+    }
 
     var eraserHandler = {
         ismousedown: false,
@@ -2834,6 +3110,7 @@
         else if (cache.isText) textHandler.mousedown(e);
         else if (cache.isImage) imageHandler.mousedown(e);
         else if (cache.isArrow) arrowHandler.mousedown(e);
+        else if (cache.isMarker) markerHandler.mousedown(e);
 
         drawHelper.redraw();
     });
@@ -2857,6 +3134,7 @@
         else if (cache.isText) textHandler.mouseup(e);
         else if (cache.isImage) imageHandler.mouseup(e);
         else if (cache.isArrow) arrowHandler.mouseup(e);
+        else if (cache.isMarker) markerHandler.mouseup(e);
 
         drawHelper.redraw();
     });
@@ -2880,6 +3158,7 @@
         else if (cache.isText) textHandler.mousemove(e);
         else if (cache.isImage) imageHandler.mousemove(e);
         else if (cache.isArrow) arrowHandler.mousemove(e);
+        else if (cache.isMarker) markerHandler.mousemove(e);
     });
 
     var keyCode;

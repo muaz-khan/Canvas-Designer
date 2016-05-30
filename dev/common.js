@@ -8,6 +8,7 @@ var is = {
     isQuadraticCurve: false,
     isBezierCurve: false,
     isPencil: false,
+    isMarker: true,
     isEraser: false,
     isText: false,
     isImage: false,
@@ -15,7 +16,7 @@ var is = {
     set: function(shape) {
         var cache = this;
 
-        cache.isLine = cache.isArrow = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isEraser = cache.isText = cache.isImage = false;
+        cache.isLine = cache.isArrow = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = cache.isPencil = cache.isMarker = cache.isEraser = cache.isText = cache.isImage = false;
         cache['is' + shape] = true;
     }
 };
@@ -113,6 +114,10 @@ var common = {
                 tempArray[i] = ['context.beginPath();\n' + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n' + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n' + this.strokeOrFill(p[2])];
             }
 
+            if (p[0] === 'marker') {
+                tempArray[i] = ['context.beginPath();\n' + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n' + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n' + this.strokeOrFill(p[2])];
+            }
+
             if (p[0] === 'eraser') {
                 tempArray[i] = ['context.beginPath();\n' + 'context.moveTo(' + point[0] + ', ' + point[1] + ');\n' + 'context.lineTo(' + point[2] + ', ' + point[3] + ');\n' + this.strokeOrFill(p[2])];
             }
@@ -172,6 +177,15 @@ var common = {
             }
 
             if (p[0] === 'pencil') {
+                output += this.shortenHelper(p[0], [
+                    getPoint(point[0], x, 'x'),
+                    getPoint(point[1], y, 'y'),
+                    getPoint(point[2], x, 'x'),
+                    getPoint(point[3], y, 'y')
+                ], p[2]);
+            }
+
+            if (p[0] === 'marker') {
                 output += this.shortenHelper(p[0], [
                     getPoint(point[0], x, 'x'),
                     getPoint(point[1], y, 'y'),
@@ -298,6 +312,12 @@ var common = {
                 + this.strokeOrFill(p[2]);
             }
 
+            if (p[0] === 'marker') {
+                output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
+
+                + this.strokeOrFill(p[2]);
+            }
+
             if (p[0] === 'eraser') {
                 output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
 
@@ -358,6 +378,11 @@ var common = {
     // pencil
 
         + '    if(p[0] === "pencil") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
+
+    // marker
+
+        + '    if(p[0] === "marker") { \n' + '\tcontext.moveTo(point[0], point[1]);\n' + '\tcontext.lineTo(point[2], point[3]);\n' + '    }\n\n'
+
 
     // text
 

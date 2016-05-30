@@ -24,7 +24,8 @@ function CanvasDesigner() {
         bezier: true,
         quadratic: true,
         text: true,
-        image: true
+        image: true,
+        marker: true
     };
 
     var selectedIcon = 'pencil';

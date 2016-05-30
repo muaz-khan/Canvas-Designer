@@ -28,6 +28,7 @@ module.exports = function(grunt) {
                     'dev/draw-helper.js',
                     'dev/drag-helper.js',
                     'dev/pencil-handler.js',
+                    'dev/marker-handler.js',
                     'dev/eraser-handler.js',
                     'dev/text-handler.js',
                     'dev/arc-handler.js',

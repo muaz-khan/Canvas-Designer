@@ -160,6 +160,9 @@ input {
     <h2>Select Tools</h2>
     <input type="checkbox" id="pencil" checked>
     <label for="pencil">pencil</label><br>
+
+    <input type="checkbox" id="marker" checked>
+    <label for="marker">marker</label><br>
     
     <input type="checkbox" id="eraser" checked>
     <label for="eraser">eraser</label><br>
@@ -400,7 +403,8 @@ designer.setTools({
     arc: true,
     rectangle: true,
     quadratic: true,
-    bezier: true
+    bezier: true,
+    marker: true
 });
 
 designer.appendTo(document.getElementById('widget-container'));

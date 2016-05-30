@@ -2,6 +2,7 @@ var tools = {
     line: true,
     arrow: true,
     pencil: true,
+    marker: true,
     dragSingle: true,
     dragMultiple: true,
     eraser: true,
@@ -70,7 +71,7 @@ window.addEventListener('load', function() {
     }
 
     function bindEvent(context, shape) {
-        if (shape === 'Pencil') {
+        if (shape === 'Pencil' || shape === 'Marker') {
             lineCap = lineJoin = 'round';
         }
 
@@ -85,7 +86,7 @@ window.addEventListener('load', function() {
                 textHandler.onShapeUnSelected();
             }
 
-            if (shape === 'Pencil') {
+            if (shape === 'Pencil' || shape === 'Marker') {
                 lineCap = lineJoin = 'round';
             }
 
@@ -123,7 +124,7 @@ window.addEventListener('load', function() {
                 });
             }
 
-            if (this.id === 'pencil-icon' || this.id === 'eraser-icon') {
+            if (this.id === 'pencil-icon' || this.id === 'eraser-icon' || this.id === 'marker-icon') {
                 cache.lineCap = lineCap;
                 cache.lineJoin = lineJoin;
 
@@ -301,6 +302,101 @@ window.addEventListener('load', function() {
     if (tools.pencil === true) {
         decoratePencil();
     } else document.getElementById('pencil-icon').style.display = 'none';
+
+    function decorateMarker() {
+        function hexToRGBA(h, alpha) {
+            return 'rgba(' + hexToRGB(h).join(',') + ',' + alpha + ')';
+        }
+
+        function doneHandler() {
+            markerContainer.style.display = 'none';
+
+            markerLineWidth = strokeStyleText.value;
+            markerStrokeStyle = hexToRGBA(fillStyleText.value, alpha);
+        }
+
+        var colors = [
+            ['FFFFFF', '006600', '000099', 'CC0000', '8C4600'],
+            ['CCCCCC', '00CC00', '6633CC', 'FF0000', 'B28500'],
+            ['666666', '66FFB2', '006DD9', 'FF7373', 'FF9933'],
+            ['333333', '26FF26', '6699FF', 'CC33FF', 'FFCC99'],
+            ['000000', 'CCFF99', 'BFDFFF', 'FFBFBF', 'FFFF33']
+        ];
+
+        var context = getContext('marker-icon');
+
+        context.lineWidth = 9;
+        context.lineCap = 'round';
+        context.strokeStyle = 'green';
+        context.moveTo(35, 20);
+        context.lineTo(5, 25);
+        context.stroke();
+
+        context.fillStyle = 'Gray';
+        context.font = '9px Verdana';
+        context.fillText('Marker', 6, 12);
+
+        bindEvent(context, 'Marker');
+
+        var markerContainer = find('marker-container'),
+            strokeStyleText = find('marker-stroke-style'),
+            markerColorsList = find("marker-colors-list"),
+            fillStyleText = find('marker-fill-style'),
+            btnMarkerDone = find('marker-done'),
+            canvas = context.canvas,
+            alpha = 0.2;
+
+        // START INIT MARKER
+
+        markerStrokeStyle = hexToRGBA(fillStyleText.value, alpha);
+
+        var html = '';
+        colors.forEach(function(colorRow) {
+            var row = '<tr>';
+
+            colorRow.forEach(function(color) {
+                row += '<td style="background-color:#' + color + '" data-color="' + color + '"></td>';
+            })
+            row += '</tr>';
+
+            html += row;
+        });
+
+        markerColorsList.innerHTML = html;
+
+        // console.log(markerColorsList.getElementsByTagName('td'))
+        Array.prototype.slice.call(markerColorsList.getElementsByTagName('td')).forEach(function(td) {
+            addEvent(td, 'mouseover', function() {
+                var elColor = td.getAttribute('data-color');
+                fillStyleText.value = elColor
+            });
+
+            addEvent(td, 'click', function() {
+                var elColor = td.getAttribute('data-color');
+                fillStyleText.value = elColor;
+
+                doneHandler();
+            });
+        });
+
+        // END INIT MARKER
+
+        addEvent(canvas, 'click', function() {
+            hideContainers();
+
+            markerContainer.style.display = 'block';
+            markerContainer.style.top = (canvas.offsetTop + 1) + 'px';
+            markerContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
+
+            fillStyleText.focus();
+        });
+
+        addEvent(btnMarkerDone, 'click', doneHandler);
+    }
+
+    if (tools.marker === true) {
+        decorateMarker();
+    } else document.getElementById('marker-icon').style.display = 'none';
 
     function decorateEraser() {
         var context = getContext('eraser-icon');
@@ -617,7 +713,11 @@ window.addEventListener('load', function() {
 function hideContainers() {
     var additionalContainer = find('additional-container'),
         colorsContainer = find('colors-container'),
+        markerContainer = find('marker-container'),
         lineWidthContainer = find('line-width-container');
 
-    additionalContainer.style.display = colorsContainer.style.display = lineWidthContainer.style.display = 'none';
+    additionalContainer.style.display =
+        colorsContainer.style.display =
+        markerContainer.style.display =
+        lineWidthContainer.style.display = 'none';
 }

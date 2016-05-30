@@ -45,6 +45,7 @@ You can use [`designer.setSelected`](https://github.com/muaz-khan/Canvas-Designe
 10. `text` --- to write texts on single or multiple lines, select font families/sizes and more
 11. `image` --- add external images
 12. `arrow` --- draw arrow lines
+13. `marker` --- draw markers
 
 The correct name for `dragSingle` should be: `drag-move-resize last-selected-shape`.
 
@@ -94,11 +95,9 @@ You can paste any text: English, Arabic, Chinese etc.
 
    `designer.appendTo(document.body);`
 
-E.g. (Please don't forget replacing `1.0.7` with latest version)
-
 ```html
 <!-- 1st step -->
-<script src="https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.7/canvas-designer-widget.js"></script>
+<script src="https://cdn.webrtc-experiment.com/Canvas-Designer/canvas-designer-widget.js"></script>
 
 <!-- 2nd step -->
 <script>
@@ -106,14 +105,14 @@ var designer = new CanvasDesigner();
 
 // both links are mandatory
 // widget.html will internally use widget.js
-designer.widgetHtmlURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.7/widget.html'; // you can place this file anywhere
-designer.widgetJsURL = 'https://github.com/muaz-khan/Canvas-Designer/releases/download/1.0.7/widget.js';     // you can place this file anywhere
+designer.widgetHtmlURL = 'https://cdn.webrtc-experiment.com/Canvas-Designer/widget.html'; // you can place this file anywhere
+designer.widgetJsURL = 'https://cdn.webrtc-experiment.com/Canvas-Designer/widget.js';     // you can place this file anywhere
 </script>
 
 <!-- 3rd i.e. last step -->
 <script>
 // <iframe> will be appended to "document.body"
-designer.appendTo(document.body);
+designer.appendTo(document.body || document.documentElement);
 </script>
 ```
 
@@ -254,6 +253,7 @@ designer.setTools({
     line: true,
     arrow: true,
     pencil: true,
+    marker: true,
     dragSingle: true,
     dragMultiple: true,
     eraser: true,
@@ -376,11 +376,159 @@ designer.undo({
 
 `designer.pointsLength` shows number of shapes; and `designer.undo` accepts shape-index as well.
 
-# How to contribute?
+<h2 align="center">Add New Tools</h2>
 
-It is not too much complex to add new tools :) Its easy.
+## First Step
+
+Open [`widget.html`](https://github.com/muaz-khan/Canvas-Designer/blob/master/widget.html) and add your new tool-icon HTML.
+
+```html
+<div id="tool-box" class="tool-box"> <!-- search for this div; and include your HTML inside this div -->
+    <canvas id="yourNewToolIcon" width="40" height="40"></canvas> <!-- here is your icon-HTML -->
+</div>
+```
+
+## Second Step
+
+Open [`decorator.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/decorator.js) and decorate your new HTML icon.
+
+```javascript
+var tools = {
+    yourNewToolIcon: true // add this line to make sure index.html can use it
+};
+```
+
+Search for `decorateLine` method, and append following snippet quickly after that method:
+
+```javascript
+function decorateYourNewToolIcon() {
+    var context = getContext('yourNewToolIcon');
+
+    context.fillStyle = 'Gray';
+    context.font = '9px Verdana';
+    context.fillText('New', 16, 12);
+
+    bindEvent(context, 'YourNewToolIconSelected');
+}
+
+if (tools.yourNewToolIcon === true) {
+    decorateYourNewToolIcon();
+} else document.getElementById('yourNewToolIcon').style.display = 'none';
+```
+
+## Third Step
+
+Open [`common.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js) and add selection-states for your new tool-icon (i.e. whether your new tool icon is selected or not):
+
+```javascript
+var is = {
+    isYourNewToolIconSelected: false, // add this line
+
+    set: function (shape) {
+        var cache = this;
+
+        cache.isYourNewToolIconSelected = false; // add this line as well.
+
+        // ..... don't modify anything else
+        cache['is' + shape] = true;
+    }
+};
+```
+
+You merely need to set `isYourNewToolIconSelected:true` also `cache.isYourNewToolIconSelected=false`.
+
+## Fourth Step
+
+Create new file in the [`dev`](https://github.com/muaz-khan/Canvas-Designer/tree/master/dev) directory. Name this file as `yourNewToolIcon-handler.js`. 
+
+This file MUST look like this:
+
+```javascript
+var yourNewToolIconHandler = {
+    ismousedown: false,
+
+    mousedown: function(e) {
+        this.ismousedown = true;
+    },
+    
+    mouseup: function(e) { 
+        this.ismousedown = false;
+    },
+    
+    mousemove: function(e) {
+        if(this.ismousedown) { ... }
+    }
+};
+```
+
+You can check other `*-handler.js` from [`dev`](https://github.com/muaz-khan/Canvas-Designer/tree/master/dev) directory to get the idea how exactly it works.
+
+## Fifth Step
+
+Open [`events-handler.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/events-handler.js) and make sure that your above `yourNewToolIconHandler` object is called for mouse up/down/move events.
+
+```javascript
+addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function (e) {
+
+    // you merely need to add this line at the end of this method
+    else if (is.isYourNewToolIconSelected) yourNewToolIconHandler.mousedown(e);
+});
+
+addEvent(document, isTouch ? 'touchend' : 'mouseup', function (e) {
+
+    // you merely need to add this line at the end of this method
+    else if (is.isYourNewToolIconSelected) yourNewToolIconHandler.mouseup(e);
+});
+
+addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function (e) {
+
+    // you merely need to add this line at the end of this method
+    else if (is.isYourNewToolIconSelected) yourNewToolIconHandler.mousemove(e);
+});
+```
+
+First of all, we are checking whether your tool-icon is selected or not: `is.isYourNewToolIconSelected`
+
+Then we are calling `yourNewToolIconHandler` dot `mousedown/mouseup/mousemove` events respectively.
+
+## Sixth Step
+
+Open [`draw-helper.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/draw-helper.js). Make sure that your new tool-icon can be drawn on the `<canvas>` surface.
+
+```javascript
+yourNewToolIcon: function(context, point, options) {
+    context.beginPath();
+    context.moveTo(point[0], point[1]);
+    context.whateverYouWantToDoHere(point[2], point[3]);
+
+    this.handleOptions(context, options);
+}
+```
+
+Usually `point[0]` is `x` coordinates; `point[1]` is `y` coordinates; `point[2]` is `width` and `point[3]` is `height`.
+
+Different shapes can handle these points differently.
+
+There is NO-limit for `point[index]`. You can add as many points as you want.
+
+Complex shapes can add 10 or 20 points.
+
+## Seventh Step
+
+Open [`drag-helper.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/drag-helper.js) and make sure that your new shape can be dragged/resized/move.
+
+Search for `p[0] === 'line'` and add similar code-blocks for your shape (new-tool-icon) as well.
+
+## Eighth Step
+
+Open [`common.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js) and make sure that your new shape (tool-icon) is printed on the `<textarea>` as well.
+
+This allows end-users to copy your shape's code and use anywhere on their own web-pages.
+
+For more information:
 
 * https://www.webrtc-experiment.com/Canvas-Designer/Help/#contribute
+
 
 # Shortcut Keys
 
@@ -391,6 +539,13 @@ ctrl+a (to select all shapes)
 ctrl+c (copy last-selected shape)
 ctrl+v (paste last-copied shape)
 ```
+
+# Contributors
+
+1. [Muaz Khan](https://github.com/muaz-khan)
+2. [Oleg Aliullov](https://github.com/rashidovich2)
+
+Please make pull-request to update this list.
 
 # License
 
