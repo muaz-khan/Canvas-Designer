@@ -463,6 +463,10 @@ var yourNewToolIconHandler = {
 
 You can check other `*-handler.js` from [`dev`](https://github.com/muaz-khan/Canvas-Designer/tree/master/dev) directory to get the idea how exactly it works.
 
+Now open [`Gruntfile.js#L43`](https://github.com/muaz-khan/Canvas-Designer/blob/master/Gruntfile.js#L43) and add link to your new file: `dev/events-handler.js`.
+
+Now compile all your changes using `grunt`.
+
 ## Fifth Step
 
 Open [`events-handler.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/events-handler.js) and make sure that your above `yourNewToolIconHandler` object is called for mouse up/down/move events.
@@ -525,7 +529,18 @@ Open [`common.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/
 
 This allows end-users to copy your shape's code and use anywhere on their own web-pages.
 
-For more information:
+Open [`common.js`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js) file; there is a function [`updateTextArea`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js#L67) inside the "common" object – which is aimed to output into textarea element.
+
+You don't have to change [`updateTextArea`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js#L67). For simplicity purpose, code is separated in different functions/properties that you've to edit:
+
+1. [`forLoop`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js#L363)
+2. [`absoluteNOTShortened`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js#L105)
+3. [`relativeShortened`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js#L158)
+4. [`relativeNOTShortened`](https://github.com/muaz-khan/Canvas-Designer/blob/master/dev/common.js#L281)
+
+Search for `p[0] === 'line'` and add similar code-blocks for your shape (new-tool-icon) as well.
+
+### For more information
 
 * https://www.webrtc-experiment.com/Canvas-Designer/Help/#contribute
 
@@ -539,6 +554,8 @@ ctrl+a (to select all shapes)
 ctrl+c (copy last-selected shape)
 ctrl+v (paste last-copied shape)
 ```
+
+`ctrl+mousedown` allows you quickly copy/paste all shapes. (i.e. ctrl button + mouse down)
 
 # Contributors
 
