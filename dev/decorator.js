@@ -11,7 +11,8 @@ var tools = {
     bezier: true,
     quadratic: true,
     text: true,
-    image: true
+    image: true,
+    zoom: true
 };
 
 if (params.tools) {
@@ -285,6 +286,30 @@ window.addEventListener('load', function() {
     if (tools.arrow === true) {
         decorateArrow();
     } else document.getElementById('arrow').style.display = 'none';
+
+    function decoreZoomUp() {
+        var context = getContext('zoom-up');
+        zoomHandler.icons.up(context);
+        addEvent(context.canvas, 'click', function() {
+            zoomHandler.up();
+        });
+    }
+
+    function decoreZoomDown() {
+        var context = getContext('zoom-down');
+        zoomHandler.icons.down(context);
+        addEvent(context.canvas, 'click', function() {
+            zoomHandler.down();
+        });
+    }
+
+    if (tools.zoom === true) {
+        decoreZoomUp();
+        decoreZoomDown();
+    } else {
+        document.getElementById('zoom-up').style.display = 'none';
+        document.getElementById('zoom-down').style.display = 'none';
+    }
 
     function decoratePencil() {
         var context = getContext('pencil-icon');

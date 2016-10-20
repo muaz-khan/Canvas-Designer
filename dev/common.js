@@ -25,8 +25,11 @@ function addEvent(element, eventType, callback) {
     if (element.addEventListener) {
         element.addEventListener(eventType, callback, !1);
         return true;
-    } else if (element.attachEvent) return element.attachEvent('on' + eventType, callback);
-    else element['on' + eventType] = callback;
+    } else if (element.attachEvent) {
+        return element.attachEvent('on' + eventType, callback);
+    } else {
+        element['on' + eventType] = callback;
+    }
     return this;
 }
 

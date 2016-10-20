@@ -3,6 +3,8 @@
 * Main demo: https://www.webrtc-experiment.com/Canvas-Designer/
 * Multiple designers demo: https://www.webrtc-experiment.com/Canvas-Designer/multiple.html
 
+YouTube video: https://www.youtube.com/watch?v=pvAj5l_v3cM
+
 [![npm](https://img.shields.io/npm/v/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![downloads](https://img.shields.io/npm/dm/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![Build Status: Linux](https://travis-ci.org/muaz-khan/Canvas-Designer.png?branch=master)](https://travis-ci.org/muaz-khan/Canvas-Designer)
 
 > "Collaborative" [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) i.e. Canvas-Drawing tool allows you draw bezier/quadratic curves, rectangles, circles and lines. You can also set strokes, back/forth colors and much more. You can draw using pencils, erase drawing, type texts etc. You can [easily add your own tools](https://www.webrtc-experiment.com/Canvas-Designer/Help/#contribute).
@@ -51,9 +53,10 @@ The correct name for `dragSingle` should be: `drag-move-resize last-selected-sha
 
 The correct name for `dragMultiple` should be: `drag-move all-shapes`.
 
-**Upcoming** tools & features:
+### Upcoming tools
 
-1. Resize all shapes at once (currently you can resize last selected shape only)
+1. Allow users to add video-streams or screen-streams or existing-webm-mp4-videos
+2. Resize all shapes at once (currently you can resize last selected shape only)
 
 # Features
 
@@ -262,7 +265,8 @@ designer.setTools({
     bezier: true,
     quadratic: true,
     text: true,
-    image: true
+    image: true,
+    zoom: true
 });
 ```
 
@@ -305,7 +309,7 @@ designer.iframe.style.border = '5px solid red';
 
 ## `toDataURL`
 
-Get data-URL of your drawings! 
+Get data-URL of your drawings!
 
 ```javascript
 designer.toDataURL('image/png', function(dataURL) {
@@ -439,7 +443,7 @@ You merely need to set `isYourNewToolIconSelected:true` also `cache.isYourNewToo
 
 ## Fourth Step
 
-Create new file in the [`dev`](https://github.com/muaz-khan/Canvas-Designer/tree/master/dev) directory. Name this file as `yourNewToolIcon-handler.js`. 
+Create new file in the [`dev`](https://github.com/muaz-khan/Canvas-Designer/tree/master/dev) directory. Name this file as `yourNewToolIcon-handler.js`.
 
 This file MUST look like this:
 
@@ -450,11 +454,11 @@ var yourNewToolIconHandler = {
     mousedown: function(e) {
         this.ismousedown = true;
     },
-    
-    mouseup: function(e) { 
+
+    mouseup: function(e) {
         this.ismousedown = false;
     },
-    
+
     mousemove: function(e) {
         if(this.ismousedown) { ... }
     }
