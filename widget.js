@@ -1,4 +1,4 @@
-// Last time updated: 2016-10-20 11:27:38 AM UTC
+// Last time updated: 2016-11-16 4:15:14 PM UTC
 
 // _______________
 // Canvas-Designer
@@ -33,6 +33,14 @@
     };
 
     function addEvent(element, eventType, callback) {
+        if (eventType.split(' ').length > 1) {
+            var events = eventType.split(' ');
+            for (var i = 0; i < events; i++) {
+                addEvent(element, events[i], callback);
+            }
+            return;
+        }
+
         if (element.addEventListener) {
             element.addEventListener(eventType, callback, !1);
             return true;
@@ -597,19 +605,63 @@
         }
     }
 
+    // marker + pencil
+    function hexToR(h) {
+        return parseInt((cutHex(h)).substring(0, 2), 16)
+    }
+
+    function hexToG(h) {
+        return parseInt((cutHex(h)).substring(2, 4), 16)
+    }
+
+    function hexToB(h) {
+        return parseInt((cutHex(h)).substring(4, 6), 16)
+    }
+
+    function cutHex(h) {
+        return (h.charAt(0) == "#") ? h.substring(1, 7) : h
+    }
+
+    function clone(obj) {
+        if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj)
+            return obj;
+
+        if (obj instanceof Date)
+            var temp = new obj.constructor(); //or new Date(obj);
+        else
+            var temp = obj.constructor();
+
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                obj['isActiveClone'] = null;
+                temp[key] = clone(obj[key]);
+                delete obj['isActiveClone'];
+            }
+        }
+
+        return temp;
+    }
+
+    function hexToRGB(h) {
+        return [
+            hexToR(h),
+            hexToG(h),
+            hexToB(h)
+        ]
+    }
+
     var drawHelper = {
-        redraw: function(skipSync) {
+        redraw: function() {
             tempContext.clearRect(0, 0, innerWidth, innerHeight);
             context.clearRect(0, 0, innerWidth, innerHeight);
 
             var i, point, length = points.length;
             for (i = 0; i < length; i++) {
                 point = points[i];
-                this[point[0]](context, point[1], point[2]);
-            }
-
-            if (!skipSync && typeof syncPoints !== 'undefined') {
-                syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
+                if (point && point.length && this[point[0]]) {
+                    this[point[0]](context, point[1], point[2]);
+                }
+                // else warn
             }
         },
         getOptions: function(opt) {
@@ -1428,9 +1480,9 @@
             // make sure that pencil is drawing shapes even 
             // if mouse is down but mouse isn't moving
             tempContext.lineCap = 'round';
-            drawHelper.line(tempContext, [t.prevX, t.prevY, x, y]);
+            pencilDrawHelper.line(tempContext, [t.prevX, t.prevY, x, y]);
 
-            points[points.length] = ['line', [t.prevX, t.prevY, x, y], drawHelper.getOptions()];
+            points[points.length] = ['line', [t.prevX, t.prevY, x, y], pencilDrawHelper.getOptions()];
 
             t.prevX = x;
             t.prevY = y;
@@ -1446,15 +1498,24 @@
 
             if (t.ismousedown) {
                 tempContext.lineCap = 'round';
-                drawHelper.line(tempContext, [t.prevX, t.prevY, x, y]);
+                pencilDrawHelper.line(tempContext, [t.prevX, t.prevY, x, y]);
 
-                points[points.length] = ['line', [t.prevX, t.prevY, x, y], drawHelper.getOptions()];
+                points[points.length] = ['line', [t.prevX, t.prevY, x, y], pencilDrawHelper.getOptions()];
 
                 t.prevX = x;
                 t.prevY = y;
             }
         }
-    };
+    }
+
+    var pencilLineWidth = document.getElementById('pencil-stroke-style').value,
+        pencilStrokeStyle = '#' + document.getElementById('pencil-fill-style').value;
+
+    var pencilDrawHelper = clone(drawHelper);
+
+    pencilDrawHelper.getOptions = function() {
+        return [pencilLineWidth, pencilStrokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
+    }
 
     var markerHandler = {
         ismousedown: false,
@@ -1502,58 +1563,14 @@
         }
     }
 
-    function clone(obj) {
-        if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj)
-            return obj;
-
-        if (obj instanceof Date)
-            var temp = new obj.constructor(); //or new Date(obj);
-        else
-            var temp = obj.constructor();
-
-        for (var key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                obj['isActiveClone'] = null;
-                temp[key] = clone(obj[key]);
-                delete obj['isActiveClone'];
-            }
-        }
-
-        return temp;
-    }
-
-    function hexToRGB(h) {
-        return [
-            hexToR(h),
-            hexToG(h),
-            hexToB(h)
-        ]
-    }
-
-    function hexToR(h) {
-        return parseInt((cutHex(h)).substring(0, 2), 16)
-    }
-
-    function hexToG(h) {
-        return parseInt((cutHex(h)).substring(2, 4), 16)
-    }
-
-    function hexToB(h) {
-        return parseInt((cutHex(h)).substring(4, 6), 16)
-    }
-
-    function cutHex(h) {
-        return (h.charAt(0) == "#") ? h.substring(1, 7) : h
-    }
-
-    var markerLineWidth = 8,
-        markerGlobalAlpha = 0.1,
-        markerStrokeStyle = '#FF7373';
+    var markerLineWidth = document.getElementById('marker-stroke-style').value,
+        markerStrokeStyle = '#' + document.getElementById('marker-fill-style').value,
+        markerGlobalAlpha = 0.7;
 
     var markerDrawHelper = clone(drawHelper);
 
     markerDrawHelper.getOptions = function() {
-        return [markerLineWidth, markerStrokeStyle, fillStyle, globalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
+        return [markerLineWidth, markerStrokeStyle, fillStyle, markerGlobalAlpha, globalCompositeOperation, lineCap, lineJoin, font];
     }
 
     var eraserHandler = {
@@ -2697,6 +2714,19 @@
         }
 
         function decoratePencil() {
+
+            function hexToRGBA(h, alpha) {
+                return 'rgba(' + hexToRGB(h).join(',') + ',1)';
+            }
+
+            var colors = [
+                ['FFFFFF', '006600', '000099', 'CC0000', '8C4600'],
+                ['CCCCCC', '00CC00', '6633CC', 'FF0000', 'B28500'],
+                ['666666', '66FFB2', '006DD9', 'FF7373', 'FF9933'],
+                ['333333', '26FF26', '6699FF', 'CC33FF', 'FFCC99'],
+                ['000000', 'CCFF99', 'BFDFFF', 'FFBFBF', 'FFFF33']
+            ];
+
             var context = getContext('pencil-icon');
 
             context.lineWidth = 5;
@@ -2710,6 +2740,81 @@
             context.fillText('Pencil', 6, 12);
 
             bindEvent(context, 'Pencil');
+
+            var pencilContainer = find('pencil-container'),
+                pencilColorContainer = find('pencil-fill-colors'),
+                strokeStyleText = find('pencil-stroke-style'),
+                pencilColorsList = find("pencil-colors-list"),
+                fillStyleText = find('pencil-fill-style'),
+                pencilSelectedColor = find('pencil-selected-color'),
+                pencilSelectedColor2 = find('pencil-selected-color-2'),
+                btnPencilDone = find('pencil-done'),
+                canvas = context.canvas,
+                alpha = 0.2;
+
+            // START INIT PENCIL
+
+
+
+            pencilStrokeStyle = hexToRGBA(fillStyleText.value, alpha)
+
+            pencilSelectedColor.style.backgroundColor =
+                pencilSelectedColor2.style.backgroundColor = '#' + fillStyleText.value;
+
+            colors.forEach(function(colorRow) {
+                var row = '<tr>';
+
+                colorRow.forEach(function(color) {
+                    row += '<td style="background-color:#' + color + '" data-color="' + color + '"></td>';
+                })
+                row += '</tr>';
+
+                pencilColorsList.innerHTML += row;
+            })
+
+            // console.log(pencilColorsList.getElementsByTagName('td'))
+            Array.prototype.slice.call(pencilColorsList.getElementsByTagName('td')).forEach(function(td) {
+                addEvent(td, 'mouseover', function() {
+                    var elColor = td.getAttribute('data-color');
+                    pencilSelectedColor2.style.backgroundColor = '#' + elColor;
+                    fillStyleText.value = elColor
+                });
+
+                addEvent(td, 'click', function() {
+                    var elColor = td.getAttribute('data-color');
+                    pencilSelectedColor.style.backgroundColor =
+                        pencilSelectedColor2.style.backgroundColor = '#' + elColor;
+
+                    fillStyleText.value = elColor;
+
+
+                    pencilColorContainer.style.display = 'none';
+                });
+            })
+
+            // END INIT PENCIL
+
+            addEvent(canvas, 'click', function() {
+                hideContainers();
+
+                pencilContainer.style.display = 'block';
+                pencilContainer.style.top = (canvas.offsetTop + 1) + 'px';
+                pencilContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
+
+                fillStyleText.focus();
+            });
+
+            addEvent(btnPencilDone, 'click', function() {
+                pencilContainer.style.display = 'none';
+                pencilColorContainer.style.display = 'none';
+
+                pencilLineWidth = strokeStyleText.value;
+                pencilStrokeStyle = hexToRGBA(fillStyleText.value, alpha);
+            });
+
+            addEvent(pencilSelectedColor, 'click', function() {
+                pencilColorContainer.style.display = 'block';
+            });
         }
 
         if (tools.pencil === true) {
@@ -3141,12 +3246,16 @@
             colorsContainer = find('colors-container'),
             markerContainer = find('marker-container'),
             markerColorContainer = find('marker-fill-colors'),
+            pencilContainer = find('pencil-container'),
+            pencilColorContainer = find('pencil-fill-colors'),
             lineWidthContainer = find('line-width-container');
 
         additionalContainer.style.display =
             colorsContainer.style.display =
             markerColorContainer.style.display =
             markerContainer.style.display =
+            pencilColorContainer.style.display =
+            pencilContainer.style.display =
             lineWidthContainer.style.display = 'none';
     }
 
@@ -3175,9 +3284,12 @@
         else if (cache.isMarker) markerHandler.mousedown(e);
 
         drawHelper.redraw();
+
+        e.preventDefault();
+        e.stopPropagation();
     });
 
-    addEvent(canvas, isTouch ? 'touchend' : 'mouseup', function(e) {
+    addEvent(canvas, isTouch ? 'touchend touchcancel' : 'mouseup', function(e) {
         if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : {
             pageX: 0,
             pageY: 0
@@ -3199,6 +3311,11 @@
         else if (cache.isMarker) markerHandler.mouseup(e);
 
         drawHelper.redraw();
+
+        syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
+
+        e.preventDefault();
+        e.stopPropagation();
     });
 
     addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function(e) {
@@ -3221,6 +3338,9 @@
         else if (cache.isImage) imageHandler.mousemove(e);
         else if (cache.isArrow) arrowHandler.mousemove(e);
         else if (cache.isMarker) markerHandler.mousemove(e);
+
+        e.preventDefault();
+        e.stopPropagation();
     });
 
     var keyCode;
@@ -3303,7 +3423,7 @@
                 points.length = points.length - 1;
                 drawHelper.redraw();
 
-                syncPoints(true);
+                syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
             }
         }
 
@@ -3324,6 +3444,8 @@
         // Ctrl + v
         if (isControlKeyPressed && keyCode === 86 && copiedStuff.length) {
             paste();
+
+            syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
         }
 
         // Ending the Control Key
@@ -3456,7 +3578,7 @@
         lastPointIndex = points.length;
 
         // redraw the <canvas> surfaces
-        drawHelper.redraw(true);
+        drawHelper.redraw();
     }, false);
 
     function syncPoints(isSyncAll) {

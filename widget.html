@@ -399,38 +399,40 @@
             color: white!important;
         }
         #marker-selected-color,
-        #marker-selected-color-2 {
+        #marker-selected-color-2, #pencil-selected-color,
+        #pencil-selected-color-2 {
             display: inline-block;
+            vertical-align: middle;
             width: 30px;
             height: 30px;
         }
-        #marker-fill-colors {
+        #marker-fill-colors, #pencil-fill-colors {
             display: none;
         }
-        #marker-color-container {
+        #marker-color-container, #pencil-color-container {
             position: relative;
         }
-        #marker-fill-colors {
+        #marker-fill-colors, #pencil-fill-colors {
             left: 100%;
             top: 0;
             width: 100px;
             padding: 10px;
         }
-        #marker-fill-style {
+        #marker-fill-style, #pencil-fill-style {
             width: 50px;
             display: inline-block;
         }
-        #marker-colors-list {
+        #marker-colors-list, #pencil-colors-list {
             margin: 10px auto;
             border-collapse: collapse;
         }
-        #marker-colors-list td {
+        #marker-colors-list td, #pencil-colors-list td {
             width: 15px;
             height: 15px;
             border: 1px solid black;
             padding: 0;
         }
-        #marker-colors-list td:hover {
+        #marker-colors-list td:hover, #pencil-colors-list td:hover {
             border: 1px solid white;
         }
     </style>
@@ -534,7 +536,7 @@
     <section id="marker-container" class="context-popup colors-container">
 
         <div class="input-div">
-            <label for="marker-stroke-style">Толщина:</label>
+            <label for="marker-stroke-style">Thickness:</label>
             <select id="marker-stroke-style" value="8">
                 <option value='8'>8</option>
                 <option value='9'>9</option>
@@ -575,6 +577,60 @@
     </section>
 
     <!-- marker selector -->
+
+    <!-- pencil selector -->
+
+    <section id="pencil-container" class="context-popup colors-container">
+
+        <div class="input-div">
+            <label for="pencil-stroke-style">Thickness:</label>
+            <select id="pencil-stroke-style">
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+                <option value='5' selected>5</option>
+                <option value='6'>6</option>
+                <option value='7'>7</option>
+                <option value='8'>8</option>
+                <option value='9'>9</option>
+                <option value='10'>10</option>
+                <option value='11'>11</option>
+                <option value='12'>12</option>
+                <option value='14'>14</option>
+                <option value='16'>16</option>
+                <option value='18'>18</option>
+                <option value='20'>20</option>
+                <option value='22'>22</option>
+                <option value='22'>22</option>
+                <option value='24'>24</option>
+                <option value='26'>26</option>
+                <option value='28'>28</option>
+                <option value='36'>36</option>
+                <option value='36'>36</option>
+                <option value='48'>48</option>
+                <option value='72'>72</option>
+            </select>
+        </div>
+        <div class="input-div" id='pencil-color-container'>
+            <label for="pencil-fill-style">Fill Color:</label>
+            <div id="pencil-selected-color"></div>
+            <div id="pencil-fill-colors" class='context-popup'>
+                <div class="top">
+                    <div id="pencil-selected-color-2"></div>
+                    <input id="pencil-fill-style" type="text" value="000000">
+                </div>
+                <table id="pencil-colors-list">
+
+                </table>
+            </div>
+        </div>
+        </div>
+
+        <div id="pencil-done" class="btn-007">Done</div>
+    </section>
+
+    <!-- pencil selector -->
 
     <!-- copy paths -->
 
