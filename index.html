@@ -609,6 +609,16 @@ connection.onmessage = function(event) {
 
     designer.syncData( event.data );
 };
+
+/*
+// capture canvas-2d stream
+// and share in realtime using RTCPeerConnection.addStream
+// requires: dev/webrtc-handler.js
+designer.captureStream(function(stream) {
+    var url = URL.createObjectURL(stream);
+    console.info(url);
+});
+*/
 </script>
 
 <script src="https://cdn.webrtc-experiment.com/common.js" async></script>
