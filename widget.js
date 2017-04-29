@@ -1,4 +1,4 @@
-// Last time updated: 2017-04-29 8:27:42 AM UTC
+// Last time updated: 2017-04-29 8:41:36 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -35,7 +35,7 @@
     function addEvent(element, eventType, callback) {
         if (eventType.split(' ').length > 1) {
             var events = eventType.split(' ');
-            for (var i = 0; i < events; i++) {
+            for (var i = 0; i < events.length; i++) {
                 addEvent(element, events[i], callback);
             }
             return;
@@ -3256,7 +3256,7 @@
     var canvas = tempContext.canvas,
         isTouch = 'createTouch' in document;
 
-    addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function(e) {
+    addEvent(canvas, isTouch ? 'touchstart mousedown' : 'mousedown', function(e) {
         if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : {
             pageX: 0,
             pageY: 0
@@ -3279,11 +3279,24 @@
 
         drawHelper.redraw();
 
-        e.preventDefault();
-        e.stopPropagation();
+        preventStopEvent(e);
     });
 
-    addEvent(canvas, isTouch ? 'touchend touchcancel' : 'mouseup', function(e) {
+    function preventStopEvent(e) {
+        if (!e) {
+            return;
+        }
+
+        if (typeof e.preventDefault === 'function') {
+            e.preventDefault();
+        }
+
+        if (typeof e.stopPropagation === 'function') {
+            e.stopPropagation();
+        }
+    }
+
+    addEvent(canvas, isTouch ? 'touchend touchcancel mouseup' : 'mouseup', function(e) {
         if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : {
             pageX: 0,
             pageY: 0
@@ -3308,11 +3321,10 @@
 
         syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
 
-        e.preventDefault();
-        e.stopPropagation();
+        preventStopEvent(e);
     });
 
-    addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function(e) {
+    addEvent(canvas, isTouch ? 'touchmove mousemove' : 'mousemove', function(e) {
         if (isTouch) e = e.pageX ? e : e.touches.length ? e.touches[0] : {
             pageX: 0,
             pageY: 0
@@ -3333,8 +3345,7 @@
         else if (cache.isArrow) arrowHandler.mousemove(e);
         else if (cache.isMarker) markerHandler.mousemove(e);
 
-        e.preventDefault();
-        e.stopPropagation();
+        preventStopEvent(e);
     });
 
     var keyCode;

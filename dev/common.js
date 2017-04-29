@@ -24,7 +24,7 @@ var is = {
 function addEvent(element, eventType, callback) {
     if (eventType.split(' ').length > 1) {
         var events = eventType.split(' ');
-        for (var i = 0; i < events; i++) {
+        for (var i = 0; i < events.length; i++) {
             addEvent(element, events[i], callback);
         }
         return;
