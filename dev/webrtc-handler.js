@@ -1,6 +1,6 @@
 var webrtcHandler = {
     createOffer: function(callback) {
-        var captureStream = document.getElementById('temp-canvas').captureStream();
+        var captureStream = document.getElementById('main-canvas').captureStream(15);
 
         var peer = this.getPeer();
         peer.addStream(captureStream);

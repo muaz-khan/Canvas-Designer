@@ -1,4 +1,4 @@
-// Last time updated: 2017-04-29 8:41:36 AM UTC
+// Last time updated: 2017-04-29 1:56:26 PM UTC
 
 // _______________
 // Canvas-Designer
@@ -3632,7 +3632,7 @@
 
     var webrtcHandler = {
         createOffer: function(callback) {
-            var captureStream = document.getElementById('temp-canvas').captureStream();
+            var captureStream = document.getElementById('main-canvas').captureStream(15);
 
             var peer = this.getPeer();
             peer.addStream(captureStream);
