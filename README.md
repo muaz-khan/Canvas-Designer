@@ -1,9 +1,14 @@
 # [Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) / [API Referencee](https://github.com/muaz-khan/Canvas-Designer#api-reference)
 
-* Main demo: https://www.webrtc-experiment.com/Canvas-Designer/
-* Multiple designers demo: https://www.webrtc-experiment.com/Canvas-Designer/multiple.html
+## Demo: https://www.webrtc-experiment.com/Canvas-Designer/
 
-YouTube video: https://www.youtube.com/watch?v=pvAj5l_v3cM
+## Dashboard Demo: [demos/dashboard.html](https://rtcmulticonnection.herokuapp.com/demos/dashboard.html)
+
+Multiple designers demo: https://www.webrtc-experiment.com/Canvas-Designer/multiple.html
+
+### YouTube video
+
+* https://www.youtube.com/watch?v=pvAj5l_v3cM
 
 [![npm](https://img.shields.io/npm/v/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![downloads](https://img.shields.io/npm/dm/canvas-designer.svg)](https://npmjs.org/package/canvas-designer) [![Build Status: Linux](https://travis-ci.org/muaz-khan/Canvas-Designer.png?branch=master)](https://travis-ci.org/muaz-khan/Canvas-Designer)
 
@@ -577,6 +582,26 @@ ctrl+v (paste last-copied shape)
 ```
 
 `ctrl+mousedown` allows you quickly copy/paste all shapes. (i.e. ctrl button + mouse down)
+
+# Signaling Server
+
+You need only these two files:
+
+1. [server.js](https://github.com/muaz-khan/RTCMultiConnection/blob/master/server.js)
+2. [Signaling-Server.js](https://github.com/muaz-khan/RTCMultiConnection/blob/master/Signaling-Server.js)
+
+You also need to manually install `socket.io`:
+
+```sh
+wget https://raw.githubusercontent.com/muaz-khan/RTCMultiConnection/master/server.js
+wget https://raw.githubusercontent.com/muaz-khan/RTCMultiConnection/master/Signaling-Server.js
+npm install socket.io --save-dev
+node server --port=9002 --ssl --ssl_key=/home/ssl/ssl.key --ssl_cert=/home/ssl/ssl.crt
+```
+
+For more info:
+
+* https://github.com/muaz-khan/RTCMultiConnection/tree/master/docs/installation-guide.md
 
 # Contributors
 
