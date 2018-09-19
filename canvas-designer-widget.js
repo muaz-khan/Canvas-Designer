@@ -25,7 +25,13 @@ function CanvasDesigner() {
         quadratic: true,
         text: true,
         image: true,
-        marker: true
+        pdf: true,
+        marker: true,
+        zoom: true,
+        lineWidth: true,
+        colorsPicker: true,
+        extraOptions: true,
+        code: true
     };
 
     var selectedIcon = 'pencil';

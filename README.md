@@ -2,11 +2,11 @@
 
 ## Demo: https://www.webrtc-experiment.com/Canvas-Designer/
 
-## Dashboard Demo: [demos/dashboard.html](https://rtcmulticonnection.herokuapp.com/demos/dashboard.html)
+## Advance Demo: [demos/dashboard.html](https://rtcmulticonnection.herokuapp.com/demos/dashboard.html)
 
 Multiple designers demo: https://www.webrtc-experiment.com/Canvas-Designer/multiple.html
 
-### YouTube video
+### YouTube video:
 
 * https://www.youtube.com/watch?v=pvAj5l_v3cM
 
@@ -53,6 +53,11 @@ You can use [`designer.setSelected`](https://github.com/muaz-khan/Canvas-Designe
 11. `image` --- add external images
 12. `arrow` --- draw arrow lines
 13. `marker` --- draw markers
+14. `lineWidth` --- set line width
+15. `colorsPicker` --- background and foreground colors picker
+16. `extraOptions` --- extra options eg. lineCap, lineJoin, globalAlpha, globalCompositeOperation etc.
+17. `pdf` --- to import PDF
+18. `code` --- to enable/disable code view
 
 The correct name for `dragSingle` should be: `drag-move-resize last-selected-shape`.
 
@@ -271,7 +276,12 @@ designer.setTools({
     quadratic: true,
     text: true,
     image: true,
-    zoom: true
+    pdf: true,
+    zoom: true,
+    lineWidth: true,
+    colorsPicker: true,
+    extraOptions: true,
+    code: true
 });
 ```
 

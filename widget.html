@@ -118,7 +118,7 @@
         /* design-surface */
 
         .design-surface {
-            background-color: white;
+            background-color: transparent;
         }
         .design-surface canvas {
             position: absolute;
@@ -140,6 +140,7 @@
             border-bottom: 1px solid #E5E5E5;
             border-radius: 2px;
             margin-top: -4px;
+            display: none;
         }
         .tool-box canvas:first-child,
         .tool-box canvas:first-child:hover {
@@ -207,7 +208,7 @@
         }
         /* arc */
 
-        .arc-range-container {
+        .arc-range-container, #pdf-page-container {
             position: absolute;
             z-index: 1000;
             display: none;
@@ -452,7 +453,9 @@
 
         <canvas id="eraser-icon" width="40" height="40" title="Erase drawings"></canvas>
         <canvas id="text-icon" width="40" height="40" title="Write text"></canvas>
-        <canvas id="image-icon" width="40" height="40" title="Add images"></canvas>
+        <canvas id="image-icon" width="40" height="40" title="Add image"></canvas>
+
+        <canvas id="pdf-icon" width="40" height="40" title="Add pdf"></canvas>
 
         <canvas id="drag-last-path" width="40" height="40" title="Drag/move last path"></canvas>
         <canvas id="drag-all-paths" width="40" height="40" title="Drag/move all paths"></canvas>
@@ -473,6 +476,12 @@
         <canvas id="additional" width="40" height="40" title="Extra options"></canvas>
     </section>
 
+    <!-- pdf -->
+
+    <section id="pdf-page-container">
+        <select id="pdf-pages-list"></select>
+    </section>
+
     <!-- arc -->
 
     <section id="arc-range-container" class="arc-range-container">
@@ -488,7 +497,7 @@
         <textarea id="code-text" class="code-text allow-select"></textarea>
     </section>
 
-    <section class="preview-panel">
+    <section class="preview-panel" style="display: none;">
         <div id="design-preview" class="preview-selected">Preview</div>
         <div id="code-preview">Code</div>
     </section>
@@ -766,9 +775,11 @@
         }
 
         var script = document.createElement('script');
-        script.src = params.widgetJsURL || 'https://cdn.webrtc-experiment.com/Canvas-Designer/widget.js';
+        script.src = params.widgetJsURL || 'https://cdn.webrtc-experiment.com/Canvas-Designer/widget.min.js';
         (document.body || document.documentElement).appendChild(script);
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
 </body>
 
 </html>

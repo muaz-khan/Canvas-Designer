@@ -197,6 +197,9 @@ div#comments-popup {
     <input type="checkbox" id="image" checked>
     <label for="image">image</label><br>
 
+    <input type="checkbox" id="pdf" checked>
+    <label for="pdf">pdf</label><br>
+
     <input type="checkbox" id="line" checked>
     <label for="line">line</label><br>
 
@@ -222,7 +225,19 @@ div#comments-popup {
     <label for="quadratic">quadratic</label><br>
 
     <input type="checkbox" id="bezier" checked>
-    <label for="bezier">bezier</label><br><br>
+    <label for="bezier">bezier</label><br>
+
+    <input type="checkbox" id="lineWidth" checked>
+    <label for="lineWidth">lineWidth</label><br>
+
+    <input type="checkbox" id="colorsPicker" checked>
+    <label for="colorsPicker">colorsPicker</label><br>
+
+    <input type="checkbox" id="extraOptions" checked>
+    <label for="extraOptions">extraOptions</label><br>
+
+    <input type="checkbox" id="code" checked>
+    <label for="code">code</label><br><br>
 
     <hr>
     <div>
@@ -382,6 +397,7 @@ designer.setTools({
     pencil: true,
     text: true,
     image: true,
+    pdf: true,
     eraser: true,
     line: true,
     arrow: true,
@@ -392,7 +408,11 @@ designer.setTools({
     quadratic: true,
     bezier: true,
     marker: true,
-    zoom: true
+    zoom: true,
+    lineWidth: true,
+    colorsPicker: true,
+    extraOptions: true,
+    code: true
 });
 
 designer.appendTo(document.getElementById('widget-container'));
