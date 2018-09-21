@@ -34,6 +34,28 @@ function CanvasDesigner() {
         code: true
     };
 
+    designer.icons = {
+        line: null,
+        arrow: null,
+        pencil: null,
+        dragSingle: null,
+        dragMultiple: null,
+        eraser: null,
+        rectangle: null,
+        arc: null,
+        bezier: null,
+        quadratic: null,
+        text: null,
+        image: null,
+        pdf: null,
+        marker: null,
+        zoom: null,
+        lineWidth: null,
+        colorsPicker: null,
+        extraOptions: null,
+        code: null
+    };
+
     var selectedIcon = 'pencil';
 
     function syncData(data) {
@@ -92,7 +114,7 @@ function CanvasDesigner() {
 
     designer.appendTo = function(parentNode) {
         designer.iframe = document.createElement('iframe');
-        designer.iframe.src = designer.widgetHtmlURL + '?widgetJsURL=' + designer.widgetJsURL + '&tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon;
+        designer.iframe.src = designer.widgetHtmlURL + '?widgetJsURL=' + designer.widgetJsURL + '&tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon + '&icons=' + JSON.stringify(designer.icons);
         designer.iframe.style.width = '100%';
         designer.iframe.style.height = '100%';
         designer.iframe.style.border = 0;

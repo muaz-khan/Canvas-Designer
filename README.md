@@ -287,6 +287,42 @@ designer.setTools({
 });
 ```
 
+## `icons`
+
+You can force/set your own tool-icons:
+
+```javascript
+designer.icons = {
+    line: '/icons/line.png',
+    arrow: '/icons/arrow.png',
+    pencil: '/icons/pencil.png',
+    dragSingle: '/icons/dragSingle.png',
+    dragMultiple: '/icons/dragMultiple.png',
+    eraser: '/icons/eraser.png',
+    rectangle: '/icons/rectangle.png',
+    arc: '/icons/arc.png',
+    bezier: '/icons/bezier.png',
+    quadratic: '/icons/quadratic.png',
+    text: '/icons/text.png',
+    image: '/icons/image.png',
+    pdf: '/icons/pdf.png',
+    marker: '/icons/marker.png',
+    zoom: '/icons/zoom.png',
+    lineWidth: '/icons/lineWidth.png',
+    colorsPicker: '/icons/colorsPicker.png',
+    extraOptions: '/icons/extraOptions.png',
+    code: '/icons/code.png'
+};
+```
+
+You can set like this as well:
+
+```javascript
+designer.icons.line = '/icons/line.png';
+```
+
+Default values are `NULL` to force icons from `/dev/data-dris.js`.
+
 ## `appendTo`
 
 CanvasDesigner is a widget; that widget should be appended to a DOM object. This method allows you pass `<body>` or any other HTMLDOMElement.
