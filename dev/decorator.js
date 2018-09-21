@@ -17,7 +17,8 @@ var tools = {
     lineWidth: true,
     colorsPicker: true,
     extraOptions: true,
-    code: true
+    code: true,
+    undo: true
 };
 
 if (params.tools) {
@@ -187,7 +188,7 @@ window.addEventListener('load', function() {
     }
 
     var toolBox = find('tool-box');
-    toolBox.style.height = (innerHeight /* - toolBox.offsetTop - 77 */ ) + 'px';
+    toolBox.style.height = (innerHeight) + 'px'; // -toolBox.offsetTop - 77
 
     function decorateDragLastPath() {
         var context = getContext('drag-last-path');
@@ -235,6 +236,30 @@ window.addEventListener('load', function() {
     if (tools.line === true) {
         decorateLine();
         document.getElementById('line').style.display = 'block';
+    }
+
+    function decorateUndo() {
+        var context = getContext('undo');
+
+        var image = new Image();
+        image.onload = function() {
+            context.drawImage(image, 4, 4, 32, 32);
+
+            document.querySelector('#undo').onclick = function() {
+                if (points.length) {
+                    points.length = points.length - 1;
+                    drawHelper.redraw();
+
+                    syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
+                }
+            };
+        };
+        image.src = data_uris.undo;
+    }
+
+    if (tools.undo === true) {
+        decorateUndo();
+        document.getElementById('undo').style.display = 'block';
     }
 
     function decorateArrow() {
@@ -594,15 +619,12 @@ window.addEventListener('load', function() {
     function decorateQuadratic() {
         var context = getContext('quadratic-curve');
 
-        context.moveTo(0, 0);
-        context.quadraticCurveTo(50, 10, 30, 40);
-        context.stroke();
-
-        context.fillStyle = 'Gray';
-        context.font = '9px Verdana';
-        context.fillText('quad..', 2, 24);
-
-        bindEvent(context, 'QuadraticCurve');
+        var image = new Image();
+        image.onload = function() {
+            context.drawImage(image, 4, 4, 32, 32);
+            bindEvent(context, 'QuadraticCurve');
+        };
+        image.src = data_uris.quadratic;
     }
 
     if (tools.quadratic === true) {

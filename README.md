@@ -58,6 +58,7 @@ You can use [`designer.setSelected`](https://github.com/muaz-khan/Canvas-Designe
 16. `extraOptions` --- extra options eg. lineCap, lineJoin, globalAlpha, globalCompositeOperation etc.
 17. `pdf` --- to import PDF
 18. `code` --- to enable/disable code view
+19. `undo` --- undo recent shapes
 
 The correct name for `dragSingle` should be: `drag-move-resize last-selected-shape`.
 
@@ -281,7 +282,8 @@ designer.setTools({
     lineWidth: true,
     colorsPicker: true,
     extraOptions: true,
-    code: true
+    code: true,
+    undo: true
 });
 ```
 
