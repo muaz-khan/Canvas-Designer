@@ -1,4 +1,4 @@
-// Last time updated: 2018-09-22 5:01:57 AM UTC
+// Last time updated: 2018-09-24 6:09:38 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -2981,9 +2981,10 @@
                     if (points.length) {
                         points.length = points.length - 1;
                         drawHelper.redraw();
-
-                        syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
                     }
+
+                    // share to webrtc
+                    syncPoints(true);
                 };
             };
             image.src = data_uris.undo;

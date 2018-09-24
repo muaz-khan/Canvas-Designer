@@ -249,9 +249,10 @@ window.addEventListener('load', function() {
                 if (points.length) {
                     points.length = points.length - 1;
                     drawHelper.redraw();
-
-                    syncPoints(is.isDragAllPaths || is.isDragLastPath ? true : false);
                 }
+
+                // share to webrtc
+                syncPoints(true);
             };
         };
         image.src = data_uris.undo;
