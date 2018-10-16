@@ -48,6 +48,8 @@ function CanvasDesigner() {
         text: null,
         image: null,
         pdf: null,
+        pdf_next: null,
+        pdf_prev: null,
         marker: null,
         zoom: null,
         lineWidth: null,

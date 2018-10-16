@@ -306,6 +306,8 @@ designer.icons = {
     text: '/icons/text.png',
     image: '/icons/image.png',
     pdf: '/icons/pdf.png',
+    pdf_next: '/icons/pdf-next.png',
+    pdf_prev: '/icons/pdf-prev.png',
     marker: '/icons/marker.png',
     zoom: '/icons/zoom.png',
     lineWidth: '/icons/lineWidth.png',

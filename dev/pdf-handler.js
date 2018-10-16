@@ -2,9 +2,11 @@ var pdfHandler = {
     lastPdfURL: null,
     lastIndex: 0,
     lastPageIndex: null,
-    removeWhiteBackground: true,
+    removeWhiteBackground: false,
     pdfPageContainer: document.getElementById('pdf-page-container'),
     pdfPagesList: document.getElementById('pdf-pages-list'),
+    pdfNext: document.getElementById('pdf-next'),
+    pdfPrev: document.getElementById('pdf-prev'),
     pageNumber: 1,
 
     images: [],
@@ -37,9 +39,12 @@ var pdfHandler = {
 
             var renderContext = {
                 canvasContext: ctx,
-                viewport: viewport,
-                background: 'rgba(0,0,0,0)'
+                viewport: viewport
             };
+
+            if (pdfHandler.removeWhiteBackground === true) {
+                renderContext.background = 'rgba(0,0,0,0)';
+            }
 
             page.render(renderContext).then(function() {
                 if (pdfHandler.removeWhiteBackground === true) {
@@ -93,14 +98,28 @@ var pdfHandler = {
                     option.selected = true;
                 }
             }
-            pdfHandler.pdfPageContainer.style.top = '20px';
-            pdfHandler.pdfPageContainer.style.left = point[2] + 'px';
 
             pdfHandler.pdfPagesList.onchange = function() {
                 pdfHandler.load(lastPdfURL);
             };
 
+            pdfHandler.pdfNext.onclick = function() {
+                pdfHandler.pdfPagesList.selectedIndex++;
+                pdfHandler.pdfPagesList.onchange();
+            };
+
+            pdfHandler.pdfPrev.onclick = function() {
+                pdfHandler.pdfPagesList.selectedIndex--;
+                pdfHandler.pdfPagesList.onchange();
+            };
+
             document.getElementById('drag-last-path').click();
+
+            pdfHandler.pdfPrev.src = data_uris.pdf_next;
+            pdfHandler.pdfNext.src = data_uris.pdf_prev;
+
+            pdfHandler.pdfPageContainer.style.top = '20px';
+            pdfHandler.pdfPageContainer.style.left = (point[3] - parseInt(point[3] / 2)) + 'px';
             pdfHandler.pdfPageContainer.style.display = 'block';
 
             // share to webrtc
@@ -141,7 +160,8 @@ var pdfHandler = {
     },
     reset_pos: function(x, y) {
         pdfHandler.pdfPageContainer.style.top = y + 'px';
-        pdfHandler.pdfPageContainer.style.left = x + 'px';
+        var point = points[points.length - 1][1];
+        pdfHandler.pdfPageContainer.style.left = (point[1] + point[3] - parseInt(point[3] / 2) - parseInt(pdfHandler.pdfPageContainer.clientWidth / 2)) + 'px';
     },
     end: function() {
         pdfHandler.pdfPageContainer.style.display = 'none';
