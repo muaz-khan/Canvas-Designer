@@ -331,6 +331,11 @@ CanvasDesigner is a widget; that widget should be appended to a DOM object. This
 
 ```javascript
 designer.appendTo(document.body || document.documentElement);
+
+// or
+designer.appendTo(document.body || document.documentElement, function() {
+    alert('iframe load callback');
+});
 ```
 
 The correct name for `appendTo` is: `append-iframe to target HTML-DOM-element`
