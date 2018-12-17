@@ -1,4 +1,4 @@
-// Last time updated: 2018-10-17 10:08:21 AM UTC
+// Last time updated: 2018-12-17 10:32:34 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -3960,6 +3960,12 @@
 
         if (event.data.syncPoints) {
             syncPoints(true);
+            return;
+        }
+
+        if (event.data.clearCanvas) {
+            points = [];
+            drawHelper.redraw();
             return;
         }
 

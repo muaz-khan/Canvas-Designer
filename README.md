@@ -2,7 +2,7 @@
 
 ## Demo: https://www.webrtc-experiment.com/Canvas-Designer/
 
-## Advance Demo: [demos/dashboard.html](https://rtcmulticonnection.herokuapp.com/demos/dashboard.html)
+## Advance Demo: [demos/dashboard/](https://rtcmulticonnection.herokuapp.com/demos/dashboard/)
 
 Multiple designers demo: https://www.webrtc-experiment.com/Canvas-Designer/multiple.html
 
@@ -234,6 +234,14 @@ Pass array-of-points that are shared by remote users using socket.io or websocke
 
 ```javascript
 designer.syncData(arrayOfPoints);
+```
+
+## `clearCanvas`
+
+Remove and clear all drawings from the canvas:
+
+```javascript
+designer.clearCanvas();
 ```
 
 ## `addSyncListener`

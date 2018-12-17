@@ -205,6 +205,14 @@ function CanvasDesigner() {
         });
     };
 
+    designer.clearCanvas = function () {
+        if (!designer.iframe) return;
+
+        designer.postMessage({
+            clearCanvas: true
+        });
+    };
+
     designer.widgetHtmlURL = 'widget.html';
     designer.widgetJsURL = 'widget.min.js';
 }
