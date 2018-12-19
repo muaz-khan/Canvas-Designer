@@ -201,8 +201,9 @@ window.addEventListener('load', function() {
         image.src = data_uris.dragSingle;
     }
 
+    decorateDragLastPath();
+
     if (tools.dragSingle === true) {
-        decorateDragLastPath();
         document.getElementById('drag-last-path').style.display = 'block';
     }
 
@@ -217,8 +218,9 @@ window.addEventListener('load', function() {
         image.src = data_uris.dragMultiple;
     }
 
+    decorateDragAllPaths();
+
     if (tools.dragMultiple === true) {
-        decorateDragAllPaths();
         document.getElementById('drag-all-paths').style.display = 'block';
     }
 

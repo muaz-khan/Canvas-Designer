@@ -1,4 +1,4 @@
-// Last time updated: 2018-12-17 10:32:34 AM UTC
+// Last time updated: 2018-12-19 10:54:19 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -2967,8 +2967,9 @@
             image.src = data_uris.dragSingle;
         }
 
+        decorateDragLastPath();
+
         if (tools.dragSingle === true) {
-            decorateDragLastPath();
             document.getElementById('drag-last-path').style.display = 'block';
         }
 
@@ -2983,8 +2984,9 @@
             image.src = data_uris.dragMultiple;
         }
 
+        decorateDragAllPaths();
+
         if (tools.dragMultiple === true) {
-            decorateDragAllPaths();
             document.getElementById('drag-all-paths').style.display = 'block';
         }
 
