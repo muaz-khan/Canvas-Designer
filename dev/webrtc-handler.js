@@ -1,7 +1,6 @@
 var webrtcHandler = {
     createOffer: function(callback) {
-        var captureStream = document.getElementById('main-canvas').captureStream(15);
-
+        var captureStream = document.getElementById('main-canvas').captureStream();
         var peer = this.getPeer();
 
         captureStream.getTracks().forEach(function(track) {
@@ -26,7 +25,11 @@ var webrtcHandler = {
         });
     },
     setRemoteDescription: function(sdp) {
-        this.peer.setRemoteDescription(new RTCSessionDescription(sdp));
+        this.peer.setRemoteDescription(new RTCSessionDescription(sdp)).then(function() {
+            if (typeof setTemporaryLine === 'function') {
+                setTemporaryLine();
+            }
+        });
     },
     createAnswer: function(sdp, callback) {
         var peer = this.getPeer();

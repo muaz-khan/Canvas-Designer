@@ -611,6 +611,12 @@ connection.onopen = function(event) {
     }
 
     numberOfConnectedUsers.innerHTML = connection.getAllParticipants().length;
+
+    if(connection.isInitiator) {
+        setTimeout(function() {
+            designer.renderStream();
+        }, 1000);
+    }
 };
 
 connection.onclose = connection.onerror = connection.onleave = function() {
