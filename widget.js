@@ -1,4 +1,4 @@
-// Last time updated: 2018-12-19 10:54:19 AM UTC
+// Last time updated: 2018-12-24 7:44:44 AM UTC
 
 // _______________
 // Canvas-Designer
@@ -4026,11 +4026,10 @@
             var captureStream = document.getElementById('main-canvas').captureStream(15);
 
             var peer = this.getPeer();
-            if ('addStream' in peer) {
-                peer.addStream(captureStream);
-            } else {
-                peer.addTrack(captureStream.getVideoTracks()[0], captureStream);
-            }
+
+            captureStream.getTracks().forEach(function(track) {
+                peer.addTrack(track, captureStream);
+            });
 
             peer.onicecandidate = function(event) {
                 if (!event || !!event.candidate) {
@@ -4073,22 +4072,17 @@
                 });
             });
 
-            if ('onaddstream' in peer) {
-                peer.onaddstream = function(event) {
-                    callback({
-                        stream: event.stream
-                    });
-                };
-            } else {
-                peer.onaddtrack = function(event) {
-                    callback({
-                        stream: event.streams[0]
-                    });
-                };
-            }
+            peer.ontrack = function(event) {
+                callback({
+                    stream: event.streams[0]
+                });
+            };
         },
         getPeer: function() {
             var WebRTC_Native_Peer = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+            var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription;
+            var RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate;
+
             var peer = new WebRTC_Native_Peer(null);
             this.peer = peer;
             return peer;
