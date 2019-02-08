@@ -130,17 +130,6 @@ designer.appendTo(document.body || document.documentElement);
 </script>
 ```
 
-You can even download TAR:
-
-```
-mkdir Canvas-Designer && cd Canvas-Designer
-wget http://dl.webrtc-experiment.com/canvas-designer.tar.gz
-tar -zxvf canvas-designer.tar.gz
-ls -a
-```
-
-* For windows, use 7Zip or WinRAR to extract this: [canvas-designer.tar.gz](http://dl.webrtc-experiment.com/canvas-designer.tar.gz)
-
 # Complete Usage
 
 ```javascript
@@ -686,6 +675,10 @@ For more info:
 
 Please make pull-request to update this list.
 
+# Disclaimer
+
+* https://www.webrtc-experiment.com/disclaimer/
+
 # License
 
-[Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) is released under [MIT licence](https://www.webrtc-experiment.com/licence/) . Copyright (c) [Muaz Khan](http://www.MuazKhan.com).
+[Canvas Designer](https://github.com/muaz-khan/Canvas-Designer) is released under [MIT license](https://github.com/muaz-khan/RecordRTC/blob/master/LICENSE) . Copyright (c) [Muaz Khan](https://MuazKhan.com).

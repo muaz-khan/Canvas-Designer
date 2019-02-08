@@ -18,12 +18,27 @@ var pencilHandler = {
         tempContext.lineCap = 'round';
         pencilDrawHelper.pencil(tempContext, [t.prevX, t.prevY, x, y]);
 
-        points[points.length] = ['pencil', [t.prevX, t.prevY, x, y], pencilDrawHelper.getOptions()];
+        points[points.length] = ['pencil', [t.prevX, t.prevY, x, y], pencilDrawHelper.getOptions(), 'start'];
 
         t.prevX = x;
         t.prevY = y;
     },
     mouseup: function(e) {
+        var x = e.pageX - canvas.offsetLeft,
+            y = e.pageY - canvas.offsetTop;
+
+        var t = this;
+
+        if (t.ismousedown) {
+            tempContext.lineCap = 'round';
+            pencilDrawHelper.pencil(tempContext, [t.prevX, t.prevY, x, y]);
+
+            points[points.length] = ['pencil', [t.prevX, t.prevY, x, y], pencilDrawHelper.getOptions(), 'end'];
+
+            t.prevX = x;
+            t.prevY = y;
+        }
+
         this.ismousedown = false;
     },
     mousemove: function(e) {

@@ -52,7 +52,7 @@ window.addEventListener('message', function(event) {
                     newArray.push(point);
                 }
             }
-            points = newArray;
+            points = newArray.reverse();
             drawHelper.redraw();
             syncPoints(true);
             return;
@@ -78,6 +78,26 @@ window.addEventListener('message', function(event) {
         }
 
         if (index === -1) {
+            if (points.length && points[points.length - 1][0] === 'pencil') {
+                var newArray = [];
+                var length = points.length;
+                var reverse = points.reverse();
+                var ended;
+                for (var i = 0; i < length; i++) {
+                    var point = reverse[i];
+                    if (point[3] == 'start') {
+                        ended = true;
+                    } else if (ended) {
+                        newArray.push(point);
+                    }
+                }
+
+                points = newArray.reverse();
+                drawHelper.redraw();
+                syncPoints(true);
+                return;
+            }
+
             points.length = points.length - 1;
             drawHelper.redraw();
             syncPoints(true);
