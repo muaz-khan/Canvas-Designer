@@ -469,6 +469,11 @@ designer.undo('all');
 designer.undo({
     numberOfLastShapes: 10
 })
+
+// to remove all occurrences of a specific shape
+designer.undo('pencil');
+designer.undo('arrow');
+designer.undo('rect');
 ```
 
 `designer.pointsLength` shows number of shapes; and `designer.undo` accepts shape-index as well.
